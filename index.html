@@ -7,11 +7,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
     <script type="text/jsx">
+
+      var formatSeconds = function(sec) {
+        var seconds = ('0' + sec % 60).slice(-2);
+        var minutes = Math.floor(sec / 60);
+        return minutes + ':' + seconds;
+      }
       var Stopwatch = React.createClass({
 
         getInitialState: function() {
           return {
-            secondsElapsed: 0
+            secondsElapsed: 0,
+            laps: []
           };
         },
 
@@ -41,24 +48,42 @@
 
         handleResetClick: function() {
           this.setState({
-            secondsElapsed: 0
+            secondsElapsed: 0,
+            laps: []
+          })
+        },
+
+        handleLapClick: function() {
+          this.setState({
+            laps: this.state.laps.concat([this.state.secondsElapsed])
           })
         },
 
         render: function() {
           return (
             <div>
-              <h1>{this.getMinutes()}:{this.getSeconds()}</h1>
+              <h1>{formatSeconds(this.state.secondsElapsed)}</h1>
 
               {(this.state.secondsElapsed === 0 || this.incrementer === this.state.lastClearedIncrementer)
                 ? <button onClick={this.handleStartClick}>start</button>
                 : <button onClick={this.handleStopClick}>stop</button>
               }
 
-              {(this.state.secondsElapsed !== 0)
+              {(this.state.secondsElapsed !== 0 && this.incrementer !== this.state.lastClearedIncrementer)
+                ? <button onClick={this.handleLapClick}>lap</button>
+                : null
+              }
+
+              {(this.state.secondsElapsed !== 0 && this.incrementer === this.state.lastClearedIncrementer)
                 ? <button onClick={this.handleResetClick}>reset</button>
                 : null
               }
+
+              <ul>
+                {this.state.laps.map(function(lap, i) {
+                  return <li><strong>{i+1}</strong> : {formatSeconds(lap)}</li>
+                })}
+              </ul>
 
             </div>
           );
