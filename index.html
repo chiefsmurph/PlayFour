@@ -34,14 +34,32 @@
 
         handleStopClick: function() {
           clearInterval(this.incrementer);
+          this.setState({
+            lastClearedIncrementer: this.incrementer
+          })
+        },
+
+        handleResetClick: function() {
+          this.setState({
+            secondsElapsed: 0
+          })
         },
 
         render: function() {
           return (
             <div>
               <h1>{this.getMinutes()}:{this.getSeconds()}</h1>
-              <button onClick={this.handleStartClick}>start</button>
-              <button onClick={this.handleStopClick}>stop</button>
+
+              {(this.state.secondsElapsed === 0 || this.incrementer === this.state.lastClearedIncrementer)
+                ? <button onClick={this.handleStartClick}>start</button>
+                : <button onClick={this.handleStopClick}>stop</button>
+              }
+
+              {(this.state.secondsElapsed !== 0)
+                ? <button onClick={this.handleResetClick}>reset</button>
+                : null
+              }
+
             </div>
           );
         }
