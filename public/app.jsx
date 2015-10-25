@@ -175,7 +175,7 @@ var HeaderBoard = React.createClass({
 	render: function() {
 		return (
 			<div className='headerBoard'>
-				<h2>{(!this.props.inGame) ? this.props.headerText : this.props.currentPlay}</h2>
+				<div>{(!this.props.inGame) ? this.props.headerText : this.props.currentPlay}</div>
 			</div>
 		);
 	}
