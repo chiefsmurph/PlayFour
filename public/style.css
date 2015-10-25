@@ -1,0 +1,43 @@
+body {
+	background: #ddd;
+	padding: 0;
+	margin: 0;
+  font-family: monospace;
+}
+table#gameArea {
+  width: 100%;
+  height: 80%;
+  position: absolute;
+  top: 20%;
+  left: 0;
+}
+table#gameArea td {
+  background-color: white;
+  text-align: center;
+  font-size: 5.9vw;
+  padding: 0;
+}
+table#gameArea td h1 {
+  margin: 0;
+}
+table#gameArea.myTurn td:hover {
+  background-color: yellow;
+  cursor: pointer;
+}
+table#gameArea td.selected {
+  background-color: cyan;
+}
+.headerBoard {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 20%;
+  text-align: center;
+  font-size: 5.9vw;
+
+}
+.headerBoard h2 {
+  font-size: 40px;
+  line-height: 40px;
+  border: 1px solid white;
+}
