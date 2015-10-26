@@ -232,7 +232,6 @@ var MyButton = React.createClass({
 });
 var HeaderBoard = React.createClass({
 	componentDidMount: function() {
-		$("#headerBoard h2").fitText();
 	},
 	render: function() {
 		return (
