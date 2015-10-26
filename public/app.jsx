@@ -224,7 +224,7 @@ var MyButton = React.createClass({
 
 	render: function() {
 		return (
-			<td onClick={this.handleClick.bind(this, this.props.id)} className={(this.props.selected) ? 'selected' : ''}>
+			<td onClick={this.handleClick.bind(this, this.props.id)} onTouchEnd={this.handleClick.bind(this, this.props.id)} className={(this.props.selected) ? 'selected' : ''}>
 				<h1>{this.props.id}</h1>
 			</td>
 		);
