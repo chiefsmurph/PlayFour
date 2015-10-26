@@ -7,6 +7,7 @@ var GameArea = React.createClass({
 			pastPlay: [],
 			selected: [null, false, false, false, false],
 			selectedQueue: [],
+			justclicked: false,
 			opp: null
 		};
 	},
@@ -139,58 +140,71 @@ var GameArea = React.createClass({
 
 	handleClick: function(index) {
 
-		if (this.state.inGame && this.state.myTurn) {
+		if (!this.state.justclicked) {
 
-					this.setState({
-						currentPlay: this.state.currentPlay.concat(index)
-					}, function() {
+			this.setState({
+				justclicked: true;
+			});
 
-						console.log(this.state.currentPlay);
+			setTimeout(function() {
+				this.setState({
+					justclicked: false;
+				});
+			}.bind(this), 100);
 
-						if (this.state.pastPlay.length !== 0 && (this.getNumOff() > 1 || (this.getNumOff() !== 1 && this.state.currentPlay.length === 4))) {
-									console.log('num off ' + this.getNumOff());
-									console.log('pastplay ' + this.state.pastPlay);
-									this.props.headerChange('YOU LOSE');
+				if (this.state.inGame && this.state.myTurn) {
 
-									this.setState({
-										myTurn: false,
-										currentPlay: [],
-										pastPlay: [],
-										inGame: false,
-										selectedQueue: []
-									});
+							this.setState({
+								currentPlay: this.state.currentPlay.concat(index)
+							}, function() {
 
-									// setTimeout(function() {
-									// 	this.props.headerChange('new game...your turn');
-									// 	this.setState({
-									// 		myTurn: true,
-									// 		inGame: true
-									// 	});
-									// }.bind(this), 700);
+								console.log(this.state.currentPlay);
 
-									this.socket.emit('fail', {move: this.state.currentPlay});
+								if (this.state.pastPlay.length !== 0 && (this.getNumOff() > 1 || (this.getNumOff() !== 1 && this.state.currentPlay.length === 4))) {
+											console.log('num off ' + this.getNumOff());
+											console.log('pastplay ' + this.state.pastPlay);
+											this.props.headerChange('YOU LOSE');
 
-						} else {
+											this.setState({
+												myTurn: false,
+												currentPlay: [],
+												pastPlay: [],
+												inGame: false,
+												selectedQueue: []
+											});
 
-									console.log('sending');
+											// setTimeout(function() {
+											// 	this.props.headerChange('new game...your turn');
+											// 	this.setState({
+											// 		myTurn: true,
+											// 		inGame: true
+											// 	});
+											// }.bind(this), 700);
 
-									this.socket.emit("sendClick", {play: index});
+											this.socket.emit('fail', {move: this.state.currentPlay});
 
-									if (this.state.currentPlay.length === 4) {
+								} else {
 
-										this.setState({
-											currentPlay: [],
-											pastPlay: this.state.currentPlay,
-											myTurn: false
-										});
+											console.log('sending');
 
-										this.props.headerChange('valid move...now opponents turn');
+											this.socket.emit("sendClick", {play: index});
 
-									}
+											if (this.state.currentPlay.length === 4) {
 
-						}
+												this.setState({
+													currentPlay: [],
+													pastPlay: this.state.currentPlay,
+													myTurn: false
+												});
 
-					});
+												this.props.headerChange('valid move...now opponents turn');
+
+											}
+
+								}
+
+							});
+				}
 
 		}
 	},
