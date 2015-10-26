@@ -146,7 +146,7 @@ var GameArea = React.createClass({
 
 			setTimeout(function() {
 				this.setState({ justclicked: false });
-			}.bind(this), 100);
+			}.bind(this), 600);
 
 				if (this.state.inGame && this.state.myTurn) {
 
