@@ -5,7 +5,9 @@ var GameArea = React.createClass({
 			myTurn: false,
 			currentPlay: [],
 			pastPlay: [],
-			selected: [null, false, false, false, false]
+			selected: [null, false, false, false, false],
+			selectedQueue: [],
+			opp: null
 		};
 	},
 	componentDidMount: function () {
@@ -13,62 +15,95 @@ var GameArea = React.createClass({
 		var that = this;
 		this.socket = io();
 
-		this.socket.on('wrongmove', function(data) {
-			this.props.headerChange(data.msg);
+		this.socket.on('opp', function(data) {
+			this.setState({
+				opp: data.opp
+			});
+			if (data.passback) {
+				this.props.headerChange('connecting to opponent: ' + data.opp);
+				this.socket.emit('opp', {opp: data.opp});
+			} else {
+				this.props.headerChange('connected to opponent: ' + data.opp);
+				this.setState({
+					inGame: true
+				});
+			}
 		}.bind(this));
 
-		this.socket.on('receivemove', function(data) {
-
-			var playSingle = function(num, i) {
-
-				setTimeout(function() {
-
-					var resetselected = [null, false, false, false, false];
-					var newselected = resetselected.slice();
-					newselected[num] = true;
-
-					this.setState({
-						selected: newselected
-					});
-
-					setTimeout(function() {
-						this.setState({
-							selected: resetselected
-						});
-
-						if (i === this.state.pastPlay.length-1) {
-							this.setState({
-								myTurn: true
-							});
-							this.props.headerChange("your turn");
-						}
-
-					}.bind(this), 350);
-
-				}.bind(this), 500 * i);
-
-			};
+		this.socket.on('connected', function(data) {
+			this.props.headerChange('connected to opponent: ' + data.opp);
 
 			this.setState({
-				pastPlay: data.play
+				myTurn: true,
+				inGame: true
 			});
 
-			data.play.forEach(playSingle.bind(this));
+		}.bind(this));
+
+		this.socket.on('winner', function(data) {
+			this.props.headerChange('you win! opp played ' + data.move + ' after ' + this.state.pastPlay);
+		}.bind(this));
+
+		this.socket.on('loner', function() {
+			this.props.headerChange(this.state.opp + ' left.  waiting for new player. ');
+			this.setState({
+				inGame: false,
+				myTurn: false,
+				currentPlay: [],
+				pastPlay: [],
+				selected: [null, false, false, false, false],
+				selectedQueue: [],
+				opp: null
+			})
+			this.socket.emite('loner');
+		}.bind(this));
+
+		this.socket.on('receiveClick', function(data) {
+
+			var num = data.play;
+
+			var resetselected = [null, false, false, false, false];
+			var newselected = resetselected.slice();
+			newselected[num] = true;
+			this.setState({
+				selected: newselected
+			});
+			setTimeout(function() {
+				var resetselected = this.state.selected;
+				resetselected[num] = false;
+				this.setState({
+					selected: resetselected
+				});
+			}.bind(this), 500);
+
+			this.setState({
+				currentPlay: this.state.currentPlay.concat(num)
+			}, function() {
+				if (this.state.currentPlay.length === 4) {
+					console.log('opp played ' + this.state.currentPlay);
+					this.setState({
+						myTurn: true,
+						pastPlay: this.state.currentPlay,
+						currentPlay: []
+					});
+					this.props.headerChange('your turn');
+				}
+			});
 
 		}.bind(this));
 
 
-		setTimeout(function() {
-			this.props.headerChange('Alright everybody...here we go!');
-			setTimeout(function() {
-				this.setState({
-					inGame: true,
-					myTurn: true
-				});
-
-			}.bind(this), 1000);
-
-		}.bind(this), 2000);
+		// setTimeout(function() {
+		// 	this.props.headerChange('Alright everybody...here we go!');
+		// 	setTimeout(function() {
+		// 		this.setState({
+		// 			inGame: true,
+		// 			myTurn: true
+		// 		});
+		//
+		// 	}.bind(this), 1000);
+		//
+		// }.bind(this), 2000);
 
 		// var that = this;
 		// this.socket = io();
@@ -78,6 +113,28 @@ var GameArea = React.createClass({
 		// this.socket.emit('fetchComments');
 	},
 
+	isNoneSelected: function() {
+		return JSON.stringify(this.state.selected) === "[null, false, false, false, false]";
+	},
+
+	getNumOff: function() {
+
+
+		if (this.state.pastPlay.length === 0) {
+			return 0;
+		}
+		var numOff = 0;
+		for (var i = 0; i < this.state.currentPlay.length; i++) {
+			if (this.state.pastPlay[i] !== this.state.currentPlay[i]) {
+				numOff++;
+			}
+		}
+		console.log('currentplay ' + this.state.currentPlay);
+		console.log('pastplay ' + this.state.pastPlay);
+		console.log('numoff ' + numOff);
+
+		return numOff;
+	},
 
 
 	handleClick: function(index) {
@@ -90,41 +147,46 @@ var GameArea = React.createClass({
 
 						console.log(this.state.currentPlay);
 
-						if (this.state.pastPlay[this.state.currentPlay.length-1] && index != this.state.pastPlay[this.state.currentPlay.length-1] ) {
-									console.log(index + ' and prev ' + this.state.pastPlay[this.state.currentPlay.length-1]);
+						if (this.state.pastPlay.length !== 0 && (this.getNumOff() > 1 || (this.getNumOff() !== 1 && this.state.currentPlay.length === 4))) {
+									console.log('num off ' + this.getNumOff());
+									console.log('pastplay ' + this.state.pastPlay);
 									this.props.headerChange('YOU LOSE');
 
 									this.setState({
 										myTurn: false,
 										currentPlay: [],
 										pastPlay: [],
-										inGame: false
+										inGame: false,
+										selectedQueue: []
 									});
 
-									setTimeout(function() {
-										this.props.headerChange('new game...your turn');
-										this.setState({
-											myTurn: true,
-											inGame: true
-										});
-									}.bind(this), 700);
+									// setTimeout(function() {
+									// 	this.props.headerChange('new game...your turn');
+									// 	this.setState({
+									// 		myTurn: true,
+									// 		inGame: true
+									// 	});
+									// }.bind(this), 700);
 
-									this.socket.emit('fail');
+									this.socket.emit('fail', {move: this.state.currentPlay});
 
-						} else if (this.state.currentPlay.length > this.state.pastPlay.length) {
+						} else {
 
 									console.log('sending');
 
-									this.socket.emit("sendplay", {play: this.state.currentPlay});
+									this.socket.emit("sendClick", {play: index});
 
-									this.setState({
-										myTurn: false,
-										currentPlay: []
-									});
+									if (this.state.currentPlay.length === 4) {
 
-									setTimeout(function() {
-										this.props.headerChange('Watch for opponent\'s response...');
-									}.bind(this), 700);
+										this.setState({
+											currentPlay: [],
+											pastPlay: this.state.currentPlay,
+											myTurn: false
+										});
+
+										this.props.headerChange('valid move...now opponents turn');
+
+									}
 
 						}
 
@@ -207,7 +269,7 @@ var TapFour = React.createClass({
 		return (
 			<div>
 				<HeaderBoard headerText={this.state.headerText} />
-				<GameArea headerChange={this.headerChange} addToPlay={this.addToPlay}/>
+				<GameArea headerChange={this.headerChange} />
 			</div>
 		);
 	}

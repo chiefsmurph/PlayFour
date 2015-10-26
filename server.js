@@ -5,50 +5,67 @@ var express = require('express');
 var app = express();
 app.use('/', express.static(path.join(__dirname, 'public')));
 
-var server = app.listen(8001);
-console.log('Server listening on port 8001');
+var server = app.listen(process.env.PORT || 8001);
+console.log('Server listening on port ' + (process.env.PORT || 8001));
 
 var io = require('socket.io')(server);
+var uuid = require('node-uuid');
 
-var pastPlay = [];
+var waitingForPlayer = null;
 
-var checkCurrentPlay = function(play) {
 
-  var goodPlay = true;
-  for (var i = 0; i < pastPlay.length; i++) {
-    if (pastPlay[i] != play[i]) {
-      goodPlay = false;
+io.on('connection', function(socket) {
+
+  var myId = socket.id;
+  var myOpp = null;
+
+  var sendToOpp = function(event, obj) {
+    if (myOpp) {
+      io.to(myOpp).emit(event, obj);
     }
   }
 
-  return goodPlay;
+  if (waitingForPlayer) {
 
-};
+    myOpp = waitingForPlayer;
+    sendToOpp('opp', {opp: myId, passback: true});
+    socket.emit('opp', {opp: myOpp});
+    console.log(myId + ' ');
+  } else {
+    waitingForPlayer = socket.id;
+    socket.emit('waiting');
+    console.log(myId + ' waiting for player');
+  }
 
-io.on('connection', function(socket) {
-  console.log('new connection');
-  socket.on('sendplay', function(data) {
+  console.log('new connection: ' + socket.id);
+  socket.on('sendClick', function(data) {
     console.log('player played ' + data.play);
-
-    if (checkCurrentPlay(data.play)) {
-      pastPlay = data.play;
-      socket.emit('wrongmove', {msg: 'good move'});
-
-      setTimeout(function() {
-        pastPlay.push(Math.floor(Math.random() * 4 + 1));
-        socket.emit('receivemove', {play: pastPlay});
-      }, 2000);
-    } else {
-      // wrong move
-      pastPlay = [];
-      console.log('error');
-      socket.emit('wrongmove', {msg: 'wrong move'});
-    }
-
+    sendToOpp('receiveClick', data);
   });
 
-  socket.on('fail', function() {
-    pastPlay = [];
+  socket.on('fail', function(data) {
+    sendToOpp('winner', data);
+  });
+
+  socket.on('opp', function(data) {
+    if (!myOpp) {
+      myOpp = data.opp;
+      waitingForPlayer = null;
+      socket.emit('connected', data);
+    }
+  });
+
+  socket.on('loner', function() {
+    myOpp = null;
+    waitingForPlayer = myId;
+  })
+
+  socket.on('disconnect', function() {
+    if (myOpp) {
+      sendToOpp('loner');
+    } else if (waitingForPlayer === myId) {
+      waitingForPlayer = null;
+    }
   });
 
 });

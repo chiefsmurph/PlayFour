@@ -21,7 +21,8 @@ table#gameArea td h1 {
   margin: 0;
 }
 table#gameArea.myTurn td:hover {
-  background-color: yellow;
+  background-color: black;
+  color: white;
   cursor: pointer;
 }
 table#gameArea td.selected {
@@ -38,7 +39,7 @@ table#gameArea td.selected {
 
 .headerBoard div {
   margin-top: 3vh;
-  font-size: 4vh;
+  font-size: 3vh;
   font-variant: small-caps;
   font-weight: 600;
   letter-spacing: 2px;
