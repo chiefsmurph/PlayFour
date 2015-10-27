@@ -21,16 +21,15 @@ table#gameArea td h1 {
   margin: 0;
 }
 @media only screen
-and (min-width : 768) {
+and (min-width : 768px) {
 	table#gameArea.myTurn td:hover {
-	  background-color: black;
-	  color: white;
+	  background-color: yellow;
 	  cursor: pointer;
 	}
 }
 
 table#gameArea td.selected {
-  background-color: cyan;
+  background-color: cyan !important;
 }
 .headerBoard {
   position: absolute;
