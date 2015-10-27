@@ -178,7 +178,7 @@ var GameArea = React.createClass({
 								currentPlay: this.state.currentPlay.concat(index)
 							}, function() {
 
-								displayNum(index);
+								displayNum.call(this,index);
 
 								console.log(this.state.currentPlay);
 
