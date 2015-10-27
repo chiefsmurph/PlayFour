@@ -4,6 +4,7 @@
     "express": "~4.11.2",
     "node-uuid": "^1.4.3",
     "path": "^0.12.7",
+    "react-odometer": "0.0.1",
     "socket.io": "~1.3.4"
   }
 }

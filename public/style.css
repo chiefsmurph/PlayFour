@@ -37,10 +37,21 @@ table#gameArea td.selected {
   padding: 0;
 }
 
-.headerBoard div {
+.headerBoard #mainText {
   margin-top: 3vh;
   font-size: 3vh;
   font-variant: small-caps;
   font-weight: 600;
   letter-spacing: 2px;
+}
+#infoPanel {
+	position: absolute;
+	top: 0px;
+	left: 5px;
+	font-size: 10px;
+	margin: 10px;
+	padding: 0;
+}
+#infoPanel #score, #infoPanel #roundScore {
+	display: inline-block;
 }

@@ -1,14 +1,24 @@
+var displayNum = function(num) {
+	setTimeout(function() {
+		var resetselected = this.state.selected;
+		resetselected[num] = false;
+		this.setState({
+			selected: resetselected
+		});
+	}.bind(this), 500);
+}
 var GameArea = React.createClass({
 	getInitialState: function () {
 		return {
-			inGame: false,
 			myTurn: false,
 			currentPlay: [],
 			pastPlay: [],
 			selected: [null, false, false, false, false],
 			selectedQueue: [],
-			justclicked: false,
-			opp: null
+			justclicked: null,
+			opp: null,
+			myId: null,
+			score: 0
 		};
 	},
 	componentDidMount: function () {
@@ -25,9 +35,7 @@ var GameArea = React.createClass({
 				this.socket.emit('opp', {opp: data.opp});
 			} else {
 				this.props.headerChange('connected to opponent: ' + data.opp);
-				this.setState({
-					inGame: true
-				});
+				this.props.inGameChange(true);
 			}
 		}.bind(this));
 
@@ -35,27 +43,29 @@ var GameArea = React.createClass({
 			this.props.headerChange('connected to opponent: ' + data.opp);
 
 			this.setState({
-				myTurn: true,
-				inGame: true
+				myTurn: true
 			});
+			this.props.inGameChange(true);
 
 		}.bind(this));
 
 		this.socket.on('winner', function(data) {
 			this.props.headerChange('you win! opp played ' + data.move + ' after ' + this.state.pastPlay);
+			this.props.scoreChange(this.props.score + this.props.curRound);
+			this.props.roundChange(0);
 		}.bind(this));
 
 		this.socket.on('loner', function() {
 			this.props.headerChange(this.state.opp + ' left.  waiting for new player. ');
 			this.setState({
-				inGame: false,
 				myTurn: false,
 				currentPlay: [],
 				pastPlay: [],
 				selected: [null, false, false, false, false],
 				selectedQueue: [],
 				opp: null
-			})
+			});
+			this.props.inGameChange(false);
 			this.socket.emite('loner');
 		}.bind(this));
 
@@ -69,18 +79,14 @@ var GameArea = React.createClass({
 			this.setState({
 				selected: newselected
 			});
-			setTimeout(function() {
-				var resetselected = this.state.selected;
-				resetselected[num] = false;
-				this.setState({
-					selected: resetselected
-				});
-			}.bind(this), 500);
+
+			displayNum.call(this, num);
 
 			this.setState({
 				currentPlay: this.state.currentPlay.concat(num)
 			}, function() {
 				if (this.state.currentPlay.length === 4) {
+					this.props.roundChange(this.props.curRound + 10);
 					console.log('opp played ' + this.state.currentPlay);
 					this.setState({
 						myTurn: true,
@@ -140,15 +146,15 @@ var GameArea = React.createClass({
 
 	handleClick: function(index) {
 
-		if (!this.state.justclicked) {
+		if (this.state.justclicked !== index) {
 
-			this.setState({ justclicked: true });
+			this.setState({ justclicked: index });
 
 			setTimeout(function() {
-				this.setState({ justclicked: false });
+				this.setState({ justclicked: null });
 			}.bind(this), 250);
 
-				if (this.state.inGame && this.state.myTurn) {
+				if (this.state.myTurn) {
 
 							this.setState({
 								currentPlay: this.state.currentPlay.concat(index)
@@ -165,10 +171,14 @@ var GameArea = React.createClass({
 												myTurn: false,
 												currentPlay: [],
 												pastPlay: [],
-												inGame: false,
 												selectedQueue: []
 											});
 
+											this.props.inGameChange(false);
+
+											this.props.scoreChange(this.props.score - (this.props.curRound / 2) );
+											this.props.roundChange(0);
+											
 											// setTimeout(function() {
 											// 	this.props.headerChange('new game...your turn');
 											// 	this.setState({
@@ -194,6 +204,8 @@ var GameArea = React.createClass({
 												});
 
 												this.props.headerChange('valid move...now opponents turn');
+
+												this.props.roundChange(this.props.curRound + 10);
 
 											}
 
@@ -227,6 +239,7 @@ var MyButton = React.createClass({
 		// 	that.setState({ comments: comments });
 		// });
 		// this.socket.emit('fetchComments');
+
 	},
 	handleClick: function(i) {
 		this.props.handleClick(i);
@@ -242,11 +255,20 @@ var MyButton = React.createClass({
 });
 var HeaderBoard = React.createClass({
 	componentDidMount: function() {
+
 	},
 	render: function() {
+		var optionalCurrent;
+		if (this.props.getInGame) {
+			optionalCurrent = (<div>Current Round: <div id='roundScore' className='odometer'>{this.props.curRound}</div></div>)
+		}
 		return (
 			<div className='headerBoard'>
-				<div>{(!this.props.inGame) ? this.props.headerText : this.props.currentPlay}</div>
+				<div id='infoPanel'>
+					<div>Your Score: <div id='score' className='odometer'>{this.props.score}</div></div>
+					{optionalCurrent}
+				</div>
+				<div id='mainText'>{this.props.headerText}</div>
 			</div>
 		);
 	}
@@ -255,6 +277,9 @@ var TapFour = React.createClass({
 	getInitialState: function() {
 		return {
 			headerText: "Welcome to Tap Four",
+			score: 0,
+			curRound: 0,
+			inGame: false,
 		};
 	},
 	componentDidMount: function() {
@@ -274,11 +299,32 @@ var TapFour = React.createClass({
 		})
 	},
 
+	scoreChange: function(score) {
+		console.log(score);
+		this.setState({
+			score: score
+		})
+	},
+
+	roundChange: function(score) {
+		console.log(score);
+		this.setState({
+			curRound: score
+		})
+	},
+
+	inGameChange: function(bool) {
+		console.log(score);
+		this.setState({
+			inGame: bool
+		})
+	},
+
 	render: function() {
 		return (
 			<div>
-				<HeaderBoard headerText={this.state.headerText} />
-				<GameArea headerChange={this.headerChange} />
+				<HeaderBoard score={this.state.score} curRound={this.state.curRound} headerText={this.state.headerText} getInGame={this.state.inGame} />
+				<GameArea scoreChange={this.scoreChange} roundChange={this.roundChange} score={this.state.score} curRound={this.state.curRound} headerChange={this.headerChange} inGameChange={this.inGameChange} />
 			</div>
 		);
 	}
