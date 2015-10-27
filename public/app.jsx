@@ -84,7 +84,7 @@ var GameArea = React.createClass({
 				opp: null
 			});
 			this.props.inGameChange(false);
-			this.socket.emite('loner');
+			this.socket.emit('loner');
 		}.bind(this));
 
 		this.socket.on('receiveClick', function(data) {

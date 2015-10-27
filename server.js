@@ -56,6 +56,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('loner', function() {
+    console.log('loner');
     myOpp = null;
     waitingForPlayer = myId;
   })
