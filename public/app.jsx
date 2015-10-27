@@ -336,7 +336,6 @@ var TapFour = React.createClass({
 		// 	that.setState({ comments: comments });
 		// });
 		// this.socket.emit('fetchComments');
-		hoverTouchUnstick();
 	},
 
 	headerChange: function(text) {

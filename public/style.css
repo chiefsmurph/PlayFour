@@ -23,7 +23,7 @@ table#gameArea td h1 {
 @media only screen
 and (min-width : 768px) {
 	table#gameArea.myTurn td:hover {
-	  background-color: yellow;
+	  /*background-color: yellow;*/
 	  cursor: pointer;
 	}
 }
