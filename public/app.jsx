@@ -179,7 +179,7 @@ var GameArea = React.createClass({
 
 	handleClick: function(index) {
 
-		if (this.state.justclicked !== index && isNoneSelected() ) {
+		if (this.state.justclicked !== index && this.isNoneSelected() ) {
 
 			this.setState({ justclicked: index });
 
