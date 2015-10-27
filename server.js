@@ -26,7 +26,6 @@ io.on('connection', function(socket) {
   }
 
   if (waitingForPlayer) {
-
     myOpp = waitingForPlayer;
     sendToOpp('opp', {opp: myId, passback: true});
     socket.emit('opp', {opp: myOpp});

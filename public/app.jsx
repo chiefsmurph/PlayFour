@@ -242,19 +242,27 @@ var GameArea = React.createClass({
 
 													console.log('sending');
 
-													this.socket.emit("sendClick", {play: index});
-
 													if (this.state.currentPlay.length === 4) {
 
-														this.setState({
-															currentPlay: [],
-															pastPlay: this.state.currentPlay,
-															myTurn: false
-														});
+														setTimeout(function() {
 
-														this.props.headerChange('valid move...<br>now opponents turn');
+																this.socket.emit("sendClick", {play: index});
 
-														this.props.roundChange(this.props.curRound + 10);
+																this.setState({
+																	currentPlay: [],
+																	pastPlay: this.state.currentPlay,
+																	myTurn: false
+																});
+
+																this.props.headerChange('valid move...<br>now opponents turn');
+
+																this.props.roundChange(this.props.curRound + 10);
+
+														}.bind(this), 1000);
+
+													} else {
+
+														this.socket.emit("sendClick", {play: index});
 
 													}
 
