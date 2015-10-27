@@ -47,7 +47,6 @@ io.on('connection', function(socket) {
       console.log(myId + ' ');
     } else {
       waitingForPlayer = socket.id;
-      socket.emit('waiting');
       console.log(myId + ' waiting for player');
     }
   });

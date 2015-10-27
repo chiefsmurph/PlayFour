@@ -24,7 +24,6 @@ var GameArea = React.createClass({
 			pastPlay: [],
 			selected: [null, false, false, false, false],
 			selectedQueue: [],
-			justclicked: null,
 			opp: null,
 			myId: null,
 			score: 0
@@ -71,10 +70,6 @@ var GameArea = React.createClass({
 			}
 		}.bind(this));
 
-		this.socket.on('waiting', function() {
-			this.props.headerChange('waiting for other players');
-		}.bind(this));
-
 		this.socket.on('opp', function(data) {
 			this.setState({
 				opp: data.opp
@@ -98,14 +93,15 @@ var GameArea = React.createClass({
 
 			setTimeout(function() {
 				this.props.headerChange('you start');
+
+					this.setState({
+						myTurn: true
+					});
+					this.props.inGameChange(true);
+					console.log('here');
+
 			}.bind(this), 1800);
 
-			setTimeout(function() {
-				this.setState({
-					myTurn: true
-				});
-				this.props.inGameChange(true);
-			}.bind(this), 1900);
 
 		}.bind(this));
 
@@ -120,8 +116,7 @@ var GameArea = React.createClass({
 				currentPlay: [],
 				pastPlay: [],
 				selected: [null, false, false, false, false],
-				selectedQueue: [],
-				justclicked: null
+				selectedQueue: []
 			});
 
 
@@ -207,7 +202,7 @@ var GameArea = React.createClass({
 	},
 
 	isNoneSelected: function() {
-		return JSON.stringify(this.state.selected) === "[null, false, false, false, false]";
+		return JSON.stringify(this.state.selected) === "[null,false,false,false,false]";
 	},
 
 	getNumOff: function() {
@@ -232,13 +227,12 @@ var GameArea = React.createClass({
 
 	handleClick: function(index) {
 
-		if (this.state.justclicked !== index && this.isNoneSelected() ) {
+		console.log('myturn ' + this.state.myTurn);
+		console.log('isNoneSelected ' + this.isNoneSelected());
 
-			this.setState({ justclicked: index });
+		if (this.isNoneSelected() ) {
 
-			setTimeout(function() {
-				this.setState({ justclicked: null });
-			}.bind(this), 550);
+			console.log('here')
 
 				if (this.state.myTurn) {
 
@@ -271,8 +265,7 @@ var GameArea = React.createClass({
 												currentPlay: [],
 												pastPlay: [],
 												selected: [null, false, false, false, false],
-												selectedQueue: [],
-												justclicked: null
+												selectedQueue: []
 											});
 
 											setTimeout(function() {
