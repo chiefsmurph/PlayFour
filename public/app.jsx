@@ -154,7 +154,7 @@ var GameArea = React.createClass({
 	},
 
 	isNoneSelected: function() {
-		return JSON.stringify(this.state.selected) === "[null, false, false, false, false]";
+		return JSON.stringify(this.state.selected) == "[null,false,false,false,false]";
 	},
 
 	getNumOff: function() {
