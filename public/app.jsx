@@ -76,14 +76,14 @@ var GameArea = React.createClass({
 				this.setState({
 					myTurn: true
 				});
-				this.props.headerChange('new game...your move / winner starts');
+				this.props.headerChange('new game...<br>our move / winner starts');
 				this.props.inGameChange(true);
 			}.bind(this), 4000);
 
 		}.bind(this));
 
 		this.socket.on('loner', function() {
-			this.props.headerChange(this.state.opp + ' left.  waiting for new player. ');
+			this.props.headerChange(this.state.opp + ' left.  <br>waiting for new player. ');
 			this.setState({
 				myTurn: false,
 				currentPlay: [],
@@ -222,7 +222,7 @@ var GameArea = React.createClass({
 												this.setState({
 													myTurn: false
 												});
-												this.props.headerChange('new game...opponent starts');
+												this.props.headerChange('new game...<br>opponent starts');
 												this.props.inGameChange(true);
 											}.bind(this), 4000);
 
@@ -250,7 +250,7 @@ var GameArea = React.createClass({
 													myTurn: false
 												});
 
-												this.props.headerChange('valid move...now opponents turn');
+												this.props.headerChange('valid move...<br>now opponents turn');
 
 												this.props.roundChange(this.props.curRound + 10);
 
@@ -315,7 +315,7 @@ var HeaderBoard = React.createClass({
 					<div>Your Score: <div id='score' className='odometer'>{this.props.score}</div></div>
 					{optionalCurrent}
 				</div>
-				<div id='mainText'>{this.props.headerText}</div>
+				<div id='mainText' dangerouslySetInnerHTML={{__html: this.props.headerText}}></div>
 			</div>
 		);
 	}
