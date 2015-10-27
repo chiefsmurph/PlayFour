@@ -11,6 +11,7 @@ console.log('Server listening on port ' + (process.env.PORT || 8001));
 var io = require('socket.io')(server);
 var uuid = require('node-uuid');
 
+var userBank = {};      // userId -> socketId
 var waitingForPlayer = null;
 
 
@@ -19,31 +20,48 @@ io.on('connection', function(socket) {
   var myId = socket.id;
   var myOpp = null;
 
+  console.log('new connection: ' + socket.id);
+
   var sendToOpp = function(event, obj) {
     if (myOpp) {
       io.to(myOpp).emit(event, obj);
     }
-  }
+  };
 
-  if (waitingForPlayer) {
-    myOpp = waitingForPlayer;
-    sendToOpp('opp', {opp: myId, passback: true});
-    socket.emit('opp', {opp: myOpp});
-    console.log(myId + ' ');
-  } else {
-    waitingForPlayer = socket.id;
-    socket.emit('waiting');
-    console.log(myId + ' waiting for player');
-  }
+  socket.on('newUser', function() {
+    setTimeout(function() {
+      socket.emit('welcome');
+    }, 1800);
+  });
 
-  console.log('new connection: ' + socket.id);
+  socket.on('authorizeScore', function(data) {
+    console.log('user ' + myId + ' sent score: ' + data);
+    socket.emit('authorization', true);
+  });
+
+  socket.on('checkForWaiting', function() {
+    if (waitingForPlayer) {
+      myOpp = waitingForPlayer;
+      sendToOpp('opp', {opp: myId, passback: true});
+      socket.emit('opp', {opp: myOpp});
+      console.log(myId + ' ');
+    } else {
+      waitingForPlayer = socket.id;
+      socket.emit('waiting');
+      console.log(myId + ' waiting for player');
+    }
+  });
+
   socket.on('sendClick', function(data) {
     console.log('player played ' + data.play);
     sendToOpp('receiveClick', data);
   });
 
   socket.on('fail', function(data) {
-    sendToOpp('winner', data);
+    sendToOpp('winner', {
+        move: data.move,
+        id: myOpp
+    });
   });
 
   socket.on('opp', function(data) {

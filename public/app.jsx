@@ -35,6 +35,42 @@ var GameArea = React.createClass({
 		var that = this;
 		this.socket = io();
 
+		if (docCookies.hasItem('userStatus')) {
+			var userStatus = docCookies.getItem('userStatus');
+			this.scoreChange(userStatus.score);
+
+			setTimeout(function() {
+				this.props.headerChange('welcome back');
+				this.socket.emit('authorizeScore', userStatus);
+			}.bind(this), 1200);
+
+		} else {
+
+			setTimeout(function() {
+				this.props.headerChange('welcome new user...<br>now registering');
+				this.socket.emit('newUser');
+			}.bind(this), 1200);
+
+		}
+
+		this.socket.on('welcome', function() {
+			this.props.headerChange('now registered...<br>waiting for opponent');
+			setTimeout(function() {
+				this.socket.emit('checkForWaiting');
+			}.bind(this), 700);
+		}.bind(this));
+
+		this.socket.on('authorization', function(data) {
+			if (data) {
+				this.props.headerChange('you have been authorized...<br>waiting for opponent');
+				setTimeout(function() {
+					this.socket.emit('checkForWaiting');
+				}.bind(this), 700);
+			} else {
+				this.props.headerChange('you are such a hackzor...<br>get outta here');
+			}
+		}.bind(this));
+
 		this.socket.on('opp', function(data) {
 			this.setState({
 				opp: data.opp
@@ -60,7 +96,8 @@ var GameArea = React.createClass({
 
 		this.socket.on('winner', function(data) {
 			this.props.headerChange('you win! opp played ' + data.move + ' after ' + this.state.pastPlay);
-			this.props.scoreChange(this.props.score + this.props.curRound);
+			var newScore = this.props.score + this.props.curRound;
+			this.props.scoreChange(newScore);
 			this.props.roundChange(0);
 			this.props.inGameChange(false);
 			this.setState({
@@ -71,6 +108,7 @@ var GameArea = React.createClass({
 				selectedQueue: [],
 				justclicked: null
 			});
+
 
 			setTimeout(function() {
 				this.setState({
@@ -246,17 +284,21 @@ var GameArea = React.createClass({
 
 											this.socket.emit("sendClick", {play: index});
 
+											setTimeout(function() {
+												this.props.headerChange('valid move');
+											}.bind(this), 500);
+
 											if (this.state.currentPlay.length === 4) {
+
+												this.setState({
+													currentPlay: [],
+													pastPlay: this.state.currentPlay,
+													myTurn: false
+												});
 
 												setTimeout(function() {
 
-														this.setState({
-															currentPlay: [],
-															pastPlay: this.state.currentPlay,
-															myTurn: false
-														});
-
-														this.props.headerChange('valid move...<br>now opponents turn');
+														this.props.headerChange('now opponents turn');
 
 														this.props.roundChange(this.props.curRound + 10);
 
@@ -349,6 +391,7 @@ var TapFour = React.createClass({
 		if ('ontouchstart' in document) {
 		    $('body').removeClass('no-touch');
 		}
+
 	},
 
 	headerChange: function(text) {
