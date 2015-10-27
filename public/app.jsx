@@ -196,7 +196,7 @@ var GameArea = React.createClass({
 								if (this.state.pastPlay.length !== 0 && (this.getNumOff() > 1 || (this.getNumOff() !== 1 && this.state.currentPlay.length === 4))) {
 											console.log('num off ' + this.getNumOff());
 											console.log('pastplay ' + this.state.pastPlay);
-											this.props.headerChange('YOU LOSE');
+											this.props.headerChange('YOU LOSE :( you played ' + this.state.currentPlay + ' after ' + this.state.pastPlay);
 
 											this.setState({
 												myTurn: false,
