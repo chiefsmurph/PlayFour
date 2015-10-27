@@ -340,6 +340,10 @@ var TapFour = React.createClass({
 		// 	that.setState({ comments: comments });
 		// });
 		// this.socket.emit('fetchComments');
+
+		if ('ontouchstart' in document) {
+		    $('body').removeClass('no-touch');
+		}
 	},
 
 	headerChange: function(text) {
