@@ -11,6 +11,4 @@ var OdometerComponent = React.createClass({
   render: function() {
     return React.DOM.div()
   }
-})
-
-module.exports = OdometerComponent;
+});
