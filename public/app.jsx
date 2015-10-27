@@ -1,4 +1,12 @@
 var displayNum = function(num) {
+
+	var resetselected = [null, false, false, false, false];
+	var newselected = resetselected.slice();
+	newselected[num] = true;
+	this.setState({
+		selected: newselected
+	});
+	
 	setTimeout(function() {
 		var resetselected = this.state.selected;
 		resetselected[num] = false;
@@ -6,6 +14,7 @@ var displayNum = function(num) {
 			selected: resetselected
 		});
 	}.bind(this), 500);
+	console.log('displaying ' + num);
 }
 var GameArea = React.createClass({
 	getInitialState: function () {
@@ -90,13 +99,6 @@ var GameArea = React.createClass({
 		this.socket.on('receiveClick', function(data) {
 
 			var num = data.play;
-
-			var resetselected = [null, false, false, false, false];
-			var newselected = resetselected.slice();
-			newselected[num] = true;
-			this.setState({
-				selected: newselected
-			});
 
 			displayNum.call(this, num);
 
