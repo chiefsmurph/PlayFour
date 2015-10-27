@@ -6,9 +6,9 @@ body {
 }
 table#gameArea {
   width: 100%;
-  height: 90%;
+  height: 86%;
   position: absolute;
-  top: 10%;
+  top: 14%;
   left: 0;
 }
 table#gameArea td {
@@ -32,7 +32,7 @@ table#gameArea td.selected {
   position: absolute;
   top: 0;
   width: 100%;
-  height: 10%;
+  height: 14%;
   text-align: center;
   padding: 0;
 }
