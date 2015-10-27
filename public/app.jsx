@@ -71,6 +71,10 @@ var GameArea = React.createClass({
 			}
 		}.bind(this));
 
+		this.socket.on('waiting', function() {
+			this.props.headerChange('waiting for other players');
+		}.bind(this));
+
 		this.socket.on('opp', function(data) {
 			this.setState({
 				opp: data.opp
@@ -81,16 +85,27 @@ var GameArea = React.createClass({
 			} else {
 				this.props.headerChange('connected to opponent: ' + data.opp);
 				this.props.inGameChange(true);
+
+				setTimeout(function() {
+					this.props.headerChange('opponent starts');
+				}.bind(this), 1800);
+
 			}
 		}.bind(this));
 
 		this.socket.on('connected', function(data) {
 			this.props.headerChange('connected to opponent: ' + data.opp);
 
-			this.setState({
-				myTurn: true
-			});
-			this.props.inGameChange(true);
+			setTimeout(function() {
+				this.props.headerChange('you start');
+			}.bind(this), 1800);
+
+			setTimeout(function() {
+				this.setState({
+					myTurn: true
+				});
+				this.props.inGameChange(true);
+			}.bind(this), 1900);
 
 		}.bind(this));
 
@@ -192,7 +207,7 @@ var GameArea = React.createClass({
 	},
 
 	isNoneSelected: function() {
-		return JSON.stringify(this.state.selected) == "[null,false,false,false,false]";
+		return JSON.stringify(this.state.selected) === "[null, false, false, false, false]";
 	},
 
 	getNumOff: function() {
