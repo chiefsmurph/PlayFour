@@ -108,20 +108,24 @@ var GameArea = React.createClass({
 
 				if (this.state.currentPlay.length === 4) {
 
-					this.props.headerChange('opponent played valid move');
-
 					setTimeout(function() {
 
-								this.props.roundChange(this.props.curRound + 10);
-								//console.log('opp played ' + this.state.currentPlay);
-								this.setState({
-									myTurn: true,
-									pastPlay: this.state.currentPlay,
-									currentPlay: []
-								});
-								this.props.headerChange('now your turn');
+						this.props.headerChange('opponent played valid move');
 
-					}.bind(this), 1500);
+						setTimeout(function() {
+
+									this.props.roundChange(this.props.curRound + 10);
+									//console.log('opp played ' + this.state.currentPlay);
+									this.setState({
+										myTurn: true,
+										pastPlay: this.state.currentPlay,
+										currentPlay: []
+									});
+									this.props.headerChange('now your turn');
+
+						}.bind(this), 1500);
+
+					}.bind(this), 500);
 
 				}
 			});
@@ -240,11 +244,11 @@ var GameArea = React.createClass({
 
 											console.log('sending');
 
+											this.socket.emit("sendClick", {play: index});
+
 											if (this.state.currentPlay.length === 4) {
 
 												setTimeout(function() {
-
-														this.socket.emit("sendClick", {play: index});
 
 														this.setState({
 															currentPlay: [],
@@ -257,10 +261,6 @@ var GameArea = React.createClass({
 														this.props.roundChange(this.props.curRound + 10);
 
 												}.bind(this), 1000);
-
-											} else {
-
-												this.socket.emit("sendClick", {play: index});
 
 											}
 
