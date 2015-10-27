@@ -170,13 +170,15 @@ var GameArea = React.createClass({
 
 			setTimeout(function() {
 				this.setState({ justclicked: null });
-			}.bind(this), 250);
+			}.bind(this), 550);
 
 				if (this.state.myTurn) {
 
 							this.setState({
 								currentPlay: this.state.currentPlay.concat(index)
 							}, function() {
+
+								displayNum(index);
 
 								console.log(this.state.currentPlay);
 
