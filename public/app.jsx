@@ -6,7 +6,7 @@ var displayNum = function(num) {
 	this.setState({
 		selected: newselected
 	});
-	
+
 	setTimeout(function() {
 		var resetselected = this.state.selected;
 		resetselected[num] = false;
@@ -105,15 +105,24 @@ var GameArea = React.createClass({
 			this.setState({
 				currentPlay: this.state.currentPlay.concat(num)
 			}, function() {
+
 				if (this.state.currentPlay.length === 4) {
-					this.props.roundChange(this.props.curRound + 10);
-					console.log('opp played ' + this.state.currentPlay);
-					this.setState({
-						myTurn: true,
-						pastPlay: this.state.currentPlay,
-						currentPlay: []
-					});
-					this.props.headerChange('your turn');
+
+					this.props.headerChange('opponent played valid move');
+
+					setTimeout(function() {
+
+								this.props.roundChange(this.props.curRound + 10);
+								//console.log('opp played ' + this.state.currentPlay);
+								this.setState({
+									myTurn: true,
+									pastPlay: this.state.currentPlay,
+									currentPlay: []
+								});
+								this.props.headerChange('now your turn');
+
+					}.bind(this), 1500);
+
 				}
 			});
 
