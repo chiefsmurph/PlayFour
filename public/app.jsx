@@ -13,7 +13,7 @@ var displayNum = function(num) {
 		this.setState({
 			selected: resetselected
 		});
-	}.bind(this), 500);
+	}.bind(this), 300);
 	console.log('displaying ' + num);
 }
 var GameArea = React.createClass({
@@ -76,7 +76,7 @@ var GameArea = React.createClass({
 				this.setState({
 					myTurn: true
 				});
-				this.props.headerChange('new game...<br>our move / winner starts');
+				this.props.headerChange('new game...<br>your move / winner starts');
 				this.props.inGameChange(true);
 			}.bind(this), 4000);
 
@@ -179,7 +179,7 @@ var GameArea = React.createClass({
 
 	handleClick: function(index) {
 
-		if (this.state.justclicked !== index) {
+		if (this.state.justclicked !== index && isNoneSelected() ) {
 
 			this.setState({ justclicked: index });
 
