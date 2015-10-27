@@ -4,6 +4,7 @@ body {
 	margin: 0;
   font-family: monospace;
 }
+
 table#gameArea {
   width: 100%;
   height: 86%;
@@ -16,16 +17,20 @@ table#gameArea td {
   text-align: center;
   font-size: 9.9vh;
   padding: 0;
+	cursor: default;
+
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+		-moz-user-select: none;     /* Firefox all */
+		-ms-user-select: none;      /* IE 10+ */
+		user-select: none;          /* Likely future */
 }
 table#gameArea td h1 {
   margin: 0;
 }
-@media only screen
-and (min-width : 768px) {
-	table#gameArea.myTurn td:hover {
-	  /*background-color: yellow;*/
-	  cursor: pointer;
-	}
+
+body.no-touch table#gameArea.myTurn td:hover {
+  background-color: yellow;
+  cursor: pointer;
 }
 
 table#gameArea td.selected {
