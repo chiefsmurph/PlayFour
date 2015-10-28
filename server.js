@@ -26,13 +26,13 @@ var dbFunctions = {
       });
     });
   },
-  getTopScore: function() {
+  getTopScore: function(cb) {
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
         client.query('SELECT * FROM scores ORDER BY score desc limit 1', function(err, result) {
 
           var topScore = result.rows[0].score;
           console.log('gotten top score ' + topScore);
-          return topScore;
+          cb(topScore);
 
         });
     });
@@ -95,7 +95,9 @@ io.on('connection', function(socket) {
 
   console.log('new connection: ' + socket.id);
 
-  socket.emit('scoreToBeat', {score: dbFunctions.getTopScore()});
+  dbFunctions.getTopScore(function(score) {
+      socket.emit('scoreToBeat', {score: score});
+  });
 
   var sendToOpp = function(event, obj) {
     if (myOpp) {
