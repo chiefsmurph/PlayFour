@@ -67,8 +67,6 @@ var dbFunctions = {
             cb(newScore, handshake);
           });
         }
-
-
       });
     });
 
@@ -164,6 +162,12 @@ io.on('connection', function(socket) {
   });
 
   socket.on('loner', function(data) {
+
+    // update db with added score
+    dbFunctions.changeScore(myUserId, data.round, function(newscore, handshake) {
+      socket.emit('updateLocal', { score: newscore, handshake: handshake });
+    });
+
     console.log('loner');
     // todo: update db of both winner and loser by data.round
     myOpp = null;

@@ -1,3 +1,5 @@
+var mySocket;
+
 var displayNum = function(num) {
 
 	var resetselected = [null, false, false, false, false];
@@ -32,49 +34,52 @@ var GameArea = React.createClass({
 	},
 	componentDidMount: function () {
 
-		var that = this;
-		this.socket = io();
+		mySocket = io();
 
 		if (docCookies.hasItem('userStatus')) {
 			var userStatus = JSON.parse(docCookies.getItem('userStatus'));
 			this.props.scoreChange(userStatus.score);
 
 			setTimeout(function() {
-				this.props.headerChange('welcome back');
-				this.socket.emit('authorizeScore', userStatus);
+				this.props.headerChange('welcome back<br>authorizing now');
+				mySocket.emit('authorizeScore', userStatus);
 			}.bind(this), 1200);
 
 		} else {
 
 			setTimeout(function() {
-				this.props.headerChange('welcome new user...<br>now registering');
-				this.socket.emit('newUser');
-			}.bind(this), 1200);
+				this.props.displayWelcomeChange(true);
+			}.bind(this), 200);
+
+			// setTimeout(function() {
+			// 	this.props.headerChange('welcome new user...<br>now registering');
+			// 	mySocket.emit('newUser');
+			// }.bind(this), 1200);
 
 		}
 
-		this.socket.on('welcome', function(data) {
+		mySocket.on('welcome', function(data) {
 			this.setState({
 				userId: data.userId
 			});
 			this.props.headerChange('now registered...<br>waiting for opponent');
 			setTimeout(function() {
-				this.socket.emit('checkForWaiting');
+				mySocket.emit('checkForWaiting');
 			}.bind(this), 700);
 		}.bind(this));
 
-		this.socket.on('authorization', function(data) {
+		mySocket.on('authorization', function(data) {
 			if (data) {
 				this.props.headerChange('you have been authorized...<br>waiting for opponent');
 				setTimeout(function() {
-					this.socket.emit('checkForWaiting');
+					mySocket.emit('checkForWaiting');
 				}.bind(this), 700);
 			} else {
 				this.props.headerChange('you are such a hackzor...<br>get outta here');
 			}
 		}.bind(this));
 
-		this.socket.on('opp', function(data) {
+		mySocket.on('opp', function(data) {
 
 			this.setState({
 				opp: data.opp.userId
@@ -82,7 +87,7 @@ var GameArea = React.createClass({
 
 					if (data.passback) {
 						this.props.headerChange('connecting to opponent: ' + this.state.opp);
-						this.socket.emit('opp', {opp: data.opp});
+						mySocket.emit('opp', {opp: data.opp});
 					} else {
 						this.props.headerChange('connected to opponent: ' + this.state.opp);
 						this.props.inGameChange(true);
@@ -97,7 +102,7 @@ var GameArea = React.createClass({
 
 		}.bind(this));
 
-		this.socket.on('connected', function(data) {
+		mySocket.on('connected', function(data) {
 			this.props.headerChange('connected to opponent: ' + data.opp);
 
 			setTimeout(function() {
@@ -114,7 +119,7 @@ var GameArea = React.createClass({
 
 		}.bind(this));
 
-		this.socket.on('winner', function(data) {
+		mySocket.on('winner', function(data) {
 			this.props.headerChange('you win! opp played ' + data.move + ' after ' + this.state.pastPlay);
 			var newScore = this.props.score + this.props.curRound;
 			this.props.scoreChange(newScore);
@@ -139,10 +144,10 @@ var GameArea = React.createClass({
 
 		}.bind(this));
 
-		this.socket.on('loner', function() {
+		mySocket.on('loner', function() {
 			this.props.headerChange(this.state.opp + ' left.  <br>waiting for new player. ');
 
-			this.socket.emit('loner', {round: this.props.curRound});
+			mySocket.emit('loner', {round: this.props.curRound});
 			var newScore = this.props.score + this.props.curRound;
 			this.props.scoreChange(newScore);
 			this.props.roundChange(0);
@@ -158,7 +163,7 @@ var GameArea = React.createClass({
 			this.props.inGameChange(false);
 		}.bind(this));
 
-		this.socket.on('receiveClick', function(data) {
+		mySocket.on('receiveClick', function(data) {
 
 			var num = data.play;
 
@@ -194,7 +199,7 @@ var GameArea = React.createClass({
 
 		}.bind(this));
 
-		this.socket.on('updateLocal', function(data) {
+		mySocket.on('updateLocal', function(data) {
 			docCookies.setItem('userStatus', JSON.stringify({
 				userId: this.state.userId,
 				score: data.score,
@@ -216,11 +221,11 @@ var GameArea = React.createClass({
 		// }.bind(this), 2000);
 
 		// var that = this;
-		// this.socket = io();
-		// this.socket.on('comments', function (comments) {
+		// mySocket = io();
+		// mySocket.on('comments', function (comments) {
 		// 	that.setState({ comments: comments });
 		// });
-		// this.socket.emit('fetchComments');
+		// mySocket.emit('fetchComments');
 	},
 
 	isNoneSelected: function() {
@@ -278,7 +283,7 @@ var GameArea = React.createClass({
 												selectedQueue: []
 											});
 
-											this.socket.emit('fail', {move: this.state.currentPlay, round: this.props.curRound});
+											mySocket.emit('fail', {move: this.state.currentPlay, round: this.props.curRound});
 
 											this.props.inGameChange(false);
 											this.props.scoreChange(this.props.score - (this.props.curRound / 2) );
@@ -313,7 +318,7 @@ var GameArea = React.createClass({
 
 											console.log('sending');
 
-											this.socket.emit("sendClick", {play: index});
+											mySocket.emit("sendClick", {play: index});
 
 											setTimeout(function() {
 												this.props.headerChange('valid move');
@@ -363,11 +368,11 @@ var GameArea = React.createClass({
 var MyButton = React.createClass({
 	componentDidMount: function () {
 		// var that = this;
-		// this.socket = io();
-		// this.socket.on('comments', function (comments) {
+		// mySocket = io();
+		// mySocket.on('comments', function (comments) {
 		// 	that.setState({ comments: comments });
 		// });
-		// this.socket.emit('fetchComments');
+		// mySocket.emit('fetchComments');
 
 	},
 	handleClick: function(i) {
@@ -402,22 +407,38 @@ var HeaderBoard = React.createClass({
 		);
 	}
 });
+var WelcomeMessage = React.createClass({
+	continueClick: function() {
+		this.props.displayWelcomeChange(false);
+	},
+	render: function() {
+		return (
+			<div id='welcomeMessage'>
+				<p>Hi there!  We see this is your first visit TapFour and even though it is a very simple game, we just wanted to give you a quick rundown on the specifics.</p>
+				<p>How to play: Each turn consists of four clicks.  The first player has complete freedom.  All subsequent plays must be the same as the previous play except one of the moves has to be different.</p>
+				<p>At the end of the month, whoever is at the top of the leaderboard will receive $10 in cash or paypal.</p>
+				<button onClick={this.continueClick}>click here to continue</button>
+			</div>
+		);
+	}
+});
 var TapFour = React.createClass({
 	getInitialState: function() {
 		return {
-			headerText: "Welcome to Tap Four",
+			headerText: "Welcome to Tap Four<br><i>the monthly $10 giveaway</i>",
 			score: 0,
 			curRound: 0,
 			inGame: false,
+			displayWelcome: false
 		};
 	},
 	componentDidMount: function() {
 		// var that = this;
-		// this.socket = io();
-		// this.socket.on('comments', function (comments) {
+		// mySocket = io();
+		// mySocket.on('comments', function (comments) {
 		// 	that.setState({ comments: comments });
 		// });
-		// this.socket.emit('fetchComments');
+		// mySocket.emit('fetchComments');
 
 		if ('ontouchstart' in document) {
 		    $('body').removeClass('no-touch');
@@ -426,38 +447,51 @@ var TapFour = React.createClass({
 	},
 
 	headerChange: function(text) {
-		console.log(text);
 		this.setState({
 			headerText: text
-		})
+		});
 	},
 
 	scoreChange: function(score) {
-		console.log(score);
 		this.setState({
 			score: score
-		})
+		});
 	},
 
 	roundChange: function(score) {
-		console.log(score);
 		this.setState({
 			curRound: score
-		})
+		});
 	},
 
 	inGameChange: function(bool) {
-		console.log(score);
 		this.setState({
 			inGame: bool
-		})
+		});
+	},
+
+	displayWelcomeChange: function(bool) {
+		if (!bool) {
+			this.headerChange('welcome new user...<br>now registering');
+			mySocket.emit('newUser');
+		}
+		this.setState({
+			displayWelcome: bool
+		});
 	},
 
 	render: function() {
+
+		var optionalEl;
+		if (this.state.displayWelcome) {
+			optionalEl = (<WelcomeMessage displayWelcomeChange={this.displayWelcomeChange} />);
+		}
+
 		return (
 			<div>
 				<HeaderBoard score={this.state.score} curRound={this.state.curRound} headerText={this.state.headerText} getInGame={this.state.inGame} />
-				<GameArea scoreChange={this.scoreChange} roundChange={this.roundChange} score={this.state.score} curRound={this.state.curRound} headerChange={this.headerChange} inGameChange={this.inGameChange} />
+				<GameArea displayWelcomeChange={this.displayWelcomeChange} scoreChange={this.scoreChange} roundChange={this.roundChange} score={this.state.score} curRound={this.state.curRound} headerChange={this.headerChange} inGameChange={this.inGameChange} />
+				{optionalEl}
 			</div>
 		);
 	}
