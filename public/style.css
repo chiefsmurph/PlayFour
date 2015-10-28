@@ -95,6 +95,6 @@ table#gameArea td.selected {
 	padding: 0;
 	font-style: italic;
 }
-#infoPanel #score, #infoPanel #roundScore {
+#infoPanel #score, #infoPanel #roundScore, #infoPanel #scoretobeat {
 	display: inline-block;
 }
