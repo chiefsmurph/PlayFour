@@ -108,14 +108,17 @@ io.on('connection', function(socket) {
 
   socket.on('authorizeScore', function(data) {
     console.log('user ' + mySocketId + ' sent score: ' + JSON.stringify(data));
-    // verify the data.userId and data.score and data.handshake
-    dbFunctions.authorizeScore(data.userId, data.score, data.handshake, function(response) {
-      console.log('made it to the cb authorize');
-      socket.emit('authorization', response);
-      if (response) {
-        myUserId = data.userId;
-      }
-    });
+    setTimeout(function() {
+        // verify the data.userId and data.score and data.handshake
+        dbFunctions.authorizeScore(data.userId, data.score, data.handshake, function(response) {
+          console.log('made it to the cb authorize');
+          socket.emit('authorization', response);
+          if (response) {
+            myUserId = data.userId;
+          }
+        });
+
+    }, 1800);
 
   });
 
