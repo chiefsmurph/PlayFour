@@ -19,6 +19,7 @@ var displayNum = function(num) {
 var GameArea = React.createClass({
 	getInitialState: function () {
 		return {
+			userId: null,
 			myTurn: false,
 			currentPlay: [],
 			pastPlay: [],
@@ -52,7 +53,10 @@ var GameArea = React.createClass({
 
 		}
 
-		this.socket.on('welcome', function() {
+		this.socket.on('welcome', function(data) {
+			this.setState({
+				userId: data.userId
+			});
 			this.props.headerChange('now registered...<br>waiting for opponent');
 			setTimeout(function() {
 				this.socket.emit('checkForWaiting');
@@ -71,21 +75,26 @@ var GameArea = React.createClass({
 		}.bind(this));
 
 		this.socket.on('opp', function(data) {
+
 			this.setState({
-				opp: data.opp
+				opp: data.opp.userId
+			}, function() {
+
+					if (data.passback) {
+						this.props.headerChange('connecting to opponent: ' + this.state.opp);
+						this.socket.emit('opp', {opp: data.opp});
+					} else {
+						this.props.headerChange('connected to opponent: ' + this.state.opp);
+						this.props.inGameChange(true);
+
+						setTimeout(function() {
+							this.props.headerChange('opponent starts');
+						}.bind(this), 1800);
+
+					}
+
 			});
-			if (data.passback) {
-				this.props.headerChange('connecting to opponent: ' + data.opp);
-				this.socket.emit('opp', {opp: data.opp});
-			} else {
-				this.props.headerChange('connected to opponent: ' + data.opp);
-				this.props.inGameChange(true);
 
-				setTimeout(function() {
-					this.props.headerChange('opponent starts');
-				}.bind(this), 1800);
-
-			}
 		}.bind(this));
 
 		this.socket.on('connected', function(data) {
@@ -132,6 +141,12 @@ var GameArea = React.createClass({
 
 		this.socket.on('loner', function() {
 			this.props.headerChange(this.state.opp + ' left.  <br>waiting for new player. ');
+
+			this.socket.emit('loner', {round: this.props.curRound});
+			var newScore = this.props.score + this.props.curRound;
+			this.props.scoreChange(newScore);
+			this.props.roundChange(0);
+
 			this.setState({
 				myTurn: false,
 				currentPlay: [],
@@ -141,7 +156,6 @@ var GameArea = React.createClass({
 				opp: null
 			});
 			this.props.inGameChange(false);
-			this.socket.emit('loner');
 		}.bind(this));
 
 		this.socket.on('receiveClick', function(data) {
@@ -256,6 +270,8 @@ var GameArea = React.createClass({
 												selectedQueue: []
 											});
 
+											this.socket.emit('fail', {move: this.state.currentPlay, round: this.props.curRound});
+
 											this.props.inGameChange(false);
 											this.props.scoreChange(this.props.score - (this.props.curRound / 2) );
 											this.props.roundChange(0);
@@ -284,7 +300,6 @@ var GameArea = React.createClass({
 											// 	});
 											// }.bind(this), 700);
 
-											this.socket.emit('fail', {move: this.state.currentPlay});
 
 								} else {
 

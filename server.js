@@ -1,3 +1,4 @@
+var pg = require('pg');
 var path = require('path');
 var express = require('express');
 
@@ -9,45 +10,114 @@ var server = app.listen(process.env.PORT || 8001);
 console.log('Server listening on port ' + (process.env.PORT || 8001));
 
 var io = require('socket.io')(server);
+var shortid = require('shortid');
 var uuid = require('node-uuid');
 
 var userBank = {};      // userId -> socketId
 var waitingForPlayer = null;
 
+var dbFunctions = {
+  initTable: function() {
+    pg.connect(process.env.DATABASE_URL, function(err, client) {
+      var query = client.query('CREATE TABLE scores IF NOT EXISTS (dbId serial primary key, username VARCHAR(30) not null, score INT, handshake VARCHAR(60))');
+      console.log('created scores table');
+      query.on('row', function(row) {
+        console.log('row: ' + JSON.stringify(row));
+      });
+    });
+  },
+  createNewUser: function(userId, cb) {
+    // insert
+    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+      var queryText = 'INSERT INTO scores (username, score, handshake) VALUES($1, $2, $3)';
+      client.query(queryText, [userId, 0, ''], function(err, result) {
+
+        console.log('created new user ' + userId);
+        cb();
+
+      });
+    });
+    // thats all folks
+  },
+  authorizeScore: function(userId, score, handshake, cb) {
+    // select where
+    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+        client.query('SELECT * FROM scores WHERE username=\'' + userId + '\' AND score = ' + score + ' AND handshake = \'' + handshake + '\'', function(err, result) {
+
+          var authorized = (result.rows.length > 0);
+          console.log('userId was authorized: ' + authorized);
+          cb(authorized);
+
+        });
+    });
+
+    // return true or false
+  },
+  changeScore: function(userId, increment, cb) {
+    // return handshake via callback
+    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+      client.query('SELECT * FROM scores WHERE username=\'' + userId + '\'', function(err, result) {
+
+        if (result.rows.length) {
+          var curScore = result.rows[0].score;
+          var newScore = curScore + increment;
+          var handshake = uuid.v1();
+          client.query('UPDATE scores SET score = ' + newScore + ',' + handshake + ' = ' + handshake + ' WHERE username=\'' + userId + '\'', function(err, result) {
+            cb(handshake);
+          });
+        }
+
+
+      });
+    });
+
+  }
+};
+
+dbFunctions.initTable();
+
 
 io.on('connection', function(socket) {
 
-  var myId = socket.id;
+  var myUserId = null;
+  var mySocketId = socket.id;
   var myOpp = null;
 
   console.log('new connection: ' + socket.id);
 
   var sendToOpp = function(event, obj) {
     if (myOpp) {
-      io.to(myOpp).emit(event, obj);
+      io.to(myOpp.socketId).emit(event, obj);
     }
   };
 
+  var returnUserToken = function() {
+    return {userId: myUserId, socketId: mySocketId};
+  }
+
   socket.on('newUser', function() {
     setTimeout(function() {
-      socket.emit('welcome');
+      myUserId = shortid.generate();
+      socket.emit('welcome', {userId: myUserId});
     }, 1800);
   });
 
   socket.on('authorizeScore', function(data) {
-    console.log('user ' + myId + ' sent score: ' + data);
+    console.log('user ' + mySocketId + ' sent score: ' + data);
+    // verify the data.userId and data.score and data.handshake
+    myUserId = data.userId;
     socket.emit('authorization', true);
   });
 
   socket.on('checkForWaiting', function() {
     if (waitingForPlayer) {
       myOpp = waitingForPlayer;
-      sendToOpp('opp', {opp: myId, passback: true});
+      sendToOpp('opp', {opp: returnUserToken(), passback: true});
       socket.emit('opp', {opp: myOpp});
-      console.log(myId + ' ');
+      console.log(mySocketId + ' ');
     } else {
-      waitingForPlayer = socket.id;
-      console.log(myId + ' waiting for player');
+      waitingForPlayer = returnUserToken();
+      console.log(mySocketId + ' waiting for player');
     }
   });
 
@@ -57,9 +127,9 @@ io.on('connection', function(socket) {
   });
 
   socket.on('fail', function(data) {
+    // todo: update db of both winner and loser by data.round
     sendToOpp('winner', {
-        move: data.move,
-        id: myOpp
+        move: data.move
     });
   });
 
@@ -71,16 +141,17 @@ io.on('connection', function(socket) {
     }
   });
 
-  socket.on('loner', function() {
+  socket.on('loner', function(data) {
     console.log('loner');
+    // todo: update db of both winner and loser by data.round
     myOpp = null;
-    waitingForPlayer = myId;
+    waitingForPlayer = returnUserToken();
   })
 
   socket.on('disconnect', function() {
     if (myOpp) {
       sendToOpp('loner');
-    } else if (waitingForPlayer === myId) {
+    } else if (waitingForPlayer && waitingForPlayer.socketId === mySocketId) {
       waitingForPlayer = null;
     }
   });
