@@ -59,6 +59,10 @@ var GameArea = React.createClass({
 
 		}
 
+		mySocket.on('scoreToBeat', function(data) {
+			this.props.updateScoreToBeat(data.score);
+		}.bind(this));
+
 		mySocket.on('welcome', function(data) {
 			this.setState({
 				userId: data.userId
@@ -406,11 +410,16 @@ var HeaderBoard = React.createClass({
 		if (this.props.getInGame) {
 			optionalCurrent = (<div>Current Round: <div id='roundScore' className='odometer'>{this.props.curRound}</div></div>)
 		}
+		var optionalScoreToBeat;
+		if (this.props.scoreToBeat) {
+			optionalScoreToBeat = (<div>Score To Beat: <div id='scoretobeat' className='odometer'>{this.props.scoreToBeat}</div></div>)
+		}
 		return (
 			<div className='headerBoard'>
 				<div id='infoPanel'>
 					<div>Your Score: <div id='score' className='odometer'>{this.props.score}</div></div>
 					{optionalCurrent}
+					{optionalScoreToBeat}
 				</div>
 				<div id='mainText' dangerouslySetInnerHTML={{__html: this.props.headerText}}></div>
 			</div>
@@ -441,7 +450,8 @@ var TapFour = React.createClass({
 			score: 0,
 			curRound: 0,
 			inGame: false,
-			displayWelcome: false
+			displayWelcome: false,
+			scoreToBeat: null
 		};
 	},
 	componentDidMount: function() {
@@ -482,13 +492,19 @@ var TapFour = React.createClass({
 		});
 	},
 
-	displayWelcomeChange: function(bool) {
+	displayWelcomeChange: function(bool, cb) {
 		if (!bool) {
 			this.headerChange('welcome new user...<br>now registering');
 			mySocket.emit('newUser');
 		}
 		this.setState({
 			displayWelcome: bool
+		});
+	},
+
+	updateScoreToBeat: function(s) {
+		this.setState({
+			scoreToBeat: s
 		});
 	},
 
@@ -501,7 +517,7 @@ var TapFour = React.createClass({
 
 		return (
 			<div>
-				<HeaderBoard score={this.state.score} curRound={this.state.curRound} headerText={this.state.headerText} getInGame={this.state.inGame} />
+				<HeaderBoard score={this.state.score} curRound={this.state.curRound} scoreToBeat={this.state.scoreToBeat} updateScoreToBeat={this.updateScoreToBeat} headerText={this.state.headerText} getInGame={this.state.inGame} />
 				<GameArea displayWelcomeChange={this.displayWelcomeChange} scoreChange={this.scoreChange} roundChange={this.roundChange} score={this.state.score} curRound={this.state.curRound} headerChange={this.headerChange} inGameChange={this.inGameChange} />
 				{optionalEl}
 			</div>
