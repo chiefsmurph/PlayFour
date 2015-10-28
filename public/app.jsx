@@ -103,19 +103,25 @@ var GameArea = React.createClass({
 		}.bind(this));
 
 		mySocket.on('connected', function(data) {
-			this.props.headerChange('connected to opponent: ' + data.opp);
 
-			setTimeout(function() {
-				this.props.headerChange('you start');
+			this.setState({
+				opp: data.opp.userId
+			}, function() {
 
-					this.setState({
-						myTurn: true
-					});
-					this.props.inGameChange(true);
-					console.log('here');
+				this.props.headerChange('connected to opponent: ' + this.state.opp);
 
-			}.bind(this), 1800);
+				setTimeout(function() {
+					this.props.headerChange('you start');
 
+						this.setState({
+							myTurn: true
+						});
+						this.props.inGameChange(true);
+						console.log('here');
+
+				}.bind(this), 1800);
+
+			});
 
 		}.bind(this));
 
