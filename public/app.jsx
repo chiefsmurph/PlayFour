@@ -26,6 +26,7 @@ var GameArea = React.createClass({
 			currentPlay: [],
 			pastPlay: [],
 			selected: [null, false, false, false, false],
+			justClicked: 0,
 			selectedQueue: [],
 			opp: null,
 			myId: null,
@@ -263,7 +264,17 @@ var GameArea = React.createClass({
 		console.log('myturn ' + this.state.myTurn);
 		console.log('isNoneSelected ' + this.isNoneSelected());
 
-		if (this.isNoneSelected() ) {
+		if (this.isNoneSelected() && this.state.justClicked !== index) {
+
+			this.setState({
+				justClicked: index
+			});
+
+			setTimeout(function() {
+				this.setState({
+					justClicked: 0
+				});
+			}.bind(this), 100);
 
 			console.log('here')
 
@@ -281,13 +292,6 @@ var GameArea = React.createClass({
 											console.log('num off ' + this.getNumOff());
 											console.log('pastplay ' + this.state.pastPlay);
 											this.props.headerChange('YOU LOSE :( you played ' + this.state.currentPlay + ' after ' + this.state.pastPlay);
-
-											this.setState({
-												myTurn: false,
-												currentPlay: [],
-												pastPlay: [],
-												selectedQueue: []
-											});
 
 											mySocket.emit('fail', {move: this.state.currentPlay, round: this.props.curRound});
 
