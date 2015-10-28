@@ -5,31 +5,31 @@ body {
   font-family: monospace;
 }
 #welcomeMessage {
-	width: 88%;
+	width: 100%;
 	position: absolute;
 	top: 20%;
-	left: 4%;
+	color: white;
+	font-size: 3vh;
+}
+#welcomeMessage > div {
+	width: 70%;
+	margin: 0 auto;
 	background-color: grey;
-	padding: 0 20px 20px;
 	line-height: 1.7;
 	font-family: tahoma;
 	border-radius: 13px;
-	color: white;
-	font-size: 2vh;
+	padding: 5px 20px 20px;
+	font-style: italic;
 }
 #welcomeMessage button {
 	width: 100%;
-	font-size: 20px;
-	line-height: 20px;
+	font-size: 3vh;
+	line-height: 4vh;
 	border-radius: 7px;
-	background-color: yellow;
+	background-color: #FFFF99;
 	border: 1px solid black;
 }
 #welcomeMessage button:active {
-	width: 100%;
-	font-size: 20px;
-	line-height: 20px;
-	border-radius: 7px;
 	background-color: yellow;
 	border: 1px solid black;
 }
