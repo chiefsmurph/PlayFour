@@ -126,7 +126,7 @@ io.on('connection', function(socket) {
       console.log(mySocketId + ' ');
     } else {
       waitingForPlayer = returnUserToken();
-      console.log(mySocketId + ' waiting for player');
+      console.log(myUserId + ' waiting for player');
     }
   });
 

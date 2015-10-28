@@ -37,7 +37,7 @@ var GameArea = React.createClass({
 
 		if (docCookies.hasItem('userStatus')) {
 			var userStatus = docCookies.getItem('userStatus');
-			this.scoreChange(userStatus.score);
+			this.props.scoreChange(userStatus.score);
 
 			setTimeout(function() {
 				this.props.headerChange('welcome back');
