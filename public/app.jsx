@@ -274,7 +274,7 @@ var GameArea = React.createClass({
 				this.setState({
 					justClicked: 0
 				});
-			}.bind(this), 100);
+			}.bind(this), 500);
 
 			console.log('here')
 
