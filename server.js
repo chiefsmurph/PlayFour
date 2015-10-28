@@ -38,6 +38,8 @@ var dbFunctions = {
     });
   },
   createNewUser: function(userId, cb) {
+
+    console.log('creating new user ' + userId);ßß
     // insert
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
       var queryText = 'INSERT INTO scores (username, score, handshake) VALUES($1, $2, $3)';
