@@ -19,7 +19,7 @@ var waitingForPlayer = null;
 var dbFunctions = {
   initTable: function() {
     pg.connect(process.env.DATABASE_URL, function(err, client) {
-      var query = client.query('CREATE TABLE scores IF NOT EXISTS (dbId serial primary key, username VARCHAR(30) not null, score INT, handshake VARCHAR(60))');
+      var query = client.query('CREATE TABLE scores (dbId serial primary key, username VARCHAR(30) not null, score INT, handshake VARCHAR(60))');
       console.log('created scores table');
       query.on('row', function(row) {
         console.log('row: ' + JSON.stringify(row));
