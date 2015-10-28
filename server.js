@@ -58,12 +58,12 @@ var dbFunctions = {
     // return handshake via callback
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
       client.query('SELECT * FROM scores WHERE username=\'' + userId + '\'', function(err, result) {
-
+        console.log('result rows ' + JSON.stringify(result.rows));
         if (result.rows.length) {
           var curScore = result.rows[0].score;
           var newScore = curScore + increment;
           var handshake = uuid.v1();
-          client.query('UPDATE scores SET score = ' + newScore + ',' + handshake + ' = ' + handshake + ' WHERE username=\'' + userId + '\'', function(err, result) {
+          client.query('UPDATE scores SET score = ' + newScore + ',' + handshake + ' = \'' + handshake + '\' WHERE username=\'' + userId + '\'', function(err, result) {
             cb(newScore, handshake);
           });
         }
@@ -137,6 +137,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('fail', function(data) {
+    console.log('fail data ' + JSON.stringify(data));
     // update db with subtracted score of me
     dbFunctions.changeScore(myUserId, (0-data.round), function(newscore, handshake) {
       socket.emit('updateLocal', { score: newscore, handshake: handshake });
@@ -147,7 +148,7 @@ io.on('connection', function(socket) {
     });
     // notify opponent they won
     sendToOpp('winner', {
-        move: data.move
+      move: data.move
     });
   });
 
