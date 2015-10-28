@@ -83,10 +83,24 @@ var dbFunctions = {
       });
     });
 
+  },
+  returnAllUsers: function(cb) {
+    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+      client.query('SELECT * FROM scores ORDER BY score desc WHERE score != 0', function(err, result) {
+        console.log('got all scores');
+        cb(result.rows);
+      });
+    });
   }
 };
 
 //dbFunctions.initTable();
+
+app.get('/showAllScores', function(req, res, next) {
+  dbFunctions.returnAllUsers(function(data) {
+    res.send(data);
+  });
+});
 
 
 io.on('connection', function(socket) {
