@@ -63,7 +63,7 @@ var dbFunctions = {
           var curScore = result.rows[0].score;
           var newScore = curScore + increment;
           var handshake = uuid.v1();
-          client.query('UPDATE scores SET score = ' + newScore + ',' + handshake + ' = \'' + handshake + '\' WHERE username=\'' + userId + '\'', function(err, result) {
+          client.query('UPDATE scores SET score = ' + newScore + ', handshake = \'' + handshake + '\' WHERE username=\'' + userId + '\'', function(err, result) {
             cb(newScore, handshake);
           });
         }
