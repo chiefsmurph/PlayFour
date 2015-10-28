@@ -60,6 +60,7 @@ var GameArea = React.createClass({
 		}
 
 		mySocket.on('scoreToBeat', function(data) {
+			console.log('score to beat ' + JSON.stringify(data));
 			this.props.updateScoreToBeat(data.score);
 		}.bind(this));
 
