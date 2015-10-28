@@ -14,6 +14,7 @@ var shortid = require('shortid');
 var uuid = require('node-uuid');
 
 var userBank = {};      // userId -> socketId
+var topScore = 0;
 var waitingForPlayer = null;
 
 var dbFunctions = {
@@ -28,13 +29,18 @@ var dbFunctions = {
   },
   getTopScore: function(cb) {
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+      if (client) {
         client.query('SELECT * FROM scores ORDER BY score desc limit 1', function(err, result) {
 
-          var topScore = result.rows[0].score;
-          console.log('gotten top score ' + topScore);
-          cb(topScore);
+          var tScore = result.rows[0].score;
+          console.log('gotten top score ' + tScore);
+          topScore = tScore;
+          cb(tScore);
 
         });
+      } else {
+        cb(topScore);
+      }
     });
   },
   createNewUser: function(userId, cb) {
@@ -44,7 +50,7 @@ var dbFunctions = {
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
       var queryText = 'INSERT INTO scores (username, score, handshake) VALUES($1, $2, $3)';
       client.query(queryText, [userId, 0, ''], function(err, result) {
-
+        if (err) console.log(err);
         console.log('created new user ' + userId);
         cb();
 

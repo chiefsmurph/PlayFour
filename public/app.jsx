@@ -518,9 +518,11 @@ var TapFour = React.createClass({
 		}
 
 		return (
-			<div>
-				<HeaderBoard score={this.state.score} curRound={this.state.curRound} scoreToBeat={this.state.scoreToBeat} headerText={this.state.headerText} getInGame={this.state.inGame} />
-				<GameArea displayWelcomeChange={this.displayWelcomeChange} scoreChange={this.scoreChange} roundChange={this.roundChange} updateScoreToBeat={this.updateScoreToBeat} score={this.state.score} curRound={this.state.curRound} headerChange={this.headerChange} inGameChange={this.inGameChange} />
+			<div id='container'>
+				<table>
+					<tr><td><HeaderBoard score={this.state.score} curRound={this.state.curRound} scoreToBeat={this.state.scoreToBeat} headerText={this.state.headerText} getInGame={this.state.inGame} /></td></tr>
+					<tr><td><GameArea displayWelcomeChange={this.displayWelcomeChange} scoreChange={this.scoreChange} roundChange={this.roundChange} updateScoreToBeat={this.updateScoreToBeat} score={this.state.score} curRound={this.state.curRound} headerChange={this.headerChange} inGameChange={this.inGameChange} /></td></tr>
+				</table>
 				{optionalEl}
 			</div>
 		);

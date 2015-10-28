@@ -33,12 +33,22 @@ body {
 	background-color: yellow;
 	border: 1px solid black;
 }
-table#gameArea {
+#container {
   width: 100%;
-  height: 86%;
+	height: 100%;
   position: absolute;
-  top: 14%;
+  top: 0;
   left: 0;
+}
+table {
+  width: 100%;
+  height: 100%;
+}
+#container > table tbody tr:first-child {
+	height: 15%;
+}
+#container > table tbody > tr td {
+	padding: 0
 }
 table#gameArea td {
   background-color: white;
@@ -46,6 +56,9 @@ table#gameArea td {
   font-size: 9.9vh;
   padding: 0;
 	cursor: default;
+
+	height: 50%;
+	width: 50%;
 
 	-webkit-user-select: none;  /* Chrome all / Safari all */
 		-moz-user-select: none;     /* Firefox all */
@@ -65,16 +78,16 @@ table#gameArea td.selected {
   background-color: cyan !important;
 }
 .headerBoard {
-  position: absolute;
+  /*position: absolute;
   top: 0;
+  height: 14%;*/
   width: 100%;
-  height: 14%;
-  text-align: center;
+	text-align: center;
   padding: 0;
+	margin: -4px 0 0 3px;
 }
 
 .headerBoard #mainText {
-  margin-top: 5.5vh;
   font-size: 3.3vh;
   font-variant: small-caps;
   font-weight: 600;
@@ -83,17 +96,19 @@ table#gameArea td.selected {
 #infoPanel > div {
 	display: inline-block;
 	padding: 5px 10px;
-	margin: 0px 4px;
+	margin: 2px 4px 2px 0;
 	background-color: rgba(255,255,255,0.6);
 }
 #infoPanel {
-	position: absolute;
+	/*position: absolute;
 	top: 0px;
-	left: 0px;
+	left: 0px;*/
 	font-size: 2.2vh;
 	margin: 5px 0;
 	padding: 0;
 	font-style: italic;
+	text-align: left;
+	clear: both;
 }
 #infoPanel #score, #infoPanel #roundScore, #infoPanel #scoretobeat {
 	display: inline-block;
