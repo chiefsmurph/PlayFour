@@ -421,7 +421,7 @@ var WelcomeMessage = React.createClass({
 		return (
 			<div id='welcomeMessage'>
 				<div>
-					<p>Hi there!  We see this is your first visit TapFour and even though it is a very simple game, we just wanted to give you a quick rundown on the specifics.</p>
+					<p>Hi there!  We see this is your first visit to Tap Four (The Monthly $10 Giveaway) and even though it is a very simple game, we just wanted to give you a quick rundown on the specifics.</p>
 					<p>How to play: Each turn consists of four clicks.  The player that starts has complete freedom.  All subsequent plays must be the same as the previous play except one of the moves must be different.</p>
 					<p>At the end of the month, whoever is at the top of the leaderboard will receive $10 in cash or paypal.</p>
 					<button onClick={this.continueClick}>click here to continue</button>
