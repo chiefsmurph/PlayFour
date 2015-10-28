@@ -36,7 +36,7 @@ var GameArea = React.createClass({
 		this.socket = io();
 
 		if (docCookies.hasItem('userStatus')) {
-			var userStatus = docCookies.getItem('userStatus');
+			var userStatus = JSON.parse(docCookies.getItem('userStatus'));
 			this.props.scoreChange(userStatus.score);
 
 			setTimeout(function() {
@@ -195,11 +195,11 @@ var GameArea = React.createClass({
 		}.bind(this));
 
 		this.socket.on('updateLocal', function(data) {
-			docCookies.setItem('userStatus', {
+			docCookies.setItem('userStatus', JSON.stringify({
 				userId: this.state.userId,
 				score: data.score,
 				handshake: data.handshake
-			});
+			}));
 		}.bind(this));
 
 
