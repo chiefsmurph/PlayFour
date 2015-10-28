@@ -408,11 +408,11 @@ var HeaderBoard = React.createClass({
 	render: function() {
 		var optionalCurrent;
 		if (this.props.getInGame) {
-			optionalCurrent = (<div>Current Round: <div id='roundScore' className='odometer'>{this.props.curRound}</div></div>)
+			optionalCurrent = (<div>Current Round: <div id='roundScore' className='odometer'>{this.props.curRound}</div></div>);
 		}
 		var optionalScoreToBeat;
 		if (this.props.scoreToBeat) {
-			optionalScoreToBeat = (<div>Score To Beat: <div id='scoretobeat' className='odometer'>{this.props.scoreToBeat}</div></div>)
+			optionalScoreToBeat = (<div>Score To Beat: <div id='scoretobeat' className='odometer'>{this.props.scoreToBeat}</div></div>);
 		}
 		return (
 			<div className='headerBoard'>
@@ -503,6 +503,7 @@ var TapFour = React.createClass({
 	},
 
 	updateScoreToBeat: function(s) {
+		console.log('score updaet ' + s);
 		this.setState({
 			scoreToBeat: s
 		});
