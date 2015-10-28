@@ -26,13 +26,13 @@ var dbFunctions = {
       });
     });
   },
-  getTopScore: function(cb) {
+  getTopScore: function() {
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
         client.query('SELECT * FROM scores ORDER BY score desc limit 1', function(err, result) {
 
           var topScore = result.rows[0].score;
           console.log('gotten top score ' + topScore);
-          cb(topScore);
+          return topScore;
 
         });
     });
