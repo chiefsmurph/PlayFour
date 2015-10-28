@@ -63,7 +63,7 @@ var dbFunctions = {
           var newScore = curScore + increment;
           var handshake = uuid.v1();
           client.query('UPDATE scores SET score = ' + newScore + ',' + handshake + ' = ' + handshake + ' WHERE username=\'' + userId + '\'', function(err, result) {
-            cb(handshake);
+            cb(newScore, handshake);
           });
         }
 
@@ -74,7 +74,7 @@ var dbFunctions = {
   }
 };
 
-dbFunctions.initTable();
+//dbFunctions.initTable();
 
 
 io.on('connection', function(socket) {
@@ -98,15 +98,24 @@ io.on('connection', function(socket) {
   socket.on('newUser', function() {
     setTimeout(function() {
       myUserId = shortid.generate();
-      socket.emit('welcome', {userId: myUserId});
+      dbFunctions.createNewUser(myUserId, function() {
+        console.log('made it to the cb createnewuser');
+        socket.emit('welcome', {userId: myUserId});
+      });
     }, 1800);
   });
 
   socket.on('authorizeScore', function(data) {
     console.log('user ' + mySocketId + ' sent score: ' + data);
     // verify the data.userId and data.score and data.handshake
-    myUserId = data.userId;
-    socket.emit('authorization', true);
+    dbFunctions.authorizeScore(data.userId, data.score, data.handshake, function(response) {
+      console.log('made it to the cb authorize');
+      socket.emit('authorization', response);
+      if (response) {
+        myUserId = data.userId;
+      }
+    });
+
   });
 
   socket.on('checkForWaiting', function() {
@@ -127,7 +136,15 @@ io.on('connection', function(socket) {
   });
 
   socket.on('fail', function(data) {
-    // todo: update db of both winner and loser by data.round
+    // update db with subtracted score of me
+    dbFunctions.changeScore(myUserId, (0-data.round), function(newscore, handshake) {
+      socket.emit('updateLocal', { score: newscore, handshake: handshake });
+    });
+    // update db with added score of my opponent
+    dbFunctions.changeScore(myOpp.userId, data.round, function(newscore, handshake) {
+      sendToOpp('updateLocal', { score: newscore, handshake: handshake });
+    });
+    // notify opponent they won
     sendToOpp('winner', {
         move: data.move
     });

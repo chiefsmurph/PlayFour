@@ -194,6 +194,14 @@ var GameArea = React.createClass({
 
 		}.bind(this));
 
+		this.socket.on('updateLocal', function(data) {
+			docCookies.setItem('userStatus', {
+				userId: this.state.userId,
+				score: data.score,
+				handshake: data.handshake
+			});
+		}.bind(this));
+
 
 		// setTimeout(function() {
 		// 	this.props.headerChange('Alright everybody...here we go!');
