@@ -62,6 +62,7 @@ var dbFunctions = {
     // select where
     console.log('authorizing ' + userId + ' ' + score + ' ' + handshake);
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+      if (err) console.log('err ' + err);
         client.query('SELECT * FROM scores WHERE username=\'' + userId + '\' AND score = ' + score + ' AND handshake = \'' + handshake + '\'', function(err, result) {
 
           var authorized = (result.rows.length > 0);

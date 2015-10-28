@@ -113,3 +113,4 @@ table#gameArea td.selected {
 #infoPanel #score, #infoPanel #roundScore, #infoPanel #scoretobeat {
 	display: inline-block;
 }
+button:focus {outline:0 !important;}
