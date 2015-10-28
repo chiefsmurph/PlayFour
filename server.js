@@ -152,7 +152,7 @@ io.on('connection', function(socket) {
         // verify the data.userId and data.score and data.handshake
         dbFunctions.authorizeScore(data.userId, data.score, data.handshake, function(response) {
           console.log('made it to the cb authorize');
-          socket.emit('authorization', response);
+          socket.emit('authorization', {response: response, userId: data.userId});
           if (response) {
             myUserId = data.userId;
           }

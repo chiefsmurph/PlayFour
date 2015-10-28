@@ -75,7 +75,10 @@ var GameArea = React.createClass({
 		}.bind(this));
 
 		mySocket.on('authorization', function(data) {
-			if (data) {
+			if (data.response) {
+				this.setState({
+					userId: data.userId
+				})
 				this.props.headerChange('you have been authorized...<br>waiting for opponent');
 				setTimeout(function() {
 					mySocket.emit('checkForWaiting');
