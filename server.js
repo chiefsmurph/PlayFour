@@ -41,6 +41,7 @@ var dbFunctions = {
   },
   authorizeScore: function(userId, score, handshake, cb) {
     // select where
+    console.log('authorizing ' + userId + ' ' + score + ' ' + handshake);
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
         client.query('SELECT * FROM scores WHERE username=\'' + userId + '\' AND score = ' + score + ' AND handshake = \'' + handshake + '\'', function(err, result) {
 
@@ -106,7 +107,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('authorizeScore', function(data) {
-    console.log('user ' + mySocketId + ' sent score: ' + data);
+    console.log('user ' + mySocketId + ' sent score: ' + JSON.stringify(data));
     // verify the data.userId and data.score and data.handshake
     dbFunctions.authorizeScore(data.userId, data.score, data.handshake, function(response) {
       console.log('made it to the cb authorize');
