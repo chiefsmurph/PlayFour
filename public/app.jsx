@@ -50,7 +50,7 @@ var GameArea = React.createClass({
 		} else {
 
 			setTimeout(function() {
-				this.props.displayWelcomeChange(true);
+				this.props.toggleInfo();
 			}.bind(this), 200);
 
 			// setTimeout(function() {
@@ -85,7 +85,7 @@ var GameArea = React.createClass({
 					mySocket.emit('checkForWaiting');
 				}.bind(this), 700);
 			} else {
-				this.props.headerChange('you are such a hackzor...<br>get outta here');
+				this.props.headerChange('AUTHENTICATION ERROR...<br>chiefsmurph@gmail.com to reclaim lost scores or click <a href="/reAuth">here</a> to start over.');
 			}
 		}.bind(this));
 
@@ -96,10 +96,10 @@ var GameArea = React.createClass({
 			}, function() {
 
 					if (data.passback) {
-						this.props.headerChange('connecting to opponent: ' + this.state.opp);
+						this.props.headerChange('connecting to opponent:<br><span class="small">' + this.state.opp + '</span>');
 						mySocket.emit('opp', {opp: data.opp});
 					} else {
-						this.props.headerChange('connected to opponent: ' + this.state.opp);
+						this.props.headerChange('connected to opponent:<br><span class="small">' + this.state.opp + '</span>');
 						this.props.inGameChange(true);
 
 						setTimeout(function() {
@@ -118,7 +118,7 @@ var GameArea = React.createClass({
 				opp: data.opp.userId
 			}, function() {
 
-				this.props.headerChange('connected to opponent: ' + this.state.opp);
+				this.props.headerChange('connected to opponent:<br><span class="small">' + this.state.opp + '</span>');
 
 				setTimeout(function() {
 					this.props.headerChange('you start');
@@ -302,8 +302,10 @@ var GameArea = React.createClass({
 
 								console.log(this.state.currentPlay);
 
+								// first off...is it a bad move?
 								if (this.state.pastPlay.length !== 0 && (this.getNumOff() > 1 || (this.getNumOff() !== 1 && this.state.currentPlay.length === 4))) {
 
+											// in case of wrong click
 											displayNum.call(this, index, 'red', 1000);
 
 											console.log('num off ' + this.getNumOff());
@@ -312,7 +314,10 @@ var GameArea = React.createClass({
 
 											mySocket.emit('fail', {move: this.state.currentPlay, round: this.props.curRound});
 
-											this.props.inGameChange(false);
+											setTimeout(function() {
+												this.props.inGameChange(false);
+											}.bind(this), 1000);
+
 											this.props.scoreChange(this.props.score - (this.props.curRound / 2) );
 											this.props.roundChange(0);
 
@@ -342,16 +347,20 @@ var GameArea = React.createClass({
 
 								} else {
 
+											// in case of good click :-)
+
 											console.log('sending');
 
 											mySocket.emit("sendClick", {play: index});
 
-											setTimeout(function() {
-												this.props.headerChange('valid move');
-											}.bind(this), 500);
+
 
 											if (this.state.currentPlay.length === 4) {
-
+													// click number 4! woo hoo
+													// switch turns
+												setTimeout(function() {
+													this.props.headerChange('great move!');
+												}.bind(this), 100);
 
 												displayNum.call(this, index, 'green');
 
@@ -370,7 +379,11 @@ var GameArea = React.createClass({
 
 												}.bind(this), 1000);
 
-											} else {
+											} else {		// click 1,2,3
+
+												setTimeout(function() {
+													this.props.headerChange('valid click');
+												}.bind(this), 100+Math.random()*300);
 
 												displayNum.call(this, index, 'blue');
 
@@ -385,8 +398,12 @@ var GameArea = React.createClass({
 		}
 	},
 	render: function() {
+		var classString = '';
+		if (this.state.myTurn) classString += 'myTurn ';
+		if (!this.props.currentlyInGame) classString += 'faded ';
+		classString = classString.trim();
 		return (
-			<table id='gameArea' className={(this.state.myTurn) ? 'myTurn' : ''}>
+			<table id='gameArea' className={classString}>
 				<tr>
 					<MyButton id='1' handleClick={this.handleClick} selected={this.state.selected[1]} />
 					<MyButton id='2' handleClick={this.handleClick} selected={this.state.selected[2]} />
@@ -441,21 +458,36 @@ var HeaderBoard = React.createClass({
 					{optionalCurrent}
 					{optionalScoreToBeat}
 				</div>
+
+				<img id='infoIcon' src='img/info_icon2.png' onClick={this.props.toggleInfo} className={(this.props.displayingInfo) ? 'faded' : ''}/>
 				<div id='mainText' dangerouslySetInnerHTML={{__html: this.props.headerText}}></div>
 			</div>
 		);
 	}
 });
 var WelcomeMessage = React.createClass({
+	getInitialState: function() {
+		return {
+			isnt: ''
+		};
+	},
+	componentDidMount: function() {
+		if (docCookies.hasItem('userStatus')) {
+			this.setState({
+				isnt: 'n\'t'
+			});
+		}
+
+	},
 	continueClick: function() {
-		this.props.displayWelcomeChange(false);
+		this.props.continueOnNewUser();
 	},
 	render: function() {
 		return (
 			<div id='welcomeMessage'>
 				<div>
-					<p>Hi there!  We see this is your first visit to Tap Four (The Monthly $10 Giveaway) and even though it is a very simple game, we just wanted to give you a quick rundown on the specifics.</p>
-					<p>How to play: Each turn consists of four clicks.  The player that starts has complete freedom.  All subsequent plays must be the same as the previous play except one of the moves must be different.</p>
+					<p>Hi there!  We see this is{this.state.isnt} your first visit to Tap Four (The Monthly $10 Giveaway) and even though it is a very simple game, we just wanted to give you a quick rundown on the specifics.</p>
+					<p>How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  All subsequent plays must be the exact same- except for one number different.</p>
 					<p>At the end of the month, whoever is at the top of the leaderboard will receive $10 in cash or paypal.</p>
 					<button onClick={this.continueClick}>click here to continue</button>
 				</div>
@@ -471,7 +503,8 @@ var TapFour = React.createClass({
 			curRound: 0,
 			inGame: false,
 			displayWelcome: false,
-			scoreToBeat: null
+			scoreToBeat: null,
+			emitOnContinue: true
 		};
 	},
 	componentDidMount: function() {
@@ -484,6 +517,11 @@ var TapFour = React.createClass({
 
 		if ('ontouchstart' in document) {
 		    $('body').removeClass('no-touch');
+		}
+
+		if (docCookies.hasItem('userStatus')) {
+			console.log('woops');
+			this.blockEmitOnContinue();
 		}
 
 	},
@@ -512,13 +550,26 @@ var TapFour = React.createClass({
 		});
 	},
 
-	displayWelcomeChange: function(bool, cb) {
-		if (!bool) {
+	continueOnNewUser: function() {
+		if (this.state.emitOnContinue) {
 			this.headerChange('welcome new user...<br>now registering');
 			mySocket.emit('newUser');
+
+			// its a one time thing alright
+			this.blockEmitOnContinue();
 		}
+		this.toggleInfo();
+	},
+
+	blockEmitOnContinue: function() {
 		this.setState({
-			displayWelcome: bool
+			emitOnContinue: false
+		});
+	},
+
+	toggleInfo: function() {
+		this.setState({
+			displayWelcome: !this.state.displayWelcome
 		});
 	},
 
@@ -533,14 +584,14 @@ var TapFour = React.createClass({
 
 		var optionalEl;
 		if (this.state.displayWelcome) {
-			optionalEl = (<WelcomeMessage displayWelcomeChange={this.displayWelcomeChange} />);
+			optionalEl = (<WelcomeMessage continueOnNewUser={this.continueOnNewUser} />);
 		}
 
 		return (
 			<div id='container'>
 				<table>
-					<tr><td><HeaderBoard score={this.state.score} curRound={this.state.curRound} scoreToBeat={this.state.scoreToBeat} headerText={this.state.headerText} getInGame={this.state.inGame} /></td></tr>
-					<tr><td><GameArea displayWelcomeChange={this.displayWelcomeChange} scoreChange={this.scoreChange} roundChange={this.roundChange} updateScoreToBeat={this.updateScoreToBeat} score={this.state.score} curRound={this.state.curRound} headerChange={this.headerChange} inGameChange={this.inGameChange} /></td></tr>
+					<tr><td><HeaderBoard toggleInfo={this.toggleInfo} score={this.state.score} curRound={this.state.curRound} scoreToBeat={this.state.scoreToBeat} headerText={this.state.headerText} getInGame={this.state.inGame} displayingInfo={this.state.displayWelcome} /></td></tr>
+					<tr><td><GameArea toggleInfo={this.toggleInfo} scoreChange={this.scoreChange} roundChange={this.roundChange} updateScoreToBeat={this.updateScoreToBeat} score={this.state.score} curRound={this.state.curRound} headerChange={this.headerChange} currentlyInGame={this.state.inGame} inGameChange={this.inGameChange} /></td></tr>
 				</table>
 				{optionalEl}
 			</div>

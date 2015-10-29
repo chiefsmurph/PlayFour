@@ -7,29 +7,31 @@ body {
 #welcomeMessage {
 	width: 100%;
 	position: absolute;
-	top: 20%;
+	top: 21%;
 }
 #welcomeMessage > div {
 	width: 70%;
 	margin: 0 auto;
 	background-color: grey;
 	line-height: 1.3;
-	font-family: tahoma;
-	border-radius: 13px;
-	padding: 5px 20px 20px;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	border-radius: 4vh;
+	padding: 1vh 3vh 2.5vh 3vh;
 	font-style: italic;
 	color: white;
 	font-size: 2.5vh;
+	font-size:calc(100% + 0.7vh);
 }
 #welcomeMessage button {
 	width: 100%;
 	font-size: 3vh;
 	line-height: 4vh;
-	border-radius: 7px;
+	border-radius: 2vh;
 	background-color: #FFFF99;
 	border: 1px solid black;
+	cursor: pointer;
 }
-#welcomeMessage button:active {
+body.no-touch #welcomeMessage button:hover {
 	background-color: yellow;
 	border: 1px solid black;
 }
@@ -45,7 +47,7 @@ table {
   height: 100%;
 }
 #container > table tbody tr:first-child {
-	height: 15%;
+	height: 16%;
 }
 #container > table tbody > tr td {
 	padding: 0
@@ -67,6 +69,16 @@ table#gameArea td {
 }
 table#gameArea td h1 {
   margin: 0;
+}
+table#gameArea.faded td {
+	-webkit-filter: blur(1px);
+-moz-filter: blur(1px);
+-ms-filter: blur(1px);
+-o-filter: blur(1px);
+filter: blur(1px);
+}
+table#gameArea.faded td h1 {
+	opacity: 0.1;
 }
 
 body.no-touch table#gameArea.myTurn td:hover {
@@ -90,7 +102,7 @@ table#gameArea td.red {
   width: 100%;
 	text-align: center;
   padding: 0;
-	margin: -4px 0 0 3px;
+	margin: 0 0 0 3px;
 }
 
 .headerBoard #mainText {
@@ -98,6 +110,28 @@ table#gameArea td.red {
   font-variant: small-caps;
   font-weight: 600;
   letter-spacing: 2px;
+	position: relative;
+	top: 0px;
+}
+.headerBoard #infoIcon {
+	width: 6vh;
+	float: right;
+	position: relative;
+	top: -3vh;
+	left: -4.7vw;
+	z-index: 10000;
+	background-color: white;
+	border-radius: 3vh;
+}
+body.no-touch .headerBoard #infoIcon:hover {
+	background-color: yellow;
+	cursor: pointer;
+}
+.headerBoard #infoIcon.faded {
+	opacity: 0.6;
+}
+body.no-touch .headerBoard #infoIcon.faded:hover {
+	background-color: white;
 }
 #infoPanel > div {
 	display: inline-block;
@@ -106,17 +140,20 @@ table#gameArea td.red {
 	background-color: rgba(255,255,255,0.6);
 }
 #infoPanel {
-	/*position: absolute;
-	top: 0px;
-	left: 0px;*/
 	font-size: 2.2vh;
-	margin: 5px 0;
+	margin: 0;
 	padding: 0;
 	font-style: italic;
 	text-align: left;
 	clear: both;
+	position: relative;
+	top: -0.4em;
+	left: 0.4em;
 }
 #infoPanel #score, #infoPanel #roundScore, #infoPanel #scoretobeat {
 	display: inline-block;
 }
 button:focus {outline:0 !important;}
+.small {
+	font-size: 80%;
+}

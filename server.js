@@ -123,6 +123,9 @@ app.get('/showAllScores', function(req, res, next) {
   });
 });
 
+app.get('/reauth', function(req, res, next) {
+  res.sendfile(__dirname + '/public/reauth.html');
+});
 
 io.on('connection', function(socket) {
 
@@ -131,10 +134,6 @@ io.on('connection', function(socket) {
   var myOpp = null;
 
   console.log('new connection: ' + socket.id);
-
-  dbFunctions.getTopScore(function(score) {
-      socket.emit('scoreToBeat', {score: score});
-  });
 
   var sendToOpp = function(event, obj) {
     if (myOpp) {
@@ -152,6 +151,10 @@ io.on('connection', function(socket) {
       dbFunctions.createNewUser(myUserId, function() {
         console.log('made it to the cb createnewuser');
         socket.emit('welcome', {userId: myUserId});
+
+        dbFunctions.getTopScore(function(score) {
+            socket.emit('scoreToBeat', {score: score});
+        });
       });
     }, 1800);
   });
@@ -165,6 +168,9 @@ io.on('connection', function(socket) {
           socket.emit('authorization', {response: response, userId: data.userId});
           if (response) {
             myUserId = data.userId;
+            dbFunctions.getTopScore(function(score) {
+                socket.emit('scoreToBeat', {score: score});
+            });
           }
         });
 
