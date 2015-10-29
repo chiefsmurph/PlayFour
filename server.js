@@ -19,18 +19,21 @@ var waitingForPlayer = null;
 
 var dbFunctions = {
   initTable: function() {
-    pg.connect(process.env.DATABASE_URL, function(err, client) {
+    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
       var query = client.query('CREATE TABLE scores (dbId serial primary key, username VARCHAR(30) not null, score INT, handshake VARCHAR(60))');
       console.log('created scores table');
       query.on('row', function(row) {
         console.log('row: ' + JSON.stringify(row));
       });
+      query.on('end', function() {
+        done();
+      });
     });
   },
   getTopScore: function(cb) {
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
-      if (client) {
         client.query('SELECT * FROM scores ORDER BY score desc limit 1', function(err, result) {
+          done();
 
           var tScore = result.rows[0].score;
           console.log('gotten top score ' + tScore);
@@ -38,8 +41,6 @@ var dbFunctions = {
           cb(tScore);
 
         });
-      } else {
-        cb(topScore);
       }
     });
   },
@@ -50,6 +51,8 @@ var dbFunctions = {
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
       var queryText = 'INSERT INTO scores (username, score, handshake) VALUES($1, $2, $3)';
       client.query(queryText, [userId, 0, ''], function(err, result) {
+
+        done();
         if (err) console.log(err);
         console.log('created new user ' + userId);
         cb();
@@ -65,6 +68,7 @@ var dbFunctions = {
         console.log('err ' + err);
         client.query('SELECT * FROM scores WHERE username=\'' + userId + '\' AND score = ' + score + ' AND handshake = \'' + handshake + '\'', function(err, result) {
 
+          done();
           var authorized = (result.rows.length > 0);
           console.log('userId was authorized: ' + authorized);
           cb(authorized);
@@ -87,8 +91,10 @@ var dbFunctions = {
           client.query('UPDATE scores SET score = ' + newScore + ', handshake = \'' + handshake + '\' WHERE username=\'' + userId + '\'', function(err, result) {
             cb(newScore, handshake);
             if (newScore > topScore) {
+              topScore = newScore;
               io.sockets.emit('scoreToBeat', {score: topScore});
             }
+            done();
           });
 
         }
@@ -101,6 +107,7 @@ var dbFunctions = {
       client.query('SELECT * FROM scores ORDER BY score desc', function(err, result) {
         console.log('got all scores');
         cb(result.rows);
+        done();
       });
     });
   }
