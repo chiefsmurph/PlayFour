@@ -2,6 +2,13 @@ body:after{
     display:none;
     content: url('/img/skulls.png') url('/img/random-grey-variations.png') url('/img/my-little-plaid.png') url('/img/robots.png');
 }
+* {
+		-webkit-user-select: none;  /* Chrome all / Safari all */
+			-moz-user-select: none;     /* Firefox all */
+			-ms-user-select: none;      /* IE 10+ */
+			user-select: none;          /* Likely future */
+			cursor: default;
+}
 body {
 	background-color: rgba(173,173,173,0.9);
 	padding: 0;
@@ -18,21 +25,30 @@ body {
 #welcomeMessage > div {
 	width: 70%;
 	margin: 0 auto;
-	background-color: rgba(80,80,80,0.7);
+	background-color: rgba(80,80,80,0.9);
 	line-height: 1.4;
 	font-family: Tahoma, Arial, Helvetica, sans-serif;
 	border-radius: 4vh;
 	padding: 1vh 3vh 2.5vh 3vh;
 	font-style: italic;
 	color: white;
-	font-size: 5vh;
-	font-size:calc(100% + 1.2vh);
-	background-image: url('/img/back-pattern.png');
+	font-size: 4vh;
+	font-size:calc(90% + 1.2vh);
+	background-image: url('/img/absurdity.png');
 	/*background-color: #fff;
 background-image:
 linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
 linear-gradient(#eee .1em, transparent .1em);
 background-size: 100% 1.2em;*/
+}
+#welcomeMessage #countDown {
+	border-top: 0.5vh dotted white;
+	border-bottom: 0.5vh dotted white;
+	text-align: center;
+	padding: 1vh 0;
+	margin: 0 0 2vh;
+	font-size: 4vh;
+	font-size:calc(60% + 1vh);
 }
 #welcomeMessage button {
 	margin-top: 0.2em;
@@ -42,7 +58,7 @@ background-size: 100% 1.2em;*/
 	border-radius: 2vh;
 	background-color: #FFFF99;
 	border: 1px solid black;
-	cursor: pointer;
+	cursor: pointer !important;
 }
 body.no-touch #welcomeMessage button:hover {
 	background-color: yellow;
@@ -54,6 +70,11 @@ body.no-touch #welcomeMessage button:hover {
   position: absolute;
   top: 0;
   left: 0;
+}
+/*for mobile*/
+body:not(.no-touch) #container {
+	height: 99%;
+	left: 18px;
 }
 table {
   width: 100%;
@@ -76,11 +97,6 @@ table#gameArea td {
 
 	height: 50%;
 	width: 50%;
-
-	-webkit-user-select: none;  /* Chrome all / Safari all */
-		-moz-user-select: none;     /* Firefox all */
-		-ms-user-select: none;      /* IE 10+ */
-		user-select: none;          /* Likely future */
 
 }
 table#gameArea:not(.faded) tr:first-child td:nth-child(1) {
@@ -139,7 +155,7 @@ table#gameArea.faded td h1 {
 
 body.no-touch table#gameArea.myTurn td:hover {
   background-color: yellow;
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 table#gameArea td.blue {
@@ -168,7 +184,9 @@ table#gameArea td.red {
   font-weight: 600;
   letter-spacing: 2px;
 	position: relative;
-	top: 0px;
+	top: 1.2vh;
+	line-height: 0.9;
+	margin: 0 0 1vh 5px;
 }
 .headerBoard #infoIcon {
 	width: 6vh;
@@ -181,10 +199,11 @@ table#gameArea td.red {
 	border-radius: 3vh;
 	border: 0.25vh solid brown;
 	box-shadow: 5 10px 10px #888888;
+	opacity: 0.9;
 }
 body.no-touch .headerBoard #infoIcon:hover {
 	background-color: yellow;
-	cursor: pointer;
+	cursor: pointer !important;
 }
 .headerBoard #infoIcon.faded {
 	opacity: 0.6;
@@ -198,6 +217,7 @@ body.no-touch .headerBoard #infoIcon.faded:hover {
 	padding: 1vh 2vh;
 	margin: 0.2vh 1vh 4px 0;
 	background-color: rgba(255,255,255,0.6);
+	background-image: url('/img/absurdity.png');
 }
 #infoPanel {
 	font-size: 2.2vh;
@@ -207,7 +227,7 @@ body.no-touch .headerBoard #infoIcon.faded:hover {
 	text-align: left;
 	clear: both;
 	position: relative;
-	top: 0.4vh;
+	top: -1vh;
 	left: 0.4em;
 }
 #infoPanel #score, #infoPanel #roundScore, #infoPanel #scoretobeat {
@@ -216,4 +236,8 @@ body.no-touch .headerBoard #infoIcon.faded:hover {
 button:focus {outline:0 !important;}
 .small {
 	font-size: 80%;
+}
+.inlineblock {
+	display: inline-block;
+	margin-left: 0.4em;
 }

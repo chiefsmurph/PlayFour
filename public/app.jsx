@@ -487,8 +487,12 @@ var WelcomeMessage = React.createClass({
 			<div id='welcomeMessage'>
 				<div>
 					<p>Hi there!  We see this is{this.state.isnt} your first visit to Tap Four (The Monthly $10 Giveaway) and even though it is a very simple game, we just wanted to give you a quick rundown on the specifics.</p>
-					<p>How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent plays must be the exact same as the last- except for one number different each time.</p>
+					<p>How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed.</p>
 					<p>At the end of the month, whoever is at the top of the leaderboard will receive $10 in cash or paypal.</p>
+					<div id='countDown'>
+						Next $10 Giveaway:
+						<span className='inlineblock'> 11:59pm November 30, 2015</span>
+					</div>
 					<button onClick={this.continueClick}>click here to continue</button>
 				</div>
 			</div>
