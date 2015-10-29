@@ -1,8 +1,10 @@
 body {
-	background: #ddd;
+	background-color: rgba(173,173,173,0.9);
 	padding: 0;
 	margin: 0;
   font-family: monospace;
+
+	background-image: url('/img/back-pattern.png');
 }
 #welcomeMessage {
 	width: 100%;
@@ -12,17 +14,24 @@ body {
 #welcomeMessage > div {
 	width: 70%;
 	margin: 0 auto;
-	background-color: grey;
-	line-height: 1.3;
+	background-color: rgba(80,80,80,0.7);
+	line-height: 1.4;
 	font-family: Tahoma, Arial, Helvetica, sans-serif;
 	border-radius: 4vh;
 	padding: 1vh 3vh 2.5vh 3vh;
 	font-style: italic;
 	color: white;
-	font-size: 2.5vh;
-	font-size:calc(100% + 0.7vh);
+	font-size: 5vh;
+	font-size:calc(100% + 1.2vh);
+	background-image: url('/img/back-pattern.png');
+	/*background-color: #fff;
+background-image:
+linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+linear-gradient(#eee .1em, transparent .1em);
+background-size: 100% 1.2em;*/
 }
 #welcomeMessage button {
+	margin-top: 0.2em;
 	width: 100%;
 	font-size: 3vh;
 	line-height: 4vh;
@@ -45,6 +54,8 @@ body.no-touch #welcomeMessage button:hover {
 table {
   width: 100%;
   height: 100%;
+
+	/*background-color: blue;*/
 }
 #container > table tbody tr:first-child {
 	height: 16%;
@@ -66,19 +77,60 @@ table#gameArea td {
 		-moz-user-select: none;     /* Firefox all */
 		-ms-user-select: none;      /* IE 10+ */
 		user-select: none;          /* Likely future */
+
+}
+table#gameArea:not(.faded) tr:first-child td:nth-child(1) {
+	background-image: url('/img/skulls.png');
+	background-color: white;
+}
+table#gameArea:not(.faded) tr:first-child td:nth-child(2) {
+	background-image: url('/img/random-grey-variations.png');
+	background-color: white;
+}
+table#gameArea:not(.faded) tr:nth-child(2) td:nth-child(1) {
+	background-image: url('/img/my-little-plaid.png');
+	background-color: white;
+}
+table#gameArea:not(.faded) tr:nth-child(2) td:nth-child(2) {
+	background-image: url('/img/robots.png');
+	background-color: white;
 }
 table#gameArea td h1 {
   margin: 0;
+
+	-webkit-text-stroke: 1px black;
+color: white;
+text-shadow:
+		3px 3px 0 #000,
+	-1px -1px 0 #000,
+	 1px -1px 0 #000,
+	 -1px 1px 0 #000,
+		1px 1px 0 #000;
+
 }
 table#gameArea.faded td {
+
+	background:
+	/* On "top" */
+	repeating-linear-gradient(
+		315deg,
+		rgba(0,0,0,0.5),
+		rgba(0,0,0,0.5) 2px,
+		white 2px,
+		white 120px
+	);
+
 	-webkit-filter: blur(1px);
--moz-filter: blur(1px);
--ms-filter: blur(1px);
--o-filter: blur(1px);
-filter: blur(1px);
+	-moz-filter: blur(1px);
+	-ms-filter: blur(1px);
+	-o-filter: blur(1px);
+	filter: blur(1px);
+/*
+	background-image: none;*/
 }
 table#gameArea.faded td h1 {
 	opacity: 0.1;
+	color: rgba(0,0,0,0.5);
 }
 
 body.no-touch table#gameArea.myTurn td:hover {
@@ -87,13 +139,13 @@ body.no-touch table#gameArea.myTurn td:hover {
 }
 
 table#gameArea td.blue {
-  background-color: cyan !important;
+  background-color: rgba(0,255,255,0.4) !important;
 }
 table#gameArea td.green {
-  background-color: lime !important;
+  background-color: rgba(0,255,0,0.5) !important;
 }
 table#gameArea td.red {
-  background-color: red !important;
+  background-color: rgba(255,0,153,0.5) !important;
 }
 .headerBoard {
   /*position: absolute;
@@ -103,10 +155,11 @@ table#gameArea td.red {
 	text-align: center;
   padding: 0;
 	margin: 0 0 0 3px;
+	background-image: url('/img/back-pattern.png');
 }
 
 .headerBoard #mainText {
-  font-size: 3.3vh;
+  font-size: 3.7vh;
   font-variant: small-caps;
   font-weight: 600;
   letter-spacing: 2px;
@@ -122,6 +175,8 @@ table#gameArea td.red {
 	z-index: 10000;
 	background-color: white;
 	border-radius: 3vh;
+	border: 0.25vh solid brown;
+	box-shadow: 5 10px 10px #888888;
 }
 body.no-touch .headerBoard #infoIcon:hover {
 	background-color: yellow;
@@ -129,14 +184,15 @@ body.no-touch .headerBoard #infoIcon:hover {
 }
 .headerBoard #infoIcon.faded {
 	opacity: 0.6;
+	background-color: rgba(255,255,0,0.4);
 }
 body.no-touch .headerBoard #infoIcon.faded:hover {
-	background-color: white;
+	background-color: yellow;
 }
 #infoPanel > div {
 	display: inline-block;
-	padding: 5px 10px;
-	margin: 2px 4px 2px 0;
+	padding: 1vh 2vh;
+	margin: 0.2vh 1vh 4px 0;
 	background-color: rgba(255,255,255,0.6);
 }
 #infoPanel {
@@ -147,7 +203,7 @@ body.no-touch .headerBoard #infoIcon.faded:hover {
 	text-align: left;
 	clear: both;
 	position: relative;
-	top: -0.4em;
+	top: 0.4vh;
 	left: 0.4em;
 }
 #infoPanel #score, #infoPanel #roundScore, #infoPanel #scoretobeat {
