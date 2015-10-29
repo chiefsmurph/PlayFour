@@ -1,10 +1,11 @@
 var mySocket;
 
-var displayNum = function(num) {
+var displayNum = function(num, color, time) {
 
-	var resetselected = [null, false, false, false, false];
+	time = (typeof time !== 'undefined') ? time : 300;
+	var resetselected = [null, null, null, null, null];
 	var newselected = resetselected.slice();
-	newselected[num] = true;
+	newselected[num] = color;
 	this.setState({
 		selected: newselected
 	});
@@ -15,7 +16,7 @@ var displayNum = function(num) {
 		this.setState({
 			selected: resetselected
 		});
-	}.bind(this), 300);
+	}.bind(this), time);
 	console.log('displaying ' + num);
 }
 var GameArea = React.createClass({
@@ -25,7 +26,7 @@ var GameArea = React.createClass({
 			myTurn: false,
 			currentPlay: [],
 			pastPlay: [],
-			selected: [null, false, false, false, false],
+			selected: [null, null, null, null, null],
 			justClicked: 0,
 			selectedQueue: [],
 			opp: null,
@@ -155,7 +156,7 @@ var GameArea = React.createClass({
 				});
 				this.props.headerChange('new game...<br>your move / winner starts');
 				this.props.inGameChange(true);
-			}.bind(this), 4000);
+			}.bind(this), 5500);
 
 		}.bind(this));
 
@@ -182,8 +183,6 @@ var GameArea = React.createClass({
 
 			var num = data.play;
 
-			displayNum.call(this, num);
-
 			this.setState({
 				currentPlay: this.state.currentPlay.concat(num)
 			}, function() {
@@ -209,7 +208,13 @@ var GameArea = React.createClass({
 
 					}.bind(this), 500);
 
+
+					displayNum.call(this, num, 'green');
+
+				} else {
+					displayNum.call(this, num, 'blue');
 				}
+
 			});
 
 		}.bind(this));
@@ -244,7 +249,9 @@ var GameArea = React.createClass({
 	},
 
 	isNoneSelected: function() {
-		return JSON.stringify(this.state.selected) === "[null,false,false,false,false]";
+		return this.state.selected.every(function(selection) {
+			return (!selection);
+		});
 	},
 
 	getNumOff: function() {
@@ -271,6 +278,7 @@ var GameArea = React.createClass({
 
 		console.log('myturn ' + this.state.myTurn);
 		console.log('isNoneSelected ' + this.isNoneSelected());
+		console.log('selected ' + this.state.selected);
 
 		if (this.isNoneSelected() && this.state.justClicked !== index) {
 
@@ -292,11 +300,12 @@ var GameArea = React.createClass({
 								currentPlay: this.state.currentPlay.concat(index)
 							}, function() {
 
-								displayNum.call(this,index);
-
 								console.log(this.state.currentPlay);
 
 								if (this.state.pastPlay.length !== 0 && (this.getNumOff() > 1 || (this.getNumOff() !== 1 && this.state.currentPlay.length === 4))) {
+
+											displayNum.call(this, index, 'red', 1000);
+
 											console.log('num off ' + this.getNumOff());
 											console.log('pastplay ' + this.state.pastPlay);
 											this.props.headerChange('YOU LOSE :( you played ' + this.state.currentPlay + ' after ' + this.state.pastPlay);
@@ -311,7 +320,6 @@ var GameArea = React.createClass({
 												myTurn: false,
 												currentPlay: [],
 												pastPlay: [],
-												selected: [null, false, false, false, false],
 												selectedQueue: []
 											});
 
@@ -321,7 +329,7 @@ var GameArea = React.createClass({
 												});
 												this.props.headerChange('new game...<br>opponent starts');
 												this.props.inGameChange(true);
-											}.bind(this), 4000);
+											}.bind(this), 5500);
 
 											// setTimeout(function() {
 											// 	this.props.headerChange('new game...your turn');
@@ -344,6 +352,10 @@ var GameArea = React.createClass({
 
 											if (this.state.currentPlay.length === 4) {
 
+
+												displayNum.call(this, index, 'green');
+
+
 												this.setState({
 													currentPlay: [],
 													pastPlay: this.state.currentPlay,
@@ -357,6 +369,10 @@ var GameArea = React.createClass({
 														this.props.roundChange(this.props.curRound + 10);
 
 												}.bind(this), 1000);
+
+											} else {
+
+												displayNum.call(this, index, 'blue');
 
 											}
 
@@ -399,7 +415,7 @@ var MyButton = React.createClass({
 
 	render: function() {
 		return (
-			<td onClick={this.handleClick.bind(this, this.props.id)} onTouchStart={this.handleClick.bind(this, this.props.id)} className={(this.props.selected) ? 'selected' : ''}>
+			<td onClick={this.handleClick.bind(this, this.props.id)} onTouchStart={this.handleClick.bind(this, this.props.id)} className={(this.props.selected) ? this.props.selected : ''}>
 				<h1>{this.props.id}</h1>
 			</td>
 		);

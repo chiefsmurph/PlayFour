@@ -74,8 +74,14 @@ body.no-touch table#gameArea.myTurn td:hover {
   cursor: pointer;
 }
 
-table#gameArea td.selected {
+table#gameArea td.blue {
   background-color: cyan !important;
+}
+table#gameArea td.green {
+  background-color: lime !important;
+}
+table#gameArea td.red {
+  background-color: red !important;
 }
 .headerBoard {
   /*position: absolute;
