@@ -1,3 +1,7 @@
+body:after{
+    display:none;
+    content: url('/img/skulls.png') url('/img/random-grey-variations.png') url('/img/my-little-plaid.png') url('/img/robots.png');
+}
 body {
 	background-color: rgba(173,173,173,0.9);
 	padding: 0;
