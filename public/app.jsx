@@ -151,12 +151,19 @@ var GameArea = React.createClass({
 
 
 			setTimeout(function() {
+				this.props.headerChange('new game...');
+				this.props.inGameChange(true);
+			}.bind(this), 5000);
+
+			setTimeout(function() {
+				this.props.headerChange('your move / winner starts');
+			}.bind(this), 5500);
+
+			setTimeout(function() {
 				this.setState({
 					myTurn: true
 				});
-				this.props.headerChange('new game...<br>your move / winner starts');
-				this.props.inGameChange(true);
-			}.bind(this), 5500);
+			}.bind(this), 5700);
 
 		}.bind(this));
 
@@ -459,7 +466,7 @@ var HeaderBoard = React.createClass({
 					{optionalScoreToBeat}
 				</div>
 
-				<img id='infoIcon' src='img/info_icon2.png' onClick={this.props.toggleInfo} className={(this.props.displayingInfo) ? 'faded' : ''}/>
+				<img id='infoIcon' src='img/info_icon2.png' onClick={this.props.toggleInfo} className={(this.props.displayingInfo) ? 'tooltip-bottom faded' : 'tooltip-bottom'} data-tooltip="Info"/>
 				<div id='mainText' dangerouslySetInnerHTML={{__html: this.props.headerText}}></div>
 			</div>
 		);
