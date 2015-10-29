@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Tap Four Reauth</title>
+
+	</head>
+	<body class='no-touch'>
+		<script src="js/mozilla-cookies.js"></script>
+		<script>
+		if (docCookies.hasItem('userStatus')) {
+			docCookies.removeItem('userStatus');
+			document.write('<h1>Tap Four Reauth Success!</h1>You are good to go.  But don\'t let it happen again.');
+		} else {
+			document.write('<H1>Reauth unnecessary.</H1>')
+		}
+		</script>
+	</body>
+</html>
