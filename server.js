@@ -41,7 +41,6 @@ var dbFunctions = {
           cb(tScore);
 
         });
-      }
     });
   },
   createNewUser: function(userId, cb) {
