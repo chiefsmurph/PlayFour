@@ -18,7 +18,7 @@ body {
 	margin: 0;
   font-family: monospace;
 	overflow: hidden;
-	background-image: url(require('../img/back-pattern.png'));
+	background-image: url('../img/back-pattern.png');
 }
 #welcomeMessage {
 	width: 100%;
@@ -37,7 +37,7 @@ body {
 	color: white;
 	font-size: 4vh;
 	font-size:calc(90% + 1.2vh);
-	background-image: url(require((require('../img/absurdity.png'));))
+	background-image: url('../img/absurdity.png');
 	/*background-color: #fff;
 background-image:
 linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
@@ -103,19 +103,19 @@ table#gameArea td {
 
 }
 table#gameArea:not(.faded) tr:first-child td:nth-child(1) {
-	background-image: url(require('../img/skulls.png'));
+	background-image: url('../img/skulls.png');
 	background-color: white;
 }
 table#gameArea:not(.faded) tr:first-child td:nth-child(2) {
-	background-image: url(require('../img/random-grey-variations.png'));
+	background-image: url('../img/random-grey-variations.png');
 	background-color: white;
 }
 table#gameArea:not(.faded) tr:nth-child(2) td:nth-child(1) {
-	background-image: url(require('../img/my-little-plaid.png'));
+	background-image: url('../img/my-little-plaid.png');
 	background-color: white;
 }
 table#gameArea:not(.faded) tr:nth-child(2) td:nth-child(2) {
-	background-image: url(require('../img/robots.png'));
+	background-image: url('../img/robots.png');
 	background-color: white;
 }
 table#gameArea td h1 {
@@ -181,7 +181,7 @@ table#gameArea td.red {
 	text-align: center;
   padding: 0;
 	margin: 0 0 0 3px;
-	background-image: url(require('../img/back-pattern.png'));
+	background-image: url('../img/back-pattern.png');
 }
 
 .headerBoard #mainText {
@@ -223,7 +223,7 @@ body.no-touch .headerBoard #infoIcon.faded:hover {
 	padding: 1vh 2vh;
 	margin: 0.2vh 1vh 4px 0;
 	background-color: rgba(255,255,255,0.6);
-	background-image: url(require('../img/absurdity.png'));
+	background-image: url('../img/absurdity.png');
 }
 #infoPanel {
 	font-size: 2.2vh;

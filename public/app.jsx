@@ -7,7 +7,6 @@ require('./css/style.css');
 require('./css/tooltip.css');
 var infoIconPNG = require('./img/info_icon2.png');
 var docCookies = require('./js/mozilla-cookies.js');
-var Odometer = require('odometer');
 var OdometerComponent = require('../node_modules/react-odometer/react-odometer.js');
 
 var mySocket;
@@ -478,7 +477,7 @@ var HeaderBoard = React.createClass({
 					{optionalScoreToBeat}
 				</div>
 
-				<img id='infoIcon' src={infoIconPNG}	 onClick={this.props.toggleInfo} className={(this.props.displayingInfo) ? 'tooltip-bottom faded' : 'tooltip-bottom'} data-tooltip="Info"/>
+				<img id='infoIcon' src={infoIconPNG} onClick={this.props.toggleInfo} className={(this.props.displayingInfo) ? 'tooltip-bottom faded' : 'tooltip-bottom'} data-tooltip="Info"/>
 				<div id='mainText' dangerouslySetInnerHTML={{__html: this.props.headerText}}></div>
 			</div>
 		);
