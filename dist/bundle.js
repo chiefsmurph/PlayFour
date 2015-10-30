@@ -20856,7 +20856,8 @@
 	      el: this.getDOMNode(),
 	      value: this.props.value,
 	      theme: 'minimal',
-	      duration: 600
+	      duration: 100,
+	      animation: 'count'
 	    });
 	  },
 	  componentDidUpdate: function() {
