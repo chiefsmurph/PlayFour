@@ -2,6 +2,8 @@ var pg = require('pg');
 var path = require('path');
 var express = require('express');
 
+var clientApp = require('./public/app.jsx');
+
 // Server part
 var app = express();
 app.use('/', express.static(path.join(__dirname, 'public')));

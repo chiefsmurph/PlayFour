@@ -1,3 +1,13 @@
+'use strict';
+
+var React = require('react')
+
+require("./index.html");
+require('./css/style.css');
+require('./css/tooltip.css');
+var infoIconPNG = require('./img/info_icon2.png');
+var docCookies = require('./js/mozilla-cookies.js');
+
 var mySocket;
 
 var displayNum = function(num, color, time) {
@@ -466,7 +476,7 @@ var HeaderBoard = React.createClass({
 					{optionalScoreToBeat}
 				</div>
 
-				<img id='infoIcon' src='img/info_icon2.png' onClick={this.props.toggleInfo} className={(this.props.displayingInfo) ? 'tooltip-bottom faded' : 'tooltip-bottom'} data-tooltip="Info"/>
+				<img id='infoIcon' src={infoIconPNG}	 onClick={this.props.toggleInfo} className={(this.props.displayingInfo) ? 'tooltip-bottom faded' : 'tooltip-bottom'} data-tooltip="Info"/>
 				<div id='mainText' dangerouslySetInnerHTML={{__html: this.props.headerText}}></div>
 			</div>
 		);
