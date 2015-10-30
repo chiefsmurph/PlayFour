@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "DATABASE_URL=$(heroku config:get DATABASE_URL) nodemon server.js",
     "build": "sudo webpack",
-    "webpack": "webpack-dev-server --progress --colors --port 8090"
+    "webpack": "webpack-dev-server --progress --colors --port 8090",
+    "deploy": "git commit -a -m 'all deploy' && git push heroku webpack-build:master"
   },
   "dependencies": {
     "express": "~4.11.2",
