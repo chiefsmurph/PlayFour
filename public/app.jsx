@@ -1,3 +1,21 @@
+'use strict';
+
+var React = require("react");
+var ReactDOM = require("react-dom");
+var ReactFitText = require('react-fittext');
+
+
+require("./index.html");
+require('./css/style.css');
+require('./css/tooltip.css');
+require('./js/odometer-0.4.6/themes/odometer-theme-minimal.css');
+
+var infoIconPNG = require('./img/info_icon2.png');
+var docCookies = require('./js/mozilla-cookies.js');
+require('./js/odometer-0.4.6/odometer.min.js');
+
+var OdometerComponent = require('../node_modules/react-odometer/react-odometer.js');
+
 var mySocket;
 
 var displayNum = function(num, color, time) {
@@ -451,22 +469,22 @@ var HeaderBoard = React.createClass({
 	},
 	render: function() {
 		var optionalCurrent;
-		if (this.props.getInGame) {
-			optionalCurrent = (<div>Current Round: <div id='roundScore' className='odometer'>{this.props.curRound}</div></div>);
-		}
+		optionalCurrent = (<div className={(this.props.getInGame) ? '' : 'hidden'}>Current Round: <OdometerComponent id='roundScore' className='odometer' value={this.props.curRound}></OdometerComponent></div>);
+
 		var optionalScoreToBeat;
-		if (this.props.scoreToBeat) {
-			optionalScoreToBeat = (<div>Score To Beat: <div id='scoretobeat' className='odometer'>{this.props.scoreToBeat}</div></div>);
-		}
+		optionalScoreToBeat = (<div className={(this.props.scoreToBeat > 0) ? '' : 'hidden'}>Score To Beat: <OdometerComponent id='scoretobeat' className='odometer' value={this.props.scoreToBeat}></OdometerComponent></div>);
+
 		return (
 			<div className='headerBoard'>
 				<div id='infoPanel'>
-					<div>Your Score: <div id='score' className='odometer'>{this.props.score}</div></div>
+					<div>Your Score: <OdometerComponent id='score' className='odometer' value={this.props.score}></OdometerComponent></div>
 					{optionalCurrent}
 					{optionalScoreToBeat}
 				</div>
 
-				<img id='infoIcon' src='img/info_icon2.png' onClick={this.props.toggleInfo} className={(this.props.displayingInfo) ? 'tooltip-bottom faded' : 'tooltip-bottom'} data-tooltip="Info"/>
+				<span id='infoIcon' className="tooltip-bottom" data-tooltip="Info">
+					<img src={infoIconPNG} onClick={this.props.toggleInfo} className={(this.props.displayingInfo) ? 'faded' : ''} />
+				</span>
 				<div id='mainText' dangerouslySetInnerHTML={{__html: this.props.headerText}}></div>
 			</div>
 		);
@@ -611,7 +629,7 @@ var TapFour = React.createClass({
 });
 
 
-React.render(
+ReactDOM.render(
 	<TapFour/>,
 	document.getElementById('content')
 );

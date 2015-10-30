@@ -1,0 +1,211 @@
+
+/**
+ * Tooltip Styles
+ */
+
+/* Base styles for the element that has a tooltip */
+.no-touch [data-tooltip],
+.no-touch .tooltip {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Base styles for the entire tooltip */
+.no-touch [data-tooltip]:before,
+.no-touch [data-tooltip]:after,
+.no-touch .tooltip:before,
+.no-touch .tooltip:after {
+  position: absolute;
+  visibility: hidden;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  -webkit-transition:
+	  opacity 0.2s ease-in-out,
+		visibility 0.2s ease-in-out,
+		-webkit-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+	-moz-transition:
+		opacity 0.2s ease-in-out,
+		visibility 0.2s ease-in-out,
+		-moz-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+	transition:
+		opacity 0.2s ease-in-out,
+		visibility 0.2s ease-in-out,
+		transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform:    translate3d(0, 0, 0);
+  transform:         translate3d(0, 0, 0);
+  pointer-events: none;
+}
+
+/* Show the entire tooltip on hover and focus */
+.no-touch [data-tooltip]:hover:before,
+.no-touch [data-tooltip]:hover:after,
+.no-touch [data-tooltip]:focus:before,
+.no-touch [data-tooltip]:focus:after,
+.no-touch .tooltip:hover:before,
+.no-touch .tooltip:hover:after,
+.no-touch .tooltip:focus:before,
+.no-touch .tooltip:focus:after {
+  visibility: visible;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+}
+
+/* Base styles for the tooltip's directional arrow */
+.no-touch .tooltip:before,
+.no-touch [data-tooltip]:before {
+  z-index: 1001;
+  border: 6px solid transparent;
+  background: transparent;
+  content: "";
+}
+
+/* Base styles for the tooltip's content area */
+.no-touch .tooltip:after,
+.no-touch [data-tooltip]:after {
+  z-index: 1000;
+  padding: 8px;
+  width: 100px;
+  background-color: #000;
+  background-color: hsla(0, 0%, 20%, 0.9);
+  color: #fff;
+  content: attr(data-tooltip);
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+/* Directions */
+
+/* Top (default) */
+.no-touch [data-tooltip]:before,
+.no-touch [data-tooltip]:after,
+.no-touch .tooltip:before,
+.no-touch .tooltip:after,
+.no-touch .tooltip-top:before,
+.no-touch .tooltip-top:after {
+  bottom: 100%;
+  left: 50%;
+}
+
+.no-touch [data-tooltip]:before,
+.no-touch .tooltip:before,
+.no-touch .tooltip-top:before {
+  margin-left: -6px;
+  margin-bottom: -12px;
+  border-top-color: #000;
+  border-top-color: hsla(0, 0%, 20%, 0.9);
+}
+
+/* Horizontally align top/bottom tooltips */
+.no-touch [data-tooltip]:after,
+.no-touch .tooltip:after,
+.no-touch .tooltip-top:after {
+  margin-left: -80px;
+}
+
+.no-touch [data-tooltip]:hover:before,
+.no-touch [data-tooltip]:hover:after,
+.no-touch [data-tooltip]:focus:before,
+.no-touch [data-tooltip]:focus:after,
+.no-touch .tooltip:hover:before,
+.no-touch .tooltip:hover:after,
+.no-touch .tooltip:focus:before,
+.no-touch .tooltip:focus:after,
+.no-touch .tooltip-top:hover:before,
+.no-touch .tooltip-top:hover:after,
+.no-touch .tooltip-top:focus:before,
+.no-touch .tooltip-top:focus:after {
+  -webkit-transform: translateY(-12px);
+  -moz-transform:    translateY(-12px);
+  transform:         translateY(-12px);
+}
+
+/* Left */
+.no-touch .tooltip-left:before,
+.no-touch .tooltip-left:after {
+  right: 100%;
+  bottom: 50%;
+  left: auto;
+}
+
+.no-touch .tooltip-left:before {
+  margin-left: 0;
+  margin-right: -12px;
+  margin-bottom: 0;
+  border-top-color: transparent;
+  border-left-color: #000;
+  border-left-color: hsla(0, 0%, 20%, 0.9);
+}
+
+.no-touch .tooltip-left:hover:before,
+.no-touch .tooltip-left:hover:after,
+.no-touch .tooltip-left:focus:before,
+.no-touch .tooltip-left:focus:after {
+  -webkit-transform: translateX(-12px);
+  -moz-transform:    translateX(-12px);
+  transform:         translateX(-12px);
+}
+
+/* Bottom */
+.no-touch .tooltip-bottom:before,
+.no-touch .tooltip-bottom:after {
+  top: 100%;
+  bottom: auto;
+  left: 50%;
+}
+
+.no-touch .tooltip-bottom:before {
+  margin-top: -12px;
+  margin-bottom: 0;
+  border-top-color: transparent;
+  border-bottom-color: #000;
+  border-bottom-color: hsla(0, 0%, 20%, 0.9);
+}
+
+.no-touch .tooltip-bottom:hover:before,
+.no-touch .tooltip-bottom:hover:after,
+.no-touch .tooltip-bottom:focus:before,
+.no-touch .tooltip-bottom:focus:after {
+  -webkit-transform: translateY(20px) translateX(-10px);
+  -moz-transform:    translateY(20px) translateX(-10px);
+  transform:         translateY(20px) translateX(-10px);
+}
+
+/* Right */
+.no-touch .tooltip-right:before,
+.no-touch .tooltip-right:after {
+  bottom: 50%;
+  left: 100%;
+}
+
+.no-touch .tooltip-right:before {
+  margin-bottom: 0;
+  margin-left: -12px;
+  border-top-color: transparent;
+  border-right-color: #000;
+  border-right-color: hsla(0, 0%, 20%, 0.9);
+}
+
+.no-touch .tooltip-right:hover:before,
+.no-touch .tooltip-right:hover:after,
+.no-touch .tooltip-right:focus:before,
+.no-touch .tooltip-right:focus:after {
+  -webkit-transform: translateX(12px);
+  -moz-transform:    translateX(12px);
+  transform:         translateX(12px);
+}
+
+/* Move directional arrows down a bit for left/right tooltips */
+.no-touch .tooltip-left:before,
+.no-touch .tooltip-right:before {
+  top: 3px;
+}
+
+/* Vertically center tooltip content for left/right tooltips */
+.no-touch .tooltip-left:after,
+.no-touch .tooltip-right:after {
+  margin-left: 0;
+  margin-bottom: -16px;
+}

@@ -1,0 +1,270 @@
+body:after{
+    display:none;
+    content: url('../img/skulls.png') url('../img/random-grey-variations.png') url('../img/my-little-plaid.png') url('../img/robots.png');
+}
+* {
+		-webkit-user-select: none;  /* Chrome all / Safari all */
+			-moz-user-select: none;     /* Firefox all */
+			-ms-user-select: none;      /* IE 10+ */
+			user-select: none;          /* Likely future */
+			cursor: default;
+}
+a {
+	cursor: pointer;
+}
+body {
+	background-color: rgba(173,173,173,0.9);
+	padding: 0;
+	margin: 0;
+  font-family: monospace;
+	overflow: hidden;
+	background-image: url('../img/back-pattern.png');
+}
+#welcomeMessage {
+	width: 100%;
+	position: absolute;
+	top: 21%;
+}
+#welcomeMessage > div {
+	width: 70%;
+	margin: 0 auto;
+	background-color: rgba(80,80,80,0.9);
+	line-height: 1.4;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	border-radius: 4vh;
+	padding: 1vh 3vh 2.5vh 3vh;
+	font-style: italic;
+	color: white;
+	font-size:calc(40% + 1vh);
+	background-image: url('../img/absurdity.png');
+	/*background-color: #fff;
+background-image:
+linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+linear-gradient(#eee .1em, transparent .1em);
+background-size: 100% 1.2em;*/
+}
+.no-touch #welcomeMessage > div {
+	font-size:calc(40% + 2.3vh);
+}
+
+#welcomeMessage #countDown {
+	border-top: 0.5vh dotted white;
+	border-bottom: 0.5vh dotted white;
+	text-align: center;
+	padding: 1vh 0;
+	margin: 0 0 2vh;
+	font-size: 4vh;
+	font-size:calc(60% + 1vh);
+}
+#welcomeMessage button {
+	margin-top: 0.2em;
+	width: 100%;
+	font-size: 1.5vh;
+	line-height: 2vh;
+	border-radius: 2vh;
+	background-color: #FFFF99;
+	border: 1px solid black;
+	cursor: pointer !important;
+}
+body.no-touch #welcomeMessage button:hover {
+	background-color: yellow;
+	border: 1px solid black;
+}
+.no-touch #welcomeMessage button {
+  font-size: 3vh;
+	line-height: 4vh;
+}
+#container {
+  width: 100%;
+	height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+/*for mobile*/
+body:not(.no-touch) #container {
+	/*height: 99%;*/
+	/*left: 18px;*/
+}
+table {
+  width: 100%;
+  height: 100%;
+
+	/*background-color: blue;*/
+}
+#container > table tbody tr:first-child {
+	height: 16%;
+}
+#container > table tbody > tr td {
+	padding: 0
+}
+table#gameArea td {
+  background-color: white;
+  text-align: center;
+  font-size: 9.9vh;
+  padding: 0;
+	cursor: default;
+
+	height: 50%;
+	width: 50%;
+
+}
+table#gameArea:not(.faded) tr:first-child td:nth-child(1) {
+	background-image: url('../img/skulls.png');
+	background-color: white;
+}
+table#gameArea:not(.faded) tr:first-child td:nth-child(2) {
+	background-image: url('../img/random-grey-variations.png');
+	background-color: white;
+}
+table#gameArea:not(.faded) tr:nth-child(2) td:nth-child(1) {
+	background-image: url('../img/my-little-plaid.png');
+	background-color: white;
+}
+table#gameArea:not(.faded) tr:nth-child(2) td:nth-child(2) {
+	background-image: url('../img/robots.png');
+	background-color: white;
+}
+table#gameArea td h1 {
+  margin: 0;
+
+	-webkit-text-stroke: 1px black;
+color: white;
+text-shadow:
+		3px 3px 0 #000,
+	-1px -1px 0 #000,
+	 1px -1px 0 #000,
+	 -1px 1px 0 #000,
+		1px 1px 0 #000;
+
+}
+table#gameArea.faded td {
+
+	background:
+	/* On "top" */
+	repeating-linear-gradient(
+		315deg,
+		rgba(0,0,0,0.5),
+		rgba(0,0,0,0.5) 2px,
+		white 2px,
+		white 120px
+	);
+
+	-webkit-filter: blur(1px);
+	-moz-filter: blur(1px);
+	-ms-filter: blur(1px);
+	-o-filter: blur(1px);
+	filter: blur(1px);
+/*
+	background-image: none;*/
+}
+table#gameArea.faded td h1 {
+	opacity: 0.1;
+	color: rgba(0,0,0,0.5);
+}
+
+body.no-touch table#gameArea.myTurn td:hover {
+  background-color: yellow;
+  cursor: pointer !important;
+}
+body.no-touch table#gameArea.myTurn td:hover h1 {
+	cursor: pointer;
+}
+
+table#gameArea td.blue {
+  background-color: rgba(0,255,255,0.4) !important;
+}
+table#gameArea td.green {
+  background-color: rgba(0,255,0,0.5) !important;
+}
+table#gameArea td.red {
+  background-color: rgba(255,0,153,0.5) !important;
+}
+.headerBoard {
+  /*position: absolute;
+  top: 0;
+  height: 14%;*/
+  width: 100%;
+	text-align: center;
+  padding: 0;
+	margin: 0 0 0 3px;
+	background-image: url('../img/back-pattern.png');
+}
+
+.headerBoard #mainText {
+  font-size: 3.7vh;
+  font-variant: small-caps;
+  font-weight: 600;
+  letter-spacing: 2px;
+	position: relative;
+	top: 1.4vh;
+	line-height: 0.9;
+	margin: 0 0 1vh 5px;
+}
+.headerBoard #infoIcon {
+	width: 6vh;
+	float: right;
+	position: relative;
+	top: -3vh;
+	left: -4.7vw;
+	z-index: 100;
+}
+.headerBoard #infoIcon img {
+	width: 6vh;
+	background-color: white;
+	border-radius: 3vh;
+
+  background-color: white;
+  border-radius: 3vh;
+  /*border: 0.25vh solid brown;*/
+  box-shadow: 5 10px 10px #888888;
+  opacity: 0.9;
+}
+body.no-touch .headerBoard #infoIcon img:hover {
+	background-color: yellow;
+	cursor: pointer !important;
+}
+.headerBoard #infoIcon img.faded {
+	opacity: 0.6;
+	background-color: rgba(255,255,0,0.4);
+}
+body.no-touch .headerBoard #infoIcon img.faded:hover {
+	background-color: yellow;
+}
+#infoPanel > div {
+	display: inline-block;
+	padding: 1vh 2vh;
+	margin: 0.2vh 1vh 4px 0;
+	background-color: rgba(255,255,255,0.6);
+	background-image: url('../img/absurdity.png');
+}
+#infoPanel {
+	font-size: 2.2vh;
+  margin: 0.2vh 0 0 0;
+	padding: 0;
+	font-style: italic;
+	text-align: left;
+	clear: both;
+	position: relative;
+	top: -0.4vh;
+	left: 0.4em;
+}
+.odometer {
+	display: inline-block;
+  position: relative;
+  top: -1px;
+}
+button:focus {outline:0 !important;}
+.small {
+	font-size: 80%;
+}
+.inlineblock {
+	display: inline-block;
+	margin-left: 0.4em;
+}
+.hidden {
+  display: none !important;
+}
+.odometer-digit {
+  width: 0.6em;
+}

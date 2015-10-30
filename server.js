@@ -2,9 +2,10 @@ var pg = require('pg');
 var path = require('path');
 var express = require('express');
 
+
 // Server part
 var app = express();
-app.use('/', express.static(path.join(__dirname, 'public')));
+app.use('/', express.static(path.join(__dirname, 'dist')));
 
 var server = app.listen(process.env.PORT || 8001);
 console.log('Server listening on port ' + (process.env.PORT || 8001));
