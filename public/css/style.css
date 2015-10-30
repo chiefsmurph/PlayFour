@@ -253,5 +253,5 @@ button:focus {outline:0 !important;}
   display: none !important;
 }
 .odometer-digit {
-  width: 5px;
+  width: 0.6em;
 }
