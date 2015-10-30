@@ -23,7 +23,7 @@ body {
 #welcomeMessage {
 	width: 100%;
 	position: absolute;
-	top: 21%;
+	top: 20%;
 }
 #welcomeMessage > div {
 	width: 70%;
@@ -35,7 +35,7 @@ body {
 	padding: 1vh 3vh 2.5vh 3vh;
 	font-style: italic;
 	color: white;
-	font-size:calc(40% + 1.3vh);
+	font-size:calc(50% + 1vh);
 	background-image: url('../img/absurdity.png');
 	/*background-color: #fff;
 background-image:
@@ -44,7 +44,7 @@ linear-gradient(#eee .1em, transparent .1em);
 background-size: 100% 1.2em;*/
 }
 .no-touch #welcomeMessage > div {
-	font-size:calc(40% + 2.3vh);
+	font-size:calc(40% + 2vh);
 }
 
 #welcomeMessage #countDown {
