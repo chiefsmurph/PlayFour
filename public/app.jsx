@@ -466,13 +466,11 @@ var HeaderBoard = React.createClass({
 	},
 	render: function() {
 		var optionalCurrent;
-		if (this.props.getInGame) {
-			optionalCurrent = (<div>Current Round: <OdometerComponent id='roundScore' className='odometer' value={this.props.curRound}></OdometerComponent></div>);
-		}
+		optionalCurrent = (<div className={(this.props.getInGame) ? '' : 'hidden'}>Current Round: <OdometerComponent id='roundScore' className='odometer' value={this.props.curRound}></OdometerComponent></div>);
+
 		var optionalScoreToBeat;
-		if (this.props.scoreToBeat) {
-			optionalScoreToBeat = (<div>Score To Beat: <OdometerComponent id='scoretobeat' className='odometer' value={this.props.scoreToBeat}></OdometerComponent></div>);
-		}
+		optionalScoreToBeat = (<div className={(this.props.scoreToBeat > 0) ? '' : 'hidden'}>Score To Beat: <OdometerComponent id='scoretobeat' className='odometer' value={this.props.scoreToBeat}></OdometerComponent></div>);
+
 		return (
 			<div className='headerBoard'>
 				<div id='infoPanel'>

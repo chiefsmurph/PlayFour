@@ -249,3 +249,6 @@ button:focus {outline:0 !important;}
 	display: inline-block;
 	margin-left: 0.4em;
 }
+.hidden {
+  display: none;
+}
