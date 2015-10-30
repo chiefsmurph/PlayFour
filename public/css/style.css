@@ -238,6 +238,8 @@ body.no-touch .headerBoard #infoIcon.faded:hover {
 }
 .odometer {
 	display: inline-block;
+  position: relative;
+  top: -1px;
 }
 button:focus {outline:0 !important;}
 .small {

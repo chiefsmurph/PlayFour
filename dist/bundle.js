@@ -51,11 +51,13 @@
 	__webpack_require__(158);
 	__webpack_require__(159);
 	__webpack_require__(169);
-	var infoIconPNG = __webpack_require__(171);
-	var docCookies = __webpack_require__(172);
-	__webpack_require__(173);
+	__webpack_require__(171);
 
-	var OdometerComponent = __webpack_require__(174);
+	var infoIconPNG = __webpack_require__(173);
+	var docCookies = __webpack_require__(174);
+	__webpack_require__(175);
+
+	var OdometerComponent = __webpack_require__(176);
 
 	var mySocket;
 
@@ -20323,7 +20325,7 @@
 
 
 	// module
-	exports.push([module.id, "body:after{\n    display:none;\n    content: url(" + __webpack_require__(162) + ") url(" + __webpack_require__(163) + ") url(" + __webpack_require__(164) + ") url(" + __webpack_require__(165) + ");\n}\n* {\n\t\t-webkit-user-select: none;  /* Chrome all / Safari all */\n\t\t\t-moz-user-select: none;     /* Firefox all */\n\t\t\t-ms-user-select: none;      /* IE 10+ */\n\t\t\tuser-select: none;          /* Likely future */\n\t\t\tcursor: default;\n}\na {\n\tcursor: pointer;\n}\nbody {\n\tbackground-color: rgba(173,173,173,0.9);\n\tpadding: 0;\n\tmargin: 0;\n  font-family: monospace;\n\toverflow: hidden;\n\tbackground-image: url(" + __webpack_require__(166) + ");\n}\n#welcomeMessage {\n\twidth: 100%;\n\tposition: absolute;\n\ttop: 21%;\n}\n#welcomeMessage > div {\n\twidth: 70%;\n\tmargin: 0 auto;\n\tbackground-color: rgba(80,80,80,0.9);\n\tline-height: 1.4;\n\tfont-family: Tahoma, Arial, Helvetica, sans-serif;\n\tborder-radius: 4vh;\n\tpadding: 1vh 3vh 2.5vh 3vh;\n\tfont-style: italic;\n\tcolor: white;\n\tfont-size: 4vh;\n\tfont-size:calc(90% + 1.2vh);\n\tbackground-image: url(" + __webpack_require__(167) + ");\n\t/*background-color: #fff;\nbackground-image:\nlinear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),\nlinear-gradient(#eee .1em, transparent .1em);\nbackground-size: 100% 1.2em;*/\n}\n#welcomeMessage #countDown {\n\tborder-top: 0.5vh dotted white;\n\tborder-bottom: 0.5vh dotted white;\n\ttext-align: center;\n\tpadding: 1vh 0;\n\tmargin: 0 0 2vh;\n\tfont-size: 4vh;\n\tfont-size:calc(60% + 1vh);\n}\n#welcomeMessage button {\n\tmargin-top: 0.2em;\n\twidth: 100%;\n\tfont-size: 3vh;\n\tline-height: 4vh;\n\tborder-radius: 2vh;\n\tbackground-color: #FFFF99;\n\tborder: 1px solid black;\n\tcursor: pointer !important;\n}\nbody.no-touch #welcomeMessage button:hover {\n\tbackground-color: yellow;\n\tborder: 1px solid black;\n}\n#container {\n  width: 100%;\n\theight: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n}\n/*for mobile*/\nbody:not(.no-touch) #container {\n\theight: 99%;\n\tleft: 18px;\n}\ntable {\n  width: 100%;\n  height: 100%;\n\n\t/*background-color: blue;*/\n}\n#container > table tbody tr:first-child {\n\theight: 16%;\n}\n#container > table tbody > tr td {\n\tpadding: 0\n}\ntable#gameArea td {\n  background-color: white;\n  text-align: center;\n  font-size: 9.9vh;\n  padding: 0;\n\tcursor: default;\n\n\theight: 50%;\n\twidth: 50%;\n\n}\ntable#gameArea:not(.faded) tr:first-child td:nth-child(1) {\n\tbackground-image: url(" + __webpack_require__(162) + ");\n\tbackground-color: white;\n}\ntable#gameArea:not(.faded) tr:first-child td:nth-child(2) {\n\tbackground-image: url(" + __webpack_require__(163) + ");\n\tbackground-color: white;\n}\ntable#gameArea:not(.faded) tr:nth-child(2) td:nth-child(1) {\n\tbackground-image: url(" + __webpack_require__(164) + ");\n\tbackground-color: white;\n}\ntable#gameArea:not(.faded) tr:nth-child(2) td:nth-child(2) {\n\tbackground-image: url(" + __webpack_require__(165) + ");\n\tbackground-color: white;\n}\ntable#gameArea td h1 {\n  margin: 0;\n\n\t-webkit-text-stroke: 1px black;\ncolor: white;\ntext-shadow:\n\t\t3px 3px 0 #000,\n\t-1px -1px 0 #000,\n\t 1px -1px 0 #000,\n\t -1px 1px 0 #000,\n\t\t1px 1px 0 #000;\n\n}\ntable#gameArea.faded td {\n\n\tbackground:\n\t/* On \"top\" */\n\trepeating-linear-gradient(\n\t\t315deg,\n\t\trgba(0,0,0,0.5),\n\t\trgba(0,0,0,0.5) 2px,\n\t\twhite 2px,\n\t\twhite 120px\n\t);\n\n\t-webkit-filter: blur(1px);\n\t-moz-filter: blur(1px);\n\t-ms-filter: blur(1px);\n\t-o-filter: blur(1px);\n\tfilter: blur(1px);\n/*\n\tbackground-image: none;*/\n}\ntable#gameArea.faded td h1 {\n\topacity: 0.1;\n\tcolor: rgba(0,0,0,0.5);\n}\n\nbody.no-touch table#gameArea.myTurn td:hover {\n  background-color: yellow;\n  cursor: pointer !important;\n}\nbody.no-touch table#gameArea.myTurn td:hover h1 {\n\tcursor: pointer;\n}\n\ntable#gameArea td.blue {\n  background-color: rgba(0,255,255,0.4) !important;\n}\ntable#gameArea td.green {\n  background-color: rgba(0,255,0,0.5) !important;\n}\ntable#gameArea td.red {\n  background-color: rgba(255,0,153,0.5) !important;\n}\n.headerBoard {\n  /*position: absolute;\n  top: 0;\n  height: 14%;*/\n  width: 100%;\n\ttext-align: center;\n  padding: 0;\n\tmargin: 0 0 0 3px;\n\tbackground-image: url(" + __webpack_require__(166) + ");\n}\n\n.headerBoard #mainText {\n  font-size: 3.7vh;\n  font-variant: small-caps;\n  font-weight: 600;\n  letter-spacing: 2px;\n\tposition: relative;\n\ttop: 1.4vh;\n\tline-height: 0.9;\n\tmargin: 0 0 1vh 5px;\n}\n.headerBoard #infoIcon {\n\twidth: 6vh;\n\tfloat: right;\n\tposition: relative;\n\ttop: -3vh;\n\tleft: -4.7vw;\n\tz-index: 100;\n\tbackground-color: white;\n\tborder-radius: 3vh;\n\tborder: 0.25vh solid brown;\n\tbox-shadow: 5 10px 10px #888888;\n\topacity: 0.9;\n}\nbody.no-touch .headerBoard #infoIcon:hover {\n\tbackground-color: yellow;\n\tcursor: pointer !important;\n}\n.headerBoard #infoIcon.faded {\n\topacity: 0.6;\n\tbackground-color: rgba(255,255,0,0.4);\n}\nbody.no-touch .headerBoard #infoIcon.faded:hover {\n\tbackground-color: yellow;\n}\n#infoPanel > div {\n\tdisplay: inline-block;\n\tpadding: 1vh 2vh;\n\tmargin: 0.2vh 1vh 4px 0;\n\tbackground-color: rgba(255,255,255,0.6);\n\tbackground-image: url(" + __webpack_require__(167) + ");\n}\n#infoPanel {\n\tfont-size: 2.2vh;\n  margin: 0.2vh 0 0 0;\n\tpadding: 0;\n\tfont-style: italic;\n\ttext-align: left;\n\tclear: both;\n\tposition: relative;\n\ttop: -0.4vh;\n\tleft: 0.4em;\n}\n.odometer {\n\tdisplay: inline-block;\n}\nbutton:focus {outline:0 !important;}\n.small {\n\tfont-size: 80%;\n}\n.inlineblock {\n\tdisplay: inline-block;\n\tmargin-left: 0.4em;\n}\n", ""]);
+	exports.push([module.id, "body:after{\n    display:none;\n    content: url(" + __webpack_require__(162) + ") url(" + __webpack_require__(163) + ") url(" + __webpack_require__(164) + ") url(" + __webpack_require__(165) + ");\n}\n* {\n\t\t-webkit-user-select: none;  /* Chrome all / Safari all */\n\t\t\t-moz-user-select: none;     /* Firefox all */\n\t\t\t-ms-user-select: none;      /* IE 10+ */\n\t\t\tuser-select: none;          /* Likely future */\n\t\t\tcursor: default;\n}\na {\n\tcursor: pointer;\n}\nbody {\n\tbackground-color: rgba(173,173,173,0.9);\n\tpadding: 0;\n\tmargin: 0;\n  font-family: monospace;\n\toverflow: hidden;\n\tbackground-image: url(" + __webpack_require__(166) + ");\n}\n#welcomeMessage {\n\twidth: 100%;\n\tposition: absolute;\n\ttop: 21%;\n}\n#welcomeMessage > div {\n\twidth: 70%;\n\tmargin: 0 auto;\n\tbackground-color: rgba(80,80,80,0.9);\n\tline-height: 1.4;\n\tfont-family: Tahoma, Arial, Helvetica, sans-serif;\n\tborder-radius: 4vh;\n\tpadding: 1vh 3vh 2.5vh 3vh;\n\tfont-style: italic;\n\tcolor: white;\n\tfont-size: 4vh;\n\tfont-size:calc(90% + 1.2vh);\n\tbackground-image: url(" + __webpack_require__(167) + ");\n\t/*background-color: #fff;\nbackground-image:\nlinear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),\nlinear-gradient(#eee .1em, transparent .1em);\nbackground-size: 100% 1.2em;*/\n}\n#welcomeMessage #countDown {\n\tborder-top: 0.5vh dotted white;\n\tborder-bottom: 0.5vh dotted white;\n\ttext-align: center;\n\tpadding: 1vh 0;\n\tmargin: 0 0 2vh;\n\tfont-size: 4vh;\n\tfont-size:calc(60% + 1vh);\n}\n#welcomeMessage button {\n\tmargin-top: 0.2em;\n\twidth: 100%;\n\tfont-size: 3vh;\n\tline-height: 4vh;\n\tborder-radius: 2vh;\n\tbackground-color: #FFFF99;\n\tborder: 1px solid black;\n\tcursor: pointer !important;\n}\nbody.no-touch #welcomeMessage button:hover {\n\tbackground-color: yellow;\n\tborder: 1px solid black;\n}\n#container {\n  width: 100%;\n\theight: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n}\n/*for mobile*/\nbody:not(.no-touch) #container {\n\theight: 99%;\n\tleft: 18px;\n}\ntable {\n  width: 100%;\n  height: 100%;\n\n\t/*background-color: blue;*/\n}\n#container > table tbody tr:first-child {\n\theight: 16%;\n}\n#container > table tbody > tr td {\n\tpadding: 0\n}\ntable#gameArea td {\n  background-color: white;\n  text-align: center;\n  font-size: 9.9vh;\n  padding: 0;\n\tcursor: default;\n\n\theight: 50%;\n\twidth: 50%;\n\n}\ntable#gameArea:not(.faded) tr:first-child td:nth-child(1) {\n\tbackground-image: url(" + __webpack_require__(162) + ");\n\tbackground-color: white;\n}\ntable#gameArea:not(.faded) tr:first-child td:nth-child(2) {\n\tbackground-image: url(" + __webpack_require__(163) + ");\n\tbackground-color: white;\n}\ntable#gameArea:not(.faded) tr:nth-child(2) td:nth-child(1) {\n\tbackground-image: url(" + __webpack_require__(164) + ");\n\tbackground-color: white;\n}\ntable#gameArea:not(.faded) tr:nth-child(2) td:nth-child(2) {\n\tbackground-image: url(" + __webpack_require__(165) + ");\n\tbackground-color: white;\n}\ntable#gameArea td h1 {\n  margin: 0;\n\n\t-webkit-text-stroke: 1px black;\ncolor: white;\ntext-shadow:\n\t\t3px 3px 0 #000,\n\t-1px -1px 0 #000,\n\t 1px -1px 0 #000,\n\t -1px 1px 0 #000,\n\t\t1px 1px 0 #000;\n\n}\ntable#gameArea.faded td {\n\n\tbackground:\n\t/* On \"top\" */\n\trepeating-linear-gradient(\n\t\t315deg,\n\t\trgba(0,0,0,0.5),\n\t\trgba(0,0,0,0.5) 2px,\n\t\twhite 2px,\n\t\twhite 120px\n\t);\n\n\t-webkit-filter: blur(1px);\n\t-moz-filter: blur(1px);\n\t-ms-filter: blur(1px);\n\t-o-filter: blur(1px);\n\tfilter: blur(1px);\n/*\n\tbackground-image: none;*/\n}\ntable#gameArea.faded td h1 {\n\topacity: 0.1;\n\tcolor: rgba(0,0,0,0.5);\n}\n\nbody.no-touch table#gameArea.myTurn td:hover {\n  background-color: yellow;\n  cursor: pointer !important;\n}\nbody.no-touch table#gameArea.myTurn td:hover h1 {\n\tcursor: pointer;\n}\n\ntable#gameArea td.blue {\n  background-color: rgba(0,255,255,0.4) !important;\n}\ntable#gameArea td.green {\n  background-color: rgba(0,255,0,0.5) !important;\n}\ntable#gameArea td.red {\n  background-color: rgba(255,0,153,0.5) !important;\n}\n.headerBoard {\n  /*position: absolute;\n  top: 0;\n  height: 14%;*/\n  width: 100%;\n\ttext-align: center;\n  padding: 0;\n\tmargin: 0 0 0 3px;\n\tbackground-image: url(" + __webpack_require__(166) + ");\n}\n\n.headerBoard #mainText {\n  font-size: 3.7vh;\n  font-variant: small-caps;\n  font-weight: 600;\n  letter-spacing: 2px;\n\tposition: relative;\n\ttop: 1.4vh;\n\tline-height: 0.9;\n\tmargin: 0 0 1vh 5px;\n}\n.headerBoard #infoIcon {\n\twidth: 6vh;\n\tfloat: right;\n\tposition: relative;\n\ttop: -3vh;\n\tleft: -4.7vw;\n\tz-index: 100;\n\tbackground-color: white;\n\tborder-radius: 3vh;\n\tborder: 0.25vh solid brown;\n\tbox-shadow: 5 10px 10px #888888;\n\topacity: 0.9;\n}\nbody.no-touch .headerBoard #infoIcon:hover {\n\tbackground-color: yellow;\n\tcursor: pointer !important;\n}\n.headerBoard #infoIcon.faded {\n\topacity: 0.6;\n\tbackground-color: rgba(255,255,0,0.4);\n}\nbody.no-touch .headerBoard #infoIcon.faded:hover {\n\tbackground-color: yellow;\n}\n#infoPanel > div {\n\tdisplay: inline-block;\n\tpadding: 1vh 2vh;\n\tmargin: 0.2vh 1vh 4px 0;\n\tbackground-color: rgba(255,255,255,0.6);\n\tbackground-image: url(" + __webpack_require__(167) + ");\n}\n#infoPanel {\n\tfont-size: 2.2vh;\n  margin: 0.2vh 0 0 0;\n\tpadding: 0;\n\tfont-style: italic;\n\ttext-align: left;\n\tclear: both;\n\tposition: relative;\n\ttop: -0.4vh;\n\tleft: 0.4em;\n}\n.odometer {\n\tdisplay: inline-block;\n  position: relative;\n  top: -1px;\n}\nbutton:focus {outline:0 !important;}\n.small {\n\tfont-size: 80%;\n}\n.inlineblock {\n\tdisplay: inline-block;\n\tmargin-left: 0.4em;\n}\n", ""]);
 
 	// exports
 
@@ -20718,10 +20720,50 @@
 /* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__.p + "4dafabfe0c78e5bbe2959d55d6378501.png"
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(172);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(168)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./odometer-theme-minimal.css", function() {
+				var newContent = require("!!./../../../../node_modules/css-loader/index.js!./odometer-theme-minimal.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
 
 /***/ },
 /* 172 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(161)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".odometer.odometer-auto-theme, .odometer.odometer-theme-minimal {\n  display: -moz-inline-box;\n  -moz-box-orient: vertical;\n  display: inline-block;\n  vertical-align: middle;\n  *vertical-align: auto;\n  position: relative;\n}\n.odometer.odometer-auto-theme, .odometer.odometer-theme-minimal {\n  *display: inline;\n}\n.odometer.odometer-auto-theme .odometer-digit, .odometer.odometer-theme-minimal .odometer-digit {\n  display: -moz-inline-box;\n  -moz-box-orient: vertical;\n  display: inline-block;\n  vertical-align: middle;\n  *vertical-align: auto;\n  position: relative;\n}\n.odometer.odometer-auto-theme .odometer-digit, .odometer.odometer-theme-minimal .odometer-digit {\n  *display: inline;\n}\n.odometer.odometer-auto-theme .odometer-digit .odometer-digit-spacer, .odometer.odometer-theme-minimal .odometer-digit .odometer-digit-spacer {\n  display: -moz-inline-box;\n  -moz-box-orient: vertical;\n  display: inline-block;\n  vertical-align: middle;\n  *vertical-align: auto;\n  visibility: hidden;\n}\n.odometer.odometer-auto-theme .odometer-digit .odometer-digit-spacer, .odometer.odometer-theme-minimal .odometer-digit .odometer-digit-spacer {\n  *display: inline;\n}\n.odometer.odometer-auto-theme .odometer-digit .odometer-digit-inner, .odometer.odometer-theme-minimal .odometer-digit .odometer-digit-inner {\n  text-align: left;\n  display: block;\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  overflow: hidden;\n}\n.odometer.odometer-auto-theme .odometer-digit .odometer-ribbon, .odometer.odometer-theme-minimal .odometer-digit .odometer-ribbon {\n  display: block;\n}\n.odometer.odometer-auto-theme .odometer-digit .odometer-ribbon-inner, .odometer.odometer-theme-minimal .odometer-digit .odometer-ribbon-inner {\n  display: block;\n  -webkit-backface-visibility: hidden;\n}\n.odometer.odometer-auto-theme .odometer-digit .odometer-value, .odometer.odometer-theme-minimal .odometer-digit .odometer-value {\n  display: block;\n  -webkit-transform: translateZ(0);\n}\n.odometer.odometer-auto-theme .odometer-digit .odometer-value.odometer-last-value, .odometer.odometer-theme-minimal .odometer-digit .odometer-value.odometer-last-value {\n  position: absolute;\n}\n.odometer.odometer-auto-theme.odometer-animating-up .odometer-ribbon-inner, .odometer.odometer-theme-minimal.odometer-animating-up .odometer-ribbon-inner {\n  -webkit-transition: -webkit-transform 2s;\n  -moz-transition: -moz-transform 2s;\n  -ms-transition: -ms-transform 2s;\n  -o-transition: -o-transform 2s;\n  transition: transform 2s;\n}\n.odometer.odometer-auto-theme.odometer-animating-up.odometer-animating .odometer-ribbon-inner, .odometer.odometer-theme-minimal.odometer-animating-up.odometer-animating .odometer-ribbon-inner {\n  -webkit-transform: translateY(-100%);\n  -moz-transform: translateY(-100%);\n  -ms-transform: translateY(-100%);\n  -o-transform: translateY(-100%);\n  transform: translateY(-100%);\n}\n.odometer.odometer-auto-theme.odometer-animating-down .odometer-ribbon-inner, .odometer.odometer-theme-minimal.odometer-animating-down .odometer-ribbon-inner {\n  -webkit-transform: translateY(-100%);\n  -moz-transform: translateY(-100%);\n  -ms-transform: translateY(-100%);\n  -o-transform: translateY(-100%);\n  transform: translateY(-100%);\n}\n.odometer.odometer-auto-theme.odometer-animating-down.odometer-animating .odometer-ribbon-inner, .odometer.odometer-theme-minimal.odometer-animating-down.odometer-animating .odometer-ribbon-inner {\n  -webkit-transition: -webkit-transform 2s;\n  -moz-transition: -moz-transform 2s;\n  -ms-transition: -ms-transform 2s;\n  -o-transition: -o-transform 2s;\n  transition: transform 2s;\n  -webkit-transform: translateY(0);\n  -moz-transform: translateY(0);\n  -ms-transform: translateY(0);\n  -o-transform: translateY(0);\n  transform: translateY(0);\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 173 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__.p + "4dafabfe0c78e5bbe2959d55d6378501.png"
+
+/***/ },
+/* 174 */
 /***/ function(module, exports) {
 
 	/*\
@@ -20797,13 +20839,13 @@
 
 
 /***/ },
-/* 173 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__.p + "odometer.min.js"
 
 /***/ },
-/* 174 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -20812,7 +20854,8 @@
 	  componentDidMount: function(){
 	     this.odometer = new Odometer({
 	      el: this.getDOMNode(),
-	      value: this.props.value
+	      value: this.props.value,
+	      theme: 'minimal'
 	    });
 	  },
 	  componentDidUpdate: function() {
