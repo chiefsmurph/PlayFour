@@ -495,11 +495,7 @@
 					'div',
 					null,
 					'Current Round: ',
-					React.createElement(
-						OdometerComponent,
-						{ id: 'roundScore', className: 'odometer' },
-						this.props.curRound
-					)
+					React.createElement(OdometerComponent, { id: 'roundScore', className: 'odometer', value: this.props.curRound })
 				);
 			}
 			var optionalScoreToBeat;
@@ -508,11 +504,7 @@
 					'div',
 					null,
 					'Score To Beat: ',
-					React.createElement(
-						OdometerComponent,
-						{ id: 'scoretobeat', className: 'odometer' },
-						this.props.scoreToBeat
-					)
+					React.createElement(OdometerComponent, { id: 'scoretobeat', className: 'odometer', value: this.props.scoreToBeat })
 				);
 			}
 			return React.createElement(
@@ -525,11 +517,7 @@
 						'div',
 						null,
 						'Your Score: ',
-						React.createElement(
-							OdometerComponent,
-							{ id: 'score', className: 'odometer' },
-							this.props.score
-						)
+						React.createElement(OdometerComponent, { id: 'score', className: 'odometer', value: this.props.score })
 					),
 					optionalCurrent,
 					optionalScoreToBeat
