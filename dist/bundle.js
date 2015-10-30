@@ -20855,7 +20855,8 @@
 	     this.odometer = new Odometer({
 	      el: this.getDOMNode(),
 	      value: this.props.value,
-	      theme: 'minimal'
+	      theme: 'minimal',
+	      duration: 1000
 	    });
 	  },
 	  componentDidUpdate: function() {
