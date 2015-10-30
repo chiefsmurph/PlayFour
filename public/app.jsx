@@ -7,6 +7,8 @@ require('./css/style.css');
 require('./css/tooltip.css');
 var infoIconPNG = require('./img/info_icon2.png');
 var docCookies = require('./js/mozilla-cookies.js');
+require('./js/odometer-0.4.6/odometer.min.js');
+
 var OdometerComponent = require('../node_modules/react-odometer/react-odometer.js');
 
 var mySocket;

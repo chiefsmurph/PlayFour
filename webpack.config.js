@@ -12,7 +12,7 @@ var config = {
         loader: 'babel' // The module to load. "babel" is short for "babel-loader"
       },
       {
-          test: /index\.html$/,
+          test: /(index\.html|odometer\.min\.js)$/,
           loader: 'file?name=[name].[ext]'
       },
       {
