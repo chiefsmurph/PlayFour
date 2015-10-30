@@ -1,12 +1,14 @@
 'use strict';
 
-var React = require('react')
+var React = require('react');
 
 require("./index.html");
 require('./css/style.css');
 require('./css/tooltip.css');
 var infoIconPNG = require('./img/info_icon2.png');
 var docCookies = require('./js/mozilla-cookies.js');
+var Odometer = require('odometer');
+var OdometerComponent = require('../node_modules/react-odometer/react-odometer.js');
 
 var mySocket;
 
@@ -462,16 +464,16 @@ var HeaderBoard = React.createClass({
 	render: function() {
 		var optionalCurrent;
 		if (this.props.getInGame) {
-			optionalCurrent = (<div>Current Round: <div id='roundScore' className='odometer'>{this.props.curRound}</div></div>);
+			optionalCurrent = (<div>Current Round: <OdometerComponent id='roundScore' className='odometer'>{this.props.curRound}</OdometerComponent></div>);
 		}
 		var optionalScoreToBeat;
 		if (this.props.scoreToBeat) {
-			optionalScoreToBeat = (<div>Score To Beat: <div id='scoretobeat' className='odometer'>{this.props.scoreToBeat}</div></div>);
+			optionalScoreToBeat = (<div>Score To Beat: <OdometerComponent id='scoretobeat' className='odometer'>{this.props.scoreToBeat}</OdometerComponent></div>);
 		}
 		return (
 			<div className='headerBoard'>
 				<div id='infoPanel'>
-					<div>Your Score: <div id='score' className='odometer'>{this.props.score}</div></div>
+					<div>Your Score: <OdometerComponent id='score' className='odometer'>{this.props.score}</OdometerComponent></div>
 					{optionalCurrent}
 					{optionalScoreToBeat}
 				</div>

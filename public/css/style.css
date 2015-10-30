@@ -236,7 +236,7 @@ body.no-touch .headerBoard #infoIcon.faded:hover {
 	top: -0.4vh;
 	left: 0.4em;
 }
-#infoPanel #score, #infoPanel #roundScore, #infoPanel #scoretobeat {
+.odometer {
 	display: inline-block;
 }
 button:focus {outline:0 !important;}

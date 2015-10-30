@@ -1,8 +1,15 @@
 {
   "name": "new-react-game",
+  "scripts": {
+    "dev": "DATABASE_URL=$(heroku config:get DATABASE_URL) nodemon server.js",
+    "build": "sudo webpack",
+    "webpack": "webpack-dev-server --progress --colors --port 8090"
+  },
   "dependencies": {
     "express": "~4.11.2",
+    "jquery": "^2.1.4",
     "node-uuid": "^1.4.3",
+    "odometer": "^0.4.7",
     "path": "^0.12.7",
     "pg": "^4.4.3",
     "react-odometer": "0.0.1",
@@ -14,6 +21,7 @@
     "babel-loader": "^5.3.3",
     "css-loader": "^0.21.0",
     "file-loader": "^0.8.4",
+    "img-loader": "^1.2.0",
     "indexhtml-webpack-plugin": "^0.1.9",
     "jsx-loader": "^0.13.2",
     "style-loader": "^0.13.0",

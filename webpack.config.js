@@ -21,7 +21,10 @@ var config = {
       },
       {
         test: /\.(png|jpg)$/,
-        loader: 'file?name=[name].[ext]'
+        loaders: [
+                    'url?limit=8192',
+                    'img'
+                ]
       } // inline base64 URLs for <=8k images, direct URLs for the rest
     ]
   }
