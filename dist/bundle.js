@@ -566,7 +566,7 @@
 						null,
 						"Hi there!  We see this is",
 						this.state.isnt,
-						" your first visit to Tap Four (The Monthly $10 Giveaway) and even though it is a very simple game, we just wanted to give you a quick rundown on the specifics."
+						" your first visit to Tap Four (The Win-Big $10 Giveaway) and even though it is a very simple game, we just wanted to give you a quick rundown on the specifics."
 					),
 					React.createElement(
 						"p",
@@ -576,12 +576,12 @@
 					React.createElement(
 						"p",
 						null,
-						"At the end of the month, whoever is at the top of the leaderboard will receive $10 in cash or paypal."
+						"Whoever possesses the highest score at the time of the next Win-Big $10 Giveaway will receive $10 in cash or paypal."
 					),
 					React.createElement(
 						"div",
 						{ id: "countDown" },
-						"Next $10 Giveaway:",
+						"Time of next $10 Giveaway:",
 						React.createElement(
 							"span",
 							{ className: "inlineblock" },
