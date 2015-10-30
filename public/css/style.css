@@ -35,8 +35,7 @@ body {
 	padding: 1vh 3vh 2.5vh 3vh;
 	font-style: italic;
 	color: white;
-	font-size: 4vh;
-	font-size:calc(90% + 1.2vh);
+	font-size:calc(40% + 1vh);
 	background-image: url('../img/absurdity.png');
 	/*background-color: #fff;
 background-image:
@@ -44,6 +43,10 @@ linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent
 linear-gradient(#eee .1em, transparent .1em);
 background-size: 100% 1.2em;*/
 }
+.no-touch #welcomeMessage > div {
+	font-size:calc(40% + 2.3vh);
+}
+
 #welcomeMessage #countDown {
 	border-top: 0.5vh dotted white;
 	border-bottom: 0.5vh dotted white;
@@ -56,8 +59,8 @@ background-size: 100% 1.2em;*/
 #welcomeMessage button {
 	margin-top: 0.2em;
 	width: 100%;
-	font-size: 3vh;
-	line-height: 4vh;
+	font-size: 1.5vh;
+	line-height: 2vh;
 	border-radius: 2vh;
 	background-color: #FFFF99;
 	border: 1px solid black;
@@ -66,6 +69,10 @@ background-size: 100% 1.2em;*/
 body.no-touch #welcomeMessage button:hover {
 	background-color: yellow;
 	border: 1px solid black;
+}
+.no-touch #welcomeMessage button {
+  font-size: 3vh;
+	line-height: 4vh;
 }
 #container {
   width: 100%;
@@ -76,8 +83,8 @@ body.no-touch #welcomeMessage button:hover {
 }
 /*for mobile*/
 body:not(.no-touch) #container {
-	height: 99%;
-	left: 18px;
+	/*height: 99%;*/
+	/*left: 18px;*/
 }
 table {
   width: 100%;
@@ -201,21 +208,27 @@ table#gameArea td.red {
 	top: -3vh;
 	left: -4.7vw;
 	z-index: 100;
+}
+.headerBoard #infoIcon img {
+	width: 6vh;
 	background-color: white;
 	border-radius: 3vh;
-	border: 0.25vh solid brown;
-	box-shadow: 5 10px 10px #888888;
-	opacity: 0.9;
+
+  background-color: white;
+  border-radius: 3vh;
+  /*border: 0.25vh solid brown;*/
+  box-shadow: 5 10px 10px #888888;
+  opacity: 0.9;
 }
-body.no-touch .headerBoard #infoIcon:hover {
+body.no-touch .headerBoard #infoIcon img:hover {
 	background-color: yellow;
 	cursor: pointer !important;
 }
-.headerBoard #infoIcon.faded {
+.headerBoard #infoIcon img.faded {
 	opacity: 0.6;
 	background-color: rgba(255,255,0,0.4);
 }
-body.no-touch .headerBoard #infoIcon.faded:hover {
+body.no-touch .headerBoard #infoIcon img.faded:hover {
 	background-color: yellow;
 }
 #infoPanel > div {

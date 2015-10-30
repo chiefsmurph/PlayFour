@@ -1,6 +1,9 @@
 'use strict';
 
-var React = require('react');
+var React = require("react");
+var ReactDOM = require("react-dom");
+var ReactFitText = require('react-fittext');
+
 
 require("./index.html");
 require('./css/style.css');
@@ -479,7 +482,9 @@ var HeaderBoard = React.createClass({
 					{optionalScoreToBeat}
 				</div>
 
-				<img id='infoIcon' src={infoIconPNG} onClick={this.props.toggleInfo} className={(this.props.displayingInfo) ? 'tooltip-bottom faded' : 'tooltip-bottom'} data-tooltip="Info"/>
+				<span id='infoIcon' className="tooltip-bottom" data-tooltip="Info">
+					<img src={infoIconPNG} onClick={this.props.toggleInfo} className={(this.props.displayingInfo) ? 'faded' : ''} />
+				</span>
 				<div id='mainText' dangerouslySetInnerHTML={{__html: this.props.headerText}}></div>
 			</div>
 		);
@@ -624,7 +629,7 @@ var TapFour = React.createClass({
 });
 
 
-React.render(
+ReactDOM.render(
 	<TapFour/>,
 	document.getElementById('content')
 );

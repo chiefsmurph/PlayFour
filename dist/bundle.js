@@ -47,17 +47,19 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	var ReactFitText = __webpack_require__(159);
 
-	__webpack_require__(158);
-	__webpack_require__(159);
-	__webpack_require__(169);
+	__webpack_require__(160);
+	__webpack_require__(161);
 	__webpack_require__(171);
+	__webpack_require__(173);
 
-	var infoIconPNG = __webpack_require__(173);
-	var docCookies = __webpack_require__(174);
-	__webpack_require__(175);
+	var infoIconPNG = __webpack_require__(175);
+	var docCookies = __webpack_require__(176);
+	__webpack_require__(177);
 
-	var OdometerComponent = __webpack_require__(176);
+	var OdometerComponent = __webpack_require__(178);
 
 	var mySocket;
 
@@ -81,7 +83,7 @@
 		console.log('displaying ' + num);
 	};
 	var GameArea = React.createClass({
-		displayName: 'GameArea',
+		displayName: "GameArea",
 
 		getInitialState: function getInitialState() {
 			return {
@@ -443,25 +445,25 @@
 			if (!this.props.currentlyInGame) classString += 'faded ';
 			classString = classString.trim();
 			return React.createElement(
-				'table',
-				{ id: 'gameArea', className: classString },
+				"table",
+				{ id: "gameArea", className: classString },
 				React.createElement(
-					'tr',
+					"tr",
 					null,
-					React.createElement(MyButton, { id: '1', handleClick: this.handleClick, selected: this.state.selected[1] }),
-					React.createElement(MyButton, { id: '2', handleClick: this.handleClick, selected: this.state.selected[2] })
+					React.createElement(MyButton, { id: "1", handleClick: this.handleClick, selected: this.state.selected[1] }),
+					React.createElement(MyButton, { id: "2", handleClick: this.handleClick, selected: this.state.selected[2] })
 				),
 				React.createElement(
-					'tr',
+					"tr",
 					null,
-					React.createElement(MyButton, { id: '3', handleClick: this.handleClick, selected: this.state.selected[3] }),
-					React.createElement(MyButton, { id: '4', handleClick: this.handleClick, selected: this.state.selected[4] })
+					React.createElement(MyButton, { id: "3", handleClick: this.handleClick, selected: this.state.selected[3] }),
+					React.createElement(MyButton, { id: "4", handleClick: this.handleClick, selected: this.state.selected[4] })
 				)
 			);
 		}
 	});
 	var MyButton = React.createClass({
-		displayName: 'MyButton',
+		displayName: "MyButton",
 
 		componentDidMount: function componentDidMount() {
 			// var that = this;
@@ -478,10 +480,10 @@
 
 		render: function render() {
 			return React.createElement(
-				'td',
+				"td",
 				{ onClick: this.handleClick.bind(this, this.props.id), onTouchStart: this.handleClick.bind(this, this.props.id), className: this.props.selected ? this.props.selected : '' },
 				React.createElement(
-					'h1',
+					"h1",
 					null,
 					this.props.id
 				)
@@ -489,48 +491,52 @@
 		}
 	});
 	var HeaderBoard = React.createClass({
-		displayName: 'HeaderBoard',
+		displayName: "HeaderBoard",
 
 		componentDidMount: function componentDidMount() {},
 		render: function render() {
 			var optionalCurrent;
 			optionalCurrent = React.createElement(
-				'div',
+				"div",
 				{ className: this.props.getInGame ? '' : 'hidden' },
-				'Current Round: ',
-				React.createElement(OdometerComponent, { id: 'roundScore', className: 'odometer', value: this.props.curRound })
+				"Current Round: ",
+				React.createElement(OdometerComponent, { id: "roundScore", className: "odometer", value: this.props.curRound })
 			);
 
 			var optionalScoreToBeat;
 			optionalScoreToBeat = React.createElement(
-				'div',
+				"div",
 				{ className: this.props.scoreToBeat > 0 ? '' : 'hidden' },
-				'Score To Beat: ',
-				React.createElement(OdometerComponent, { id: 'scoretobeat', className: 'odometer', value: this.props.scoreToBeat })
+				"Score To Beat: ",
+				React.createElement(OdometerComponent, { id: "scoretobeat", className: "odometer", value: this.props.scoreToBeat })
 			);
 
 			return React.createElement(
-				'div',
-				{ className: 'headerBoard' },
+				"div",
+				{ className: "headerBoard" },
 				React.createElement(
-					'div',
-					{ id: 'infoPanel' },
+					"div",
+					{ id: "infoPanel" },
 					React.createElement(
-						'div',
+						"div",
 						null,
-						'Your Score: ',
-						React.createElement(OdometerComponent, { id: 'score', className: 'odometer', value: this.props.score })
+						"Your Score: ",
+						React.createElement(OdometerComponent, { id: "score", className: "odometer", value: this.props.score })
 					),
 					optionalCurrent,
 					optionalScoreToBeat
 				),
-				React.createElement('img', { id: 'infoIcon', src: infoIconPNG, onClick: this.props.toggleInfo, className: this.props.displayingInfo ? 'tooltip-bottom faded' : 'tooltip-bottom', 'data-tooltip': 'Info' }),
-				React.createElement('div', { id: 'mainText', dangerouslySetInnerHTML: { __html: this.props.headerText } })
+				React.createElement(
+					"span",
+					{ id: "infoIcon", className: "tooltip-bottom", "data-tooltip": "Info" },
+					React.createElement("img", { src: infoIconPNG, onClick: this.props.toggleInfo, className: this.props.displayingInfo ? 'faded' : '' })
+				),
+				React.createElement("div", { id: "mainText", dangerouslySetInnerHTML: { __html: this.props.headerText } })
 			);
 		}
 	});
 	var WelcomeMessage = React.createClass({
-		displayName: 'WelcomeMessage',
+		displayName: "WelcomeMessage",
 
 		getInitialState: function getInitialState() {
 			return {
@@ -549,49 +555,49 @@
 		},
 		render: function render() {
 			return React.createElement(
-				'div',
-				{ id: 'welcomeMessage' },
+				"div",
+				{ id: "welcomeMessage" },
 				React.createElement(
-					'div',
+					"div",
 					null,
 					React.createElement(
-						'p',
+						"p",
 						null,
-						'Hi there!  We see this is',
+						"Hi there!  We see this is",
 						this.state.isnt,
-						' your first visit to Tap Four (The Monthly $10 Giveaway) and even though it is a very simple game, we just wanted to give you a quick rundown on the specifics.'
+						" your first visit to Tap Four (The Monthly $10 Giveaway) and even though it is a very simple game, we just wanted to give you a quick rundown on the specifics."
 					),
 					React.createElement(
-						'p',
+						"p",
 						null,
-						'How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent\'s last turn but must have one click changed.'
+						"How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed."
 					),
 					React.createElement(
-						'p',
+						"p",
 						null,
-						'At the end of the month, whoever is at the top of the leaderboard will receive $10 in cash or paypal.'
+						"At the end of the month, whoever is at the top of the leaderboard will receive $10 in cash or paypal."
 					),
 					React.createElement(
-						'div',
-						{ id: 'countDown' },
-						'Next $10 Giveaway:',
+						"div",
+						{ id: "countDown" },
+						"Next $10 Giveaway:",
 						React.createElement(
-							'span',
-							{ className: 'inlineblock' },
-							' 11:59pm November 30, 2015'
+							"span",
+							{ className: "inlineblock" },
+							" 11:59pm November 30, 2015"
 						)
 					),
 					React.createElement(
-						'button',
+						"button",
 						{ onClick: this.continueClick },
-						'click here to continue'
+						"click here to continue"
 					)
 				)
 			);
 		}
 	});
 	var TapFour = React.createClass({
-		displayName: 'TapFour',
+		displayName: "TapFour",
 
 		getInitialState: function getInitialState() {
 			return {
@@ -684,25 +690,25 @@
 			}
 
 			return React.createElement(
-				'div',
-				{ id: 'container' },
+				"div",
+				{ id: "container" },
 				React.createElement(
-					'table',
+					"table",
 					null,
 					React.createElement(
-						'tr',
+						"tr",
 						null,
 						React.createElement(
-							'td',
+							"td",
 							null,
 							React.createElement(HeaderBoard, { toggleInfo: this.toggleInfo, score: this.state.score, curRound: this.state.curRound, scoreToBeat: this.state.scoreToBeat, headerText: this.state.headerText, getInGame: this.state.inGame, displayingInfo: this.state.displayWelcome })
 						)
 					),
 					React.createElement(
-						'tr',
+						"tr",
 						null,
 						React.createElement(
-							'td',
+							"td",
 							null,
 							React.createElement(GameArea, { toggleInfo: this.toggleInfo, scoreChange: this.scoreChange, roundChange: this.roundChange, updateScoreToBeat: this.updateScoreToBeat, score: this.state.score, curRound: this.state.curRound, headerChange: this.headerChange, currentlyInGame: this.state.inGame, inGameChange: this.inGameChange })
 						)
@@ -713,7 +719,7 @@
 		}
 	});
 
-	React.render(React.createElement(TapFour, null), document.getElementById('content'));
+	ReactDOM.render(React.createElement(TapFour, null), document.getElementById('content'));
 
 /***/ },
 /* 1 */
@@ -20286,19 +20292,89 @@
 /* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__.p + "index.html"
+	'use strict';
+
+	module.exports = __webpack_require__(3);
+
 
 /***/ },
 /* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*
+	 * React FitText v0.0.3
+	 * https://github.com/gianu/react-fittext
+	 *
+	 * A port of the jQuery plugin: http://github.com/davatron5000/FitText.js
+	 *
+	 * Released under the MIT license
+	 * http://gianu.mit-license.org
+	 */
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	var ReactPropTypes = React.PropTypes;
+
+	module.exports = React.createClass({
+	  displayName: 'ReactFitText',
+
+	  propTypes: {
+	    children: ReactPropTypes.element.isRequired,
+	    compressor: ReactPropTypes.number,
+	    minFontSize: ReactPropTypes.number,
+	    maxFontSize: ReactPropTypes.number
+	  },
+
+	  getDefaultProps: function() {
+	    return {
+	      compressor: 1.0,
+	      minFontSize: Number.NEGATIVE_INFINITY,
+	      maxFontSize: Number.POSITIVE_INFINITY
+	    };
+	  },
+
+	  componentDidMount: function() {
+	    window.addEventListener("resize", this._onBodyResize);
+	    this._onBodyResize();
+	  },
+
+	  componentWillUnmount: function() {
+	    window.removeEventListener("resize", this._onBodyResize);
+	  },
+
+	  _onBodyResize: function() {
+	    var element = ReactDOM.findDOMNode(this);
+	    var width = element.offsetWidth;
+	    element.style.fontSize = Math.max(
+	                      Math.min((width / (this.props.compressor*10)),
+	                                parseFloat(this.props.maxFontSize)),
+	                      parseFloat(this.props.minFontSize)) + 'px';
+	  },
+
+	  render: function() {
+	    return this.props.children;
+	  }
+	});
+
+
+/***/ },
+/* 160 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__.p + "index.html"
+
+/***/ },
+/* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(160);
+	var content = __webpack_require__(162);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(168)(content, {});
+	var update = __webpack_require__(170)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -20315,21 +20391,21 @@
 	}
 
 /***/ },
-/* 160 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(161)();
+	exports = module.exports = __webpack_require__(163)();
 	// imports
 
 
 	// module
-	exports.push([module.id, "body:after{\n    display:none;\n    content: url(" + __webpack_require__(162) + ") url(" + __webpack_require__(163) + ") url(" + __webpack_require__(164) + ") url(" + __webpack_require__(165) + ");\n}\n* {\n\t\t-webkit-user-select: none;  /* Chrome all / Safari all */\n\t\t\t-moz-user-select: none;     /* Firefox all */\n\t\t\t-ms-user-select: none;      /* IE 10+ */\n\t\t\tuser-select: none;          /* Likely future */\n\t\t\tcursor: default;\n}\na {\n\tcursor: pointer;\n}\nbody {\n\tbackground-color: rgba(173,173,173,0.9);\n\tpadding: 0;\n\tmargin: 0;\n  font-family: monospace;\n\toverflow: hidden;\n\tbackground-image: url(" + __webpack_require__(166) + ");\n}\n#welcomeMessage {\n\twidth: 100%;\n\tposition: absolute;\n\ttop: 21%;\n}\n#welcomeMessage > div {\n\twidth: 70%;\n\tmargin: 0 auto;\n\tbackground-color: rgba(80,80,80,0.9);\n\tline-height: 1.4;\n\tfont-family: Tahoma, Arial, Helvetica, sans-serif;\n\tborder-radius: 4vh;\n\tpadding: 1vh 3vh 2.5vh 3vh;\n\tfont-style: italic;\n\tcolor: white;\n\tfont-size: 4vh;\n\tfont-size:calc(90% + 1.2vh);\n\tbackground-image: url(" + __webpack_require__(167) + ");\n\t/*background-color: #fff;\nbackground-image:\nlinear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),\nlinear-gradient(#eee .1em, transparent .1em);\nbackground-size: 100% 1.2em;*/\n}\n#welcomeMessage #countDown {\n\tborder-top: 0.5vh dotted white;\n\tborder-bottom: 0.5vh dotted white;\n\ttext-align: center;\n\tpadding: 1vh 0;\n\tmargin: 0 0 2vh;\n\tfont-size: 4vh;\n\tfont-size:calc(60% + 1vh);\n}\n#welcomeMessage button {\n\tmargin-top: 0.2em;\n\twidth: 100%;\n\tfont-size: 3vh;\n\tline-height: 4vh;\n\tborder-radius: 2vh;\n\tbackground-color: #FFFF99;\n\tborder: 1px solid black;\n\tcursor: pointer !important;\n}\nbody.no-touch #welcomeMessage button:hover {\n\tbackground-color: yellow;\n\tborder: 1px solid black;\n}\n#container {\n  width: 100%;\n\theight: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n}\n/*for mobile*/\nbody:not(.no-touch) #container {\n\theight: 99%;\n\tleft: 18px;\n}\ntable {\n  width: 100%;\n  height: 100%;\n\n\t/*background-color: blue;*/\n}\n#container > table tbody tr:first-child {\n\theight: 16%;\n}\n#container > table tbody > tr td {\n\tpadding: 0\n}\ntable#gameArea td {\n  background-color: white;\n  text-align: center;\n  font-size: 9.9vh;\n  padding: 0;\n\tcursor: default;\n\n\theight: 50%;\n\twidth: 50%;\n\n}\ntable#gameArea:not(.faded) tr:first-child td:nth-child(1) {\n\tbackground-image: url(" + __webpack_require__(162) + ");\n\tbackground-color: white;\n}\ntable#gameArea:not(.faded) tr:first-child td:nth-child(2) {\n\tbackground-image: url(" + __webpack_require__(163) + ");\n\tbackground-color: white;\n}\ntable#gameArea:not(.faded) tr:nth-child(2) td:nth-child(1) {\n\tbackground-image: url(" + __webpack_require__(164) + ");\n\tbackground-color: white;\n}\ntable#gameArea:not(.faded) tr:nth-child(2) td:nth-child(2) {\n\tbackground-image: url(" + __webpack_require__(165) + ");\n\tbackground-color: white;\n}\ntable#gameArea td h1 {\n  margin: 0;\n\n\t-webkit-text-stroke: 1px black;\ncolor: white;\ntext-shadow:\n\t\t3px 3px 0 #000,\n\t-1px -1px 0 #000,\n\t 1px -1px 0 #000,\n\t -1px 1px 0 #000,\n\t\t1px 1px 0 #000;\n\n}\ntable#gameArea.faded td {\n\n\tbackground:\n\t/* On \"top\" */\n\trepeating-linear-gradient(\n\t\t315deg,\n\t\trgba(0,0,0,0.5),\n\t\trgba(0,0,0,0.5) 2px,\n\t\twhite 2px,\n\t\twhite 120px\n\t);\n\n\t-webkit-filter: blur(1px);\n\t-moz-filter: blur(1px);\n\t-ms-filter: blur(1px);\n\t-o-filter: blur(1px);\n\tfilter: blur(1px);\n/*\n\tbackground-image: none;*/\n}\ntable#gameArea.faded td h1 {\n\topacity: 0.1;\n\tcolor: rgba(0,0,0,0.5);\n}\n\nbody.no-touch table#gameArea.myTurn td:hover {\n  background-color: yellow;\n  cursor: pointer !important;\n}\nbody.no-touch table#gameArea.myTurn td:hover h1 {\n\tcursor: pointer;\n}\n\ntable#gameArea td.blue {\n  background-color: rgba(0,255,255,0.4) !important;\n}\ntable#gameArea td.green {\n  background-color: rgba(0,255,0,0.5) !important;\n}\ntable#gameArea td.red {\n  background-color: rgba(255,0,153,0.5) !important;\n}\n.headerBoard {\n  /*position: absolute;\n  top: 0;\n  height: 14%;*/\n  width: 100%;\n\ttext-align: center;\n  padding: 0;\n\tmargin: 0 0 0 3px;\n\tbackground-image: url(" + __webpack_require__(166) + ");\n}\n\n.headerBoard #mainText {\n  font-size: 3.7vh;\n  font-variant: small-caps;\n  font-weight: 600;\n  letter-spacing: 2px;\n\tposition: relative;\n\ttop: 1.4vh;\n\tline-height: 0.9;\n\tmargin: 0 0 1vh 5px;\n}\n.headerBoard #infoIcon {\n\twidth: 6vh;\n\tfloat: right;\n\tposition: relative;\n\ttop: -3vh;\n\tleft: -4.7vw;\n\tz-index: 100;\n\tbackground-color: white;\n\tborder-radius: 3vh;\n\tborder: 0.25vh solid brown;\n\tbox-shadow: 5 10px 10px #888888;\n\topacity: 0.9;\n}\nbody.no-touch .headerBoard #infoIcon:hover {\n\tbackground-color: yellow;\n\tcursor: pointer !important;\n}\n.headerBoard #infoIcon.faded {\n\topacity: 0.6;\n\tbackground-color: rgba(255,255,0,0.4);\n}\nbody.no-touch .headerBoard #infoIcon.faded:hover {\n\tbackground-color: yellow;\n}\n#infoPanel > div {\n\tdisplay: inline-block;\n\tpadding: 1vh 2vh;\n\tmargin: 0.2vh 1vh 4px 0;\n\tbackground-color: rgba(255,255,255,0.6);\n\tbackground-image: url(" + __webpack_require__(167) + ");\n}\n#infoPanel {\n\tfont-size: 2.2vh;\n  margin: 0.2vh 0 0 0;\n\tpadding: 0;\n\tfont-style: italic;\n\ttext-align: left;\n\tclear: both;\n\tposition: relative;\n\ttop: -0.4vh;\n\tleft: 0.4em;\n}\n.odometer {\n\tdisplay: inline-block;\n  position: relative;\n  top: -1px;\n}\nbutton:focus {outline:0 !important;}\n.small {\n\tfont-size: 80%;\n}\n.inlineblock {\n\tdisplay: inline-block;\n\tmargin-left: 0.4em;\n}\n.hidden {\n  display: none !important;\n}\n.odometer-digit {\n  width: 0.6em;\n}\n", ""]);
+	exports.push([module.id, "body:after{\n    display:none;\n    content: url(" + __webpack_require__(164) + ") url(" + __webpack_require__(165) + ") url(" + __webpack_require__(166) + ") url(" + __webpack_require__(167) + ");\n}\n* {\n\t\t-webkit-user-select: none;  /* Chrome all / Safari all */\n\t\t\t-moz-user-select: none;     /* Firefox all */\n\t\t\t-ms-user-select: none;      /* IE 10+ */\n\t\t\tuser-select: none;          /* Likely future */\n\t\t\tcursor: default;\n}\na {\n\tcursor: pointer;\n}\nbody {\n\tbackground-color: rgba(173,173,173,0.9);\n\tpadding: 0;\n\tmargin: 0;\n  font-family: monospace;\n\toverflow: hidden;\n\tbackground-image: url(" + __webpack_require__(168) + ");\n}\n#welcomeMessage {\n\twidth: 100%;\n\tposition: absolute;\n\ttop: 21%;\n}\n#welcomeMessage > div {\n\twidth: 70%;\n\tmargin: 0 auto;\n\tbackground-color: rgba(80,80,80,0.9);\n\tline-height: 1.4;\n\tfont-family: Tahoma, Arial, Helvetica, sans-serif;\n\tborder-radius: 4vh;\n\tpadding: 1vh 3vh 2.5vh 3vh;\n\tfont-style: italic;\n\tcolor: white;\n\tfont-size:calc(40% + 1vh);\n\tbackground-image: url(" + __webpack_require__(169) + ");\n\t/*background-color: #fff;\nbackground-image:\nlinear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),\nlinear-gradient(#eee .1em, transparent .1em);\nbackground-size: 100% 1.2em;*/\n}\n.no-touch #welcomeMessage > div {\n\tfont-size:calc(40% + 2.3vh);\n}\n\n#welcomeMessage #countDown {\n\tborder-top: 0.5vh dotted white;\n\tborder-bottom: 0.5vh dotted white;\n\ttext-align: center;\n\tpadding: 1vh 0;\n\tmargin: 0 0 2vh;\n\tfont-size: 4vh;\n\tfont-size:calc(60% + 1vh);\n}\n#welcomeMessage button {\n\tmargin-top: 0.2em;\n\twidth: 100%;\n\tfont-size: 1.5vh;\n\tline-height: 2vh;\n\tborder-radius: 2vh;\n\tbackground-color: #FFFF99;\n\tborder: 1px solid black;\n\tcursor: pointer !important;\n}\nbody.no-touch #welcomeMessage button:hover {\n\tbackground-color: yellow;\n\tborder: 1px solid black;\n}\n.no-touch #welcomeMessage button {\n  font-size: 3vh;\n\tline-height: 4vh;\n}\n#container {\n  width: 100%;\n\theight: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n}\n/*for mobile*/\nbody:not(.no-touch) #container {\n\t/*height: 99%;*/\n\t/*left: 18px;*/\n}\ntable {\n  width: 100%;\n  height: 100%;\n\n\t/*background-color: blue;*/\n}\n#container > table tbody tr:first-child {\n\theight: 16%;\n}\n#container > table tbody > tr td {\n\tpadding: 0\n}\ntable#gameArea td {\n  background-color: white;\n  text-align: center;\n  font-size: 9.9vh;\n  padding: 0;\n\tcursor: default;\n\n\theight: 50%;\n\twidth: 50%;\n\n}\ntable#gameArea:not(.faded) tr:first-child td:nth-child(1) {\n\tbackground-image: url(" + __webpack_require__(164) + ");\n\tbackground-color: white;\n}\ntable#gameArea:not(.faded) tr:first-child td:nth-child(2) {\n\tbackground-image: url(" + __webpack_require__(165) + ");\n\tbackground-color: white;\n}\ntable#gameArea:not(.faded) tr:nth-child(2) td:nth-child(1) {\n\tbackground-image: url(" + __webpack_require__(166) + ");\n\tbackground-color: white;\n}\ntable#gameArea:not(.faded) tr:nth-child(2) td:nth-child(2) {\n\tbackground-image: url(" + __webpack_require__(167) + ");\n\tbackground-color: white;\n}\ntable#gameArea td h1 {\n  margin: 0;\n\n\t-webkit-text-stroke: 1px black;\ncolor: white;\ntext-shadow:\n\t\t3px 3px 0 #000,\n\t-1px -1px 0 #000,\n\t 1px -1px 0 #000,\n\t -1px 1px 0 #000,\n\t\t1px 1px 0 #000;\n\n}\ntable#gameArea.faded td {\n\n\tbackground:\n\t/* On \"top\" */\n\trepeating-linear-gradient(\n\t\t315deg,\n\t\trgba(0,0,0,0.5),\n\t\trgba(0,0,0,0.5) 2px,\n\t\twhite 2px,\n\t\twhite 120px\n\t);\n\n\t-webkit-filter: blur(1px);\n\t-moz-filter: blur(1px);\n\t-ms-filter: blur(1px);\n\t-o-filter: blur(1px);\n\tfilter: blur(1px);\n/*\n\tbackground-image: none;*/\n}\ntable#gameArea.faded td h1 {\n\topacity: 0.1;\n\tcolor: rgba(0,0,0,0.5);\n}\n\nbody.no-touch table#gameArea.myTurn td:hover {\n  background-color: yellow;\n  cursor: pointer !important;\n}\nbody.no-touch table#gameArea.myTurn td:hover h1 {\n\tcursor: pointer;\n}\n\ntable#gameArea td.blue {\n  background-color: rgba(0,255,255,0.4) !important;\n}\ntable#gameArea td.green {\n  background-color: rgba(0,255,0,0.5) !important;\n}\ntable#gameArea td.red {\n  background-color: rgba(255,0,153,0.5) !important;\n}\n.headerBoard {\n  /*position: absolute;\n  top: 0;\n  height: 14%;*/\n  width: 100%;\n\ttext-align: center;\n  padding: 0;\n\tmargin: 0 0 0 3px;\n\tbackground-image: url(" + __webpack_require__(168) + ");\n}\n\n.headerBoard #mainText {\n  font-size: 3.7vh;\n  font-variant: small-caps;\n  font-weight: 600;\n  letter-spacing: 2px;\n\tposition: relative;\n\ttop: 1.4vh;\n\tline-height: 0.9;\n\tmargin: 0 0 1vh 5px;\n}\n.headerBoard #infoIcon {\n\twidth: 6vh;\n\tfloat: right;\n\tposition: relative;\n\ttop: -3vh;\n\tleft: -4.7vw;\n\tz-index: 100;\n}\n.headerBoard #infoIcon img {\n\twidth: 6vh;\n\tbackground-color: white;\n\tborder-radius: 3vh;\n\n  background-color: white;\n  border-radius: 3vh;\n  /*border: 0.25vh solid brown;*/\n  box-shadow: 5 10px 10px #888888;\n  opacity: 0.9;\n}\nbody.no-touch .headerBoard #infoIcon img:hover {\n\tbackground-color: yellow;\n\tcursor: pointer !important;\n}\n.headerBoard #infoIcon img.faded {\n\topacity: 0.6;\n\tbackground-color: rgba(255,255,0,0.4);\n}\nbody.no-touch .headerBoard #infoIcon img.faded:hover {\n\tbackground-color: yellow;\n}\n#infoPanel > div {\n\tdisplay: inline-block;\n\tpadding: 1vh 2vh;\n\tmargin: 0.2vh 1vh 4px 0;\n\tbackground-color: rgba(255,255,255,0.6);\n\tbackground-image: url(" + __webpack_require__(169) + ");\n}\n#infoPanel {\n\tfont-size: 2.2vh;\n  margin: 0.2vh 0 0 0;\n\tpadding: 0;\n\tfont-style: italic;\n\ttext-align: left;\n\tclear: both;\n\tposition: relative;\n\ttop: -0.4vh;\n\tleft: 0.4em;\n}\n.odometer {\n\tdisplay: inline-block;\n  position: relative;\n  top: -1px;\n}\nbutton:focus {outline:0 !important;}\n.small {\n\tfont-size: 80%;\n}\n.inlineblock {\n\tdisplay: inline-block;\n\tmargin-left: 0.4em;\n}\n.hidden {\n  display: none !important;\n}\n.odometer-digit {\n  width: 0.6em;\n}\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 161 */
+/* 163 */
 /***/ function(module, exports) {
 
 	/*
@@ -20385,43 +20461,43 @@
 
 
 /***/ },
-/* 162 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__.p + "1864012b73643e9d1f21b145392b9e67.png"
 
 /***/ },
-/* 163 */
+/* 165 */
 /***/ function(module, exports) {
 
 	module.exports = "data:image/png;base64,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"
 
 /***/ },
-/* 164 */
+/* 166 */
 /***/ function(module, exports) {
 
 	module.exports = "data:image/png;base64,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"
 
 /***/ },
-/* 165 */
+/* 167 */
 /***/ function(module, exports) {
 
 	module.exports = "data:image/png;base64,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"
 
 /***/ },
-/* 166 */
+/* 168 */
 /***/ function(module, exports) {
 
 	module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAPFBMVEX////Y2NjY2tz+/v7S0tLY2tzY2NjT09PT19/U19/Y2tzY2NvS1+DY2NjT29fY29rY2Nv///3U29fY29qvMB2xAAAAFHRSTlMAWVwAHWBcICAkWVkdVSBcVQAkYMNzETcAAAElSURBVHheRZEBjsMwCAQXE8exk/Tau///9ZaRoqrCYAYHtigyFNrEqV2BkZFsTQ061c1un8sVR7qiGHSWd+bgXl62p7I5irzSkf0yiXwqG3RzdqpzU66seDdb2ejSdSmoD2emGXNpCJ8bXs47KooNzmL8Hva9YadzMlvqZDp9BpqCHuSY8mLCgPU80dn1TDmLQVrp1p8CZr0o6FBzvZi2FcvKrXQNeruGGjP5JQqau96KNFVAhYId9Rvbw6AnO7yLoO5NZJb26GRDwpOb9vd3x/zzZihfRdEk2xP3T7EGRRH6DrV8s81fUUU9L2Hk2JVP8dJGz/J0PjX4EncJ/ehCrykR2lGOEg08mqh/SUIBmQPKXbvZDze28qU1N0zQTUEWL7qYxT9mCgcm/xQYyAAAAABJRU5ErkJggg=="
 
 /***/ },
-/* 167 */
+/* 169 */
 /***/ function(module, exports) {
 
 	module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVQIW2NgYODjBWJWKOZgQOKwQDAKByLAgSTACQAp6QE8mK8aTgAAAABJRU5ErkJggg=="
 
 /***/ },
-/* 168 */
+/* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -20675,16 +20751,16 @@
 
 
 /***/ },
-/* 169 */
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(170);
+	var content = __webpack_require__(172);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(168)(content, {});
+	var update = __webpack_require__(170)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -20701,30 +20777,30 @@
 	}
 
 /***/ },
-/* 170 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(161)();
+	exports = module.exports = __webpack_require__(163)();
 	// imports
 
 
 	// module
-	exports.push([module.id, "\n/**\n * Tooltip Styles\n */\n\n/* Base styles for the element that has a tooltip */\n[data-tooltip],\n.tooltip {\n  position: relative;\n  cursor: pointer;\n}\n\n/* Base styles for the entire tooltip */\n[data-tooltip]:before,\n[data-tooltip]:after,\n.tooltip:before,\n.tooltip:after {\n  position: absolute;\n  visibility: hidden;\n  -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)\";\n  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);\n  opacity: 0;\n  -webkit-transition:\n\t  opacity 0.2s ease-in-out,\n\t\tvisibility 0.2s ease-in-out,\n\t\t-webkit-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);\n\t-moz-transition:\n\t\topacity 0.2s ease-in-out,\n\t\tvisibility 0.2s ease-in-out,\n\t\t-moz-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);\n\ttransition:\n\t\topacity 0.2s ease-in-out,\n\t\tvisibility 0.2s ease-in-out,\n\t\ttransform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);\n  -webkit-transform: translate3d(0, 0, 0);\n  -moz-transform:    translate3d(0, 0, 0);\n  transform:         translate3d(0, 0, 0);\n  pointer-events: none;\n}\n\n/* Show the entire tooltip on hover and focus */\n[data-tooltip]:hover:before,\n[data-tooltip]:hover:after,\n[data-tooltip]:focus:before,\n[data-tooltip]:focus:after,\n.tooltip:hover:before,\n.tooltip:hover:after,\n.tooltip:focus:before,\n.tooltip:focus:after {\n  visibility: visible;\n  -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)\";\n  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);\n  opacity: 1;\n}\n\n/* Base styles for the tooltip's directional arrow */\n.tooltip:before,\n[data-tooltip]:before {\n  z-index: 1001;\n  border: 6px solid transparent;\n  background: transparent;\n  content: \"\";\n}\n\n/* Base styles for the tooltip's content area */\n.tooltip:after,\n[data-tooltip]:after {\n  z-index: 1000;\n  padding: 8px;\n  width: 160px;\n  background-color: #000;\n  background-color: hsla(0, 0%, 20%, 0.9);\n  color: #fff;\n  content: attr(data-tooltip);\n  font-size: 14px;\n  line-height: 1.2;\n}\n\n/* Directions */\n\n/* Top (default) */\n[data-tooltip]:before,\n[data-tooltip]:after,\n.tooltip:before,\n.tooltip:after,\n.tooltip-top:before,\n.tooltip-top:after {\n  bottom: 100%;\n  left: 50%;\n}\n\n[data-tooltip]:before,\n.tooltip:before,\n.tooltip-top:before {\n  margin-left: -6px;\n  margin-bottom: -12px;\n  border-top-color: #000;\n  border-top-color: hsla(0, 0%, 20%, 0.9);\n}\n\n/* Horizontally align top/bottom tooltips */\n[data-tooltip]:after,\n.tooltip:after,\n.tooltip-top:after {\n  margin-left: -80px;\n}\n\n[data-tooltip]:hover:before,\n[data-tooltip]:hover:after,\n[data-tooltip]:focus:before,\n[data-tooltip]:focus:after,\n.tooltip:hover:before,\n.tooltip:hover:after,\n.tooltip:focus:before,\n.tooltip:focus:after,\n.tooltip-top:hover:before,\n.tooltip-top:hover:after,\n.tooltip-top:focus:before,\n.tooltip-top:focus:after {\n  -webkit-transform: translateY(-12px);\n  -moz-transform:    translateY(-12px);\n  transform:         translateY(-12px);\n}\n\n/* Left */\n.tooltip-left:before,\n.tooltip-left:after {\n  right: 100%;\n  bottom: 50%;\n  left: auto;\n}\n\n.tooltip-left:before {\n  margin-left: 0;\n  margin-right: -12px;\n  margin-bottom: 0;\n  border-top-color: transparent;\n  border-left-color: #000;\n  border-left-color: hsla(0, 0%, 20%, 0.9);\n}\n\n.tooltip-left:hover:before,\n.tooltip-left:hover:after,\n.tooltip-left:focus:before,\n.tooltip-left:focus:after {\n  -webkit-transform: translateX(-12px);\n  -moz-transform:    translateX(-12px);\n  transform:         translateX(-12px);\n}\n\n/* Bottom */\n.tooltip-bottom:before,\n.tooltip-bottom:after {\n  top: 100%;\n  bottom: auto;\n  left: 50%;\n}\n\n.tooltip-bottom:before {\n  margin-top: -12px;\n  margin-bottom: 0;\n  border-top-color: transparent;\n  border-bottom-color: #000;\n  border-bottom-color: hsla(0, 0%, 20%, 0.9);\n}\n\n.tooltip-bottom:hover:before,\n.tooltip-bottom:hover:after,\n.tooltip-bottom:focus:before,\n.tooltip-bottom:focus:after {\n  -webkit-transform: translateY(12px);\n  -moz-transform:    translateY(12px);\n  transform:         translateY(12px);\n}\n\n/* Right */\n.tooltip-right:before,\n.tooltip-right:after {\n  bottom: 50%;\n  left: 100%;\n}\n\n.tooltip-right:before {\n  margin-bottom: 0;\n  margin-left: -12px;\n  border-top-color: transparent;\n  border-right-color: #000;\n  border-right-color: hsla(0, 0%, 20%, 0.9);\n}\n\n.tooltip-right:hover:before,\n.tooltip-right:hover:after,\n.tooltip-right:focus:before,\n.tooltip-right:focus:after {\n  -webkit-transform: translateX(12px);\n  -moz-transform:    translateX(12px);\n  transform:         translateX(12px);\n}\n\n/* Move directional arrows down a bit for left/right tooltips */\n.tooltip-left:before,\n.tooltip-right:before {\n  top: 3px;\n}\n\n/* Vertically center tooltip content for left/right tooltips */\n.tooltip-left:after,\n.tooltip-right:after {\n  margin-left: 0;\n  margin-bottom: -16px;\n}\n", ""]);
+	exports.push([module.id, "\n/**\n * Tooltip Styles\n */\n\n/* Base styles for the element that has a tooltip */\n.no-touch [data-tooltip],\n.no-touch .tooltip {\n  position: relative;\n  cursor: pointer;\n}\n\n/* Base styles for the entire tooltip */\n.no-touch [data-tooltip]:before,\n.no-touch [data-tooltip]:after,\n.no-touch .tooltip:before,\n.no-touch .tooltip:after {\n  position: absolute;\n  visibility: hidden;\n  -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)\";\n  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);\n  opacity: 0;\n  -webkit-transition:\n\t  opacity 0.2s ease-in-out,\n\t\tvisibility 0.2s ease-in-out,\n\t\t-webkit-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);\n\t-moz-transition:\n\t\topacity 0.2s ease-in-out,\n\t\tvisibility 0.2s ease-in-out,\n\t\t-moz-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);\n\ttransition:\n\t\topacity 0.2s ease-in-out,\n\t\tvisibility 0.2s ease-in-out,\n\t\ttransform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);\n  -webkit-transform: translate3d(0, 0, 0);\n  -moz-transform:    translate3d(0, 0, 0);\n  transform:         translate3d(0, 0, 0);\n  pointer-events: none;\n}\n\n/* Show the entire tooltip on hover and focus */\n.no-touch [data-tooltip]:hover:before,\n.no-touch [data-tooltip]:hover:after,\n.no-touch [data-tooltip]:focus:before,\n.no-touch [data-tooltip]:focus:after,\n.no-touch .tooltip:hover:before,\n.no-touch .tooltip:hover:after,\n.no-touch .tooltip:focus:before,\n.no-touch .tooltip:focus:after {\n  visibility: visible;\n  -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)\";\n  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);\n  opacity: 1;\n}\n\n/* Base styles for the tooltip's directional arrow */\n.no-touch .tooltip:before,\n.no-touch [data-tooltip]:before {\n  z-index: 1001;\n  border: 6px solid transparent;\n  background: transparent;\n  content: \"\";\n}\n\n/* Base styles for the tooltip's content area */\n.no-touch .tooltip:after,\n.no-touch [data-tooltip]:after {\n  z-index: 1000;\n  padding: 8px;\n  width: 100px;\n  background-color: #000;\n  background-color: hsla(0, 0%, 20%, 0.9);\n  color: #fff;\n  content: attr(data-tooltip);\n  font-size: 14px;\n  line-height: 1.2;\n}\n\n/* Directions */\n\n/* Top (default) */\n.no-touch [data-tooltip]:before,\n.no-touch [data-tooltip]:after,\n.no-touch .tooltip:before,\n.no-touch .tooltip:after,\n.no-touch .tooltip-top:before,\n.no-touch .tooltip-top:after {\n  bottom: 100%;\n  left: 50%;\n}\n\n.no-touch [data-tooltip]:before,\n.no-touch .tooltip:before,\n.no-touch .tooltip-top:before {\n  margin-left: -6px;\n  margin-bottom: -12px;\n  border-top-color: #000;\n  border-top-color: hsla(0, 0%, 20%, 0.9);\n}\n\n/* Horizontally align top/bottom tooltips */\n.no-touch [data-tooltip]:after,\n.no-touch .tooltip:after,\n.no-touch .tooltip-top:after {\n  margin-left: -80px;\n}\n\n.no-touch [data-tooltip]:hover:before,\n.no-touch [data-tooltip]:hover:after,\n.no-touch [data-tooltip]:focus:before,\n.no-touch [data-tooltip]:focus:after,\n.no-touch .tooltip:hover:before,\n.no-touch .tooltip:hover:after,\n.no-touch .tooltip:focus:before,\n.no-touch .tooltip:focus:after,\n.no-touch .tooltip-top:hover:before,\n.no-touch .tooltip-top:hover:after,\n.no-touch .tooltip-top:focus:before,\n.no-touch .tooltip-top:focus:after {\n  -webkit-transform: translateY(-12px);\n  -moz-transform:    translateY(-12px);\n  transform:         translateY(-12px);\n}\n\n/* Left */\n.no-touch .tooltip-left:before,\n.no-touch .tooltip-left:after {\n  right: 100%;\n  bottom: 50%;\n  left: auto;\n}\n\n.no-touch .tooltip-left:before {\n  margin-left: 0;\n  margin-right: -12px;\n  margin-bottom: 0;\n  border-top-color: transparent;\n  border-left-color: #000;\n  border-left-color: hsla(0, 0%, 20%, 0.9);\n}\n\n.no-touch .tooltip-left:hover:before,\n.no-touch .tooltip-left:hover:after,\n.no-touch .tooltip-left:focus:before,\n.no-touch .tooltip-left:focus:after {\n  -webkit-transform: translateX(-12px);\n  -moz-transform:    translateX(-12px);\n  transform:         translateX(-12px);\n}\n\n/* Bottom */\n.no-touch .tooltip-bottom:before,\n.no-touch .tooltip-bottom:after {\n  top: 100%;\n  bottom: auto;\n  left: 50%;\n}\n\n.no-touch .tooltip-bottom:before {\n  margin-top: -12px;\n  margin-bottom: 0;\n  border-top-color: transparent;\n  border-bottom-color: #000;\n  border-bottom-color: hsla(0, 0%, 20%, 0.9);\n}\n\n.no-touch .tooltip-bottom:hover:before,\n.no-touch .tooltip-bottom:hover:after,\n.no-touch .tooltip-bottom:focus:before,\n.no-touch .tooltip-bottom:focus:after {\n  -webkit-transform: translateY(20px) translateX(-10px);\n  -moz-transform:    translateY(20px) translateX(-10px);\n  transform:         translateY(20px) translateX(-10px);\n}\n\n/* Right */\n.no-touch .tooltip-right:before,\n.no-touch .tooltip-right:after {\n  bottom: 50%;\n  left: 100%;\n}\n\n.no-touch .tooltip-right:before {\n  margin-bottom: 0;\n  margin-left: -12px;\n  border-top-color: transparent;\n  border-right-color: #000;\n  border-right-color: hsla(0, 0%, 20%, 0.9);\n}\n\n.no-touch .tooltip-right:hover:before,\n.no-touch .tooltip-right:hover:after,\n.no-touch .tooltip-right:focus:before,\n.no-touch .tooltip-right:focus:after {\n  -webkit-transform: translateX(12px);\n  -moz-transform:    translateX(12px);\n  transform:         translateX(12px);\n}\n\n/* Move directional arrows down a bit for left/right tooltips */\n.no-touch .tooltip-left:before,\n.no-touch .tooltip-right:before {\n  top: 3px;\n}\n\n/* Vertically center tooltip content for left/right tooltips */\n.no-touch .tooltip-left:after,\n.no-touch .tooltip-right:after {\n  margin-left: 0;\n  margin-bottom: -16px;\n}\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 171 */
+/* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(172);
+	var content = __webpack_require__(174);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(168)(content, {});
+	var update = __webpack_require__(170)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -20741,10 +20817,10 @@
 	}
 
 /***/ },
-/* 172 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(161)();
+	exports = module.exports = __webpack_require__(163)();
 	// imports
 
 
@@ -20755,13 +20831,13 @@
 
 
 /***/ },
-/* 173 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__.p + "4dafabfe0c78e5bbe2959d55d6378501.png"
 
 /***/ },
-/* 174 */
+/* 176 */
 /***/ function(module, exports) {
 
 	/*\
@@ -20837,13 +20913,13 @@
 
 
 /***/ },
-/* 175 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__.p + "odometer.min.js"
 
 /***/ },
-/* 176 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
