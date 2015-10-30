@@ -218,9 +218,10 @@ var GameArea = React.createClass({
 
 						this.props.headerChange('opponent played valid move');
 
+						this.props.roundChange(this.props.curRound + 10);
+
 						setTimeout(function() {
 
-									this.props.roundChange(this.props.curRound + 10);
 									//console.log('opp played ' + this.state.currentPlay);
 									this.setState({
 										myTurn: true,
@@ -396,11 +397,11 @@ var GameArea = React.createClass({
 													myTurn: false
 												});
 
+												this.props.roundChange(this.props.curRound + 10);
+
 												setTimeout(function() {
 
 														this.props.headerChange('now opponents turn');
-
-														this.props.roundChange(this.props.curRound + 10);
 
 												}.bind(this), 1000);
 
