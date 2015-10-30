@@ -250,5 +250,5 @@ button:focus {outline:0 !important;}
 	margin-left: 0.4em;
 }
 .hidden {
-  display: none;
+  display: none !important;
 }
