@@ -513,6 +513,27 @@ var WelcomeMessage = React.createClass({
 			<div id='welcomeMessage'>
 				<div>
 					<p>Hi there!  We see this is{this.state.isnt} your first visit to Tap Four (The Win-Big $10 Giveaway) and even though it is a very simple game, we just wanted to give you a quick rundown on the specifics.</p>
+					<div id='examplePullout'>
+						<h2>Example match</h2>
+						<div>
+							<p>
+								Player #1: 3-4-2-2<span className='good'>Good move!</span>
+								Player #2: 3-4-1-2<span className='good'>Good move!</span>
+								Player #1: 3-2-1-2<span className='good'>Good move!</span>
+								Player #2: 3-1-3!<span className='bad'>Bad move!</span>
+							</p>
+							<p>
+								Player #1: 1-4-1-3<span className='good'>Good move!</span>
+								Player #2: 1-1-1-3<span className='good'>Good move!</span>
+								Player #1: 1-1 !<span className='good'>Bad move!</span>
+							</p>
+							<p>
+								Player #1: 3-2-1-4<span className='good'>Good move!</span>
+								Player #2: 2-2-1-4<span className='good'>Good move!</span>
+								Player #1: 1-2-1-3 !<span className='good'>Bad move!</span>
+							</p>
+						</div>
+					</div>
 					<p>How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed.</p>
 					<p>Whoever possesses the highest score at the time of the next Win-Big $10 Giveaway will receive $10 in cash or paypal.</p>
 					<div id='countDown'>

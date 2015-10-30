@@ -13,6 +13,8 @@
     "odometer": "^0.4.7",
     "path": "^0.12.7",
     "pg": "^4.4.3",
+    "react": "^0.14.1",
+    "react-dom": "^0.14.1",
     "react-fittext": "^0.1.1",
     "react-odometer": "0.0.1",
     "shortid": "^2.2.4",
