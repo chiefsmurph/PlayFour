@@ -253,14 +253,14 @@ io.on('connection', function(socket) {
   var address = socket.handshake.address;
   console.log('New connection from ' + address.address + ':' + address.port);
 
-  var endpoint = socket.manager.handshaken[socket.id].address;
-  console.log('Client connected from: ' + endpoint.address + ":" + endpoint.port);
 
   var sHeaders = socket.handshake.headers;
   console.info('[%s:%s] CONNECT', sHeaders['x-forwarded-for'], sHeaders['x-forwarded-port']);
 
 
 console.log('connection :', socket.request.connection._peername);
+
+  console.log('socket handshake big    ' + JSON.stringify(socket.handshake));
 
   var myUserId = null;
   var mySocketId = socket.id;
