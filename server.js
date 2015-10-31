@@ -247,9 +247,20 @@ app.get('/js/mozilla-cookies.js', function(req, res, next) {
 
 io.on('connection', function(socket) {
   var clientIp = socket.request.connection.remoteAddress.split(':')[3];
+  console.log('clientip ' + clientIp);
 
-  console.log(clientIp);
 
+  var address = socket.handshake.address;
+  console.log('New connection from ' + address.address + ':' + address.port);
+
+  var endpoint = socket.manager.handshaken[socket.id].address;
+  console.log('Client connected from: ' + endpoint.address + ":" + endpoint.port);
+
+  var sHeaders = socket.handshake.headers;
+  console.info('[%s:%s] CONNECT', sHeaders['x-forwarded-for'], sHeaders['x-forwarded-port']);
+
+
+console.log('connection :', socket.request.connection._peername);
 
   var myUserId = null;
   var mySocketId = socket.id;
