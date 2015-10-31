@@ -241,7 +241,7 @@ io.on('connection', function(socket) {
   socket.on('fail', function(data) {
     console.log('fail data ' + JSON.stringify(data));
     // update db with subtracted score of me
-    dbFunctions.changeScore(myUserId, (0-data.round), function(newscore, handshake) {
+    dbFunctions.changeScore(myUserId, (0-(data.round/2)), function(newscore, handshake) {
       socket.emit('updateLocal', { score: newscore, handshake: handshake });
     });
     // update db with added score of my opponent
