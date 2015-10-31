@@ -254,7 +254,7 @@ var GameArea = React.createClass({
 		}.bind(this));
 
 		mySocket.on('updateLocal', function(data) {
-			this.props.changeScore(data.score);
+			this.props.scoreChange(data.score);
 			docCookies.setItem('userStatus', JSON.stringify({
 				userId: this.state.userId,
 				score: data.score,
