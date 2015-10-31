@@ -192,7 +192,7 @@ io.on('connection', function(socket) {
           if (authorized) {
             myUserId = data.userId;
 
-            if (data.score / 0.9 > topScore) {
+            if (data.score / 0.75 > topScore) {
               dbFunctions.hasAnsweredRequest(myUserId, function(bool) {
                 if (bool) {
                   // within striking distance and already submitted paypal or cash info

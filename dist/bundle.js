@@ -136,6 +136,11 @@
 				setTimeout((function () {
 					mySocket.emit('checkForWaiting');
 				}).bind(this), 700);
+				docCookies.setItem('userStatus', JSON.stringify({
+					userId: data.userId,
+					score: 0,
+					handshake: ''
+				}));
 			}).bind(this));
 
 			mySocket.on('authorization', (function (data) {

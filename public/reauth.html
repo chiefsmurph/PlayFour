@@ -13,11 +13,11 @@
 		var docCookies = module.exports;
 		if (docCookies.hasItem('userStatus')) {
 			docCookies.removeItem('userStatus');
-			document.write('<h1>Tap Four Reauth Success!</h1>You are good to go.  But don\'t let it happen again.');
+			document.write('<h1>Tap Four Reauth Success!</h1>You are good to go.  But don\'t let it happen again.<br><br>');
 			document.write('Redirecting now...')
 			setTimeout(function() {
 				window.location.replace('/');
-			}, 3500);
+			}, 2500);
 		} else {
 			document.write('<H1>Reauth unnecessary.</H1>')
 		}
