@@ -517,7 +517,7 @@
 			var optionalScoreToBeat;
 			optionalScoreToBeat = React.createElement(
 				"div",
-				{ className: this.props.scoreToBeat > 0 ? '' : 'hidden' },
+				{ className: this.props.scoreToBeat !== null ? '' : 'hidden' },
 				"Score To Beat: ",
 				React.createElement(OdometerComponent, { id: "scoretobeat", className: "odometer", value: this.props.scoreToBeat })
 			);
