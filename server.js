@@ -18,6 +18,37 @@ var connectedUsers = {};
 var topScore = 0;
 var waitingForPlayer = null;
 
+function getCurrentTimestamp() {
+
+    var date = new Date();
+    var ampm = "";
+
+    var hour = date.getHours();
+    if (hour > 12) {
+      ampm = "pm";
+      hour = hour - 12;
+    } else {
+      ampm = "am";
+    }
+
+    var min  = date.getMinutes();
+    min = (min < 10 ? "0" : "") + min;
+
+    var sec  = date.getSeconds();
+    sec = (sec < 10 ? "0" : "") + sec;
+
+    var year = date.getFullYear();
+
+    var month = date.getMonth() + 1;
+    month = (month < 10 ? "0" : "") + month;
+
+    var day  = date.getDate();
+    day = (day < 10 ? "0" : "") + day;
+
+    return month + "/" + day + "/" + year + ' ' + hour + ':' + min + ampm;
+
+}
+
 var dbFunctions = {
   executeQuery: function(q) {
     pg.connect(process.env.DATABASE_URL, function(err, client, done) {
@@ -136,6 +167,70 @@ var dbFunctions = {
   }
 };
 
+//dbFunctions.executeQuery('CREATE TABLE visitlogs (visitId serial primary key, username VARCHAR(30) not null, ip VARCHAR(30) not null, datetime VARCHAR(30) not null, arrscore INT, leavescore INT, duration INT, gamesWon INT, gamesLost INT )');
+//dbFunctions.executeQuery('CREATE TABLE visitlogs (visitId serial primary key, username VARCHAR(30) not null, ip VARCHAR(30) not null, datetime VARCHAR(30) not null, arrscore INT, leavescore INT, duration INT, gamesWon INT, gamesLost INT )');
+//dbFunctions.executeQuery('CREATE TABLE gamelogs (gameId serial primary key, datetime VARCHAR(30) not null, winnerId VARCHAR(30) not null, loserId VARCHAR(30) not null, round INT )');
+//CREATE TABLE generalLogs (errorId serial primary key, datetime VARCHAR(30) not null, error VARCHAR(120) not null)
+
+visitLogFunctions = {
+  logNewVisit: function(userId, ip, arrScore, cb) {
+    ip = ip || "-- error --";
+
+    console.log('creating new visit ' + userId);
+    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+      var curDateTime = getCurrentTimestamp();
+      var queryText = 'INSERT INTO visitlogs (username, ip, datetime, arrscore) VALUES($1, $2, $3, $4) RETURNING visitid';
+      client.query(queryText, [userId, ip, curDateTime, arrScore], function(err, result) {
+
+        done();
+        if (err) console.log(err);
+        console.log('created new log visit' + JSON.stringify(result));
+        cb(result.rows[0].visitid);   // pass the visitid back
+
+      });
+    });
+  },
+  closeOutVisit: function(visitId, leaveScore, duration, gamesWon, gamesLost) {
+    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+      client.query('UPDATE visitlogs SET leaveScore = ' + leaveScore + ', duration = ' + duration + ', gameswon = ' + gamesWon + ', gameslost = ' + gamesLost + ' WHERE visitid=' + visitId, function(err, result) {
+        done();
+        if (err) console.log(err);
+        console.log('closed out visit' + JSON.stringify(result));
+      });
+    });
+  }
+};
+
+generalLogFunctions = {
+  logMessage: function(text) {
+    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+      var curDateTime = getCurrentTimestamp();
+      var queryText = 'INSERT INTO generalLogs (datetime, log) VALUES($1, $2)';
+      client.query(queryText, [curDateTime, text], function(err, result) {
+
+        done();
+        if (err) console.log(err);
+
+      });
+    });
+  }
+};
+
+gameLogFunctions = {
+  logGame: function(winnerId, loserId, round) {
+    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+      var curDateTime = getCurrentTimestamp();
+      var queryText = 'INSERT INTO gamelogs (datetime, winnerId, loserId, round) VALUES($1, $2, $3, $4)';
+      client.query(queryText, [curDateTime, winnerId, loserId, round], function(err, result) {
+
+        done();
+        if (err) console.log(err);
+
+      });
+    });
+  }
+}
+
 app.get('/showAllScores', function(req, res, next) {
   dbFunctions.returnAllUsers(function(data) {
     res.json(data);
@@ -151,16 +246,18 @@ app.get('/js/mozilla-cookies.js', function(req, res, next) {
 });
 
 io.on('connection', function(socket) {
-  var clientIp = socket.request.connection.remoteAddress;
+  var clientIp = socket.request.connection.remoteAddress.split(':')[3];
 
   console.log(clientIp);
-  
-  var endpoint = socket.request.connection._peername;
-    console.log('Client connected from: ' + endpoint.address + ":" + endpoint.port);
+
 
   var myUserId = null;
   var mySocketId = socket.id;
   var myOpp = null;
+
+  // visit
+  var startTime = Math.floor(Date.now() / 1000);
+  var visitId;
 
   console.log('new connection: ' + socket.id);
 
@@ -177,7 +274,7 @@ io.on('connection', function(socket) {
   socket.on('newUser', function() {
     setTimeout(function() {
       myUserId = shortid.generate();
-      connectedUsers[myUserId] = {socketId: mySocketId, score: 0};
+      connectedUsers[myUserId] = {socketId: mySocketId, score: 0, ip: clientIp, gamesWon: 0, gamesLost: 0};
       dbFunctions.createNewUser(myUserId, function() {
         console.log('made it to the cb createnewuser');
         socket.emit('welcome', {userId: myUserId});
@@ -185,6 +282,8 @@ io.on('connection', function(socket) {
         dbFunctions.getTopScore(function(score) {
             socket.emit('scoreToBeat', {score: score});
         });
+
+        visitLogFunctions.logNewVisit(myUserId, clientIp, 0);
       });
     }, 1800);
   });
@@ -192,13 +291,18 @@ io.on('connection', function(socket) {
   socket.on('authorizeScore', function(data) {
     console.log('user ' + mySocketId + ' sent score: ' + JSON.stringify(data));
     setTimeout(function() {
+
+      if (!connectedUsers[data.userId]) { // if userid not already logged in
         // verify the data.userId and data.score and data.handshake
         dbFunctions.authorizeScore(data.userId, data.score, data.handshake, function(authorized) {
           console.log('made it to the cb authorize');
 
           if (authorized) {
             myUserId = data.userId;
-            connectedUsers[myUserId] = {score: data.score, socketId: mySocketId};
+            connectedUsers[myUserId] = {score: data.score, socketId: mySocketId, ip: clientIp, gamesWon: 0, gamesLost: 0};
+            visitLogFunctions.logNewVisit(myUserId, clientIp, data.score, function(vid) {
+              visitId = vid;
+            });
 
             if (data.score / 0.75 > topScore) {
               dbFunctions.hasAnsweredRequest(myUserId, function(bool) {
@@ -224,7 +328,10 @@ io.on('connection', function(socket) {
           }
 
         });
-
+      } else {
+        // user already logged in
+        socket.emit('authorization', {response: false});
+      }
     }, 1800);
 
   });
@@ -251,16 +358,23 @@ io.on('connection', function(socket) {
     // update db with subtracted score of me
     dbFunctions.changeScore(myUserId, (0-(data.round/2)), function(newscore, handshake) {
       connectedUsers[myUserId].score = newscore;
+      connectedUsers[myUserId].gamesLost++;
       socket.emit('updateLocal', { score: newscore, handshake: handshake });
     });
+
     // update db with added score of my opponent
     dbFunctions.changeScore(myOpp.userId, data.round, function(newscore, handshake) {
+      connectedUsers[myOpp.userId].score = newscore;
+      connectedUsers[myOpp.userId].gamesWon++;
       sendToOpp('updateLocal', { score: newscore, handshake: handshake });
     });
+
     // notify opponent they won
     sendToOpp('winner', {
       move: data.move
     });
+
+    gameLogFunctions.logGame(myOpp.userId, myUserId, data.round);
   });
 
   socket.on('opp', function(data) {
@@ -273,11 +387,14 @@ io.on('connection', function(socket) {
 
   socket.on('loner', function(data) {
 
-    // update db with added score
-    dbFunctions.changeScore(myUserId, data.round, function(newscore, handshake) {
-      socket.emit('updateLocal', { score: newscore, handshake: handshake });
-    });
-
+    if (data.round > 0) {
+      // update db with added score
+      dbFunctions.changeScore(myUserId, data.round, function(newscore, handshake) {
+        connectedUsers[myUserId].score = newscore;
+        socket.emit('updateLocal', { score: newscore, handshake: handshake });
+      });
+      generalLogFunctions.logMessage(myOpp.userId + ' left in middle of game against ' + myUserId + ' (round: ' + data.round + ' )');
+    }
     console.log('loner');
     // todo: update db of both winner and loser by data.round
     myOpp = null;
@@ -287,6 +404,7 @@ io.on('connection', function(socket) {
   socket.on('sendPreferences', function(data) {
     // synch because
     dbFunctions.savePreferences(myUserId, data);
+    generalLogFunctions.logMessage(myUserId + ' sent payment preferences: ' + JSON.stringify(data));
   });
 
   socket.on('disconnect', function() {
@@ -295,6 +413,14 @@ io.on('connection', function(socket) {
     } else if (waitingForPlayer && waitingForPlayer.socketId === mySocketId) {
       waitingForPlayer = null;
     }
+    console.log('here disconnect')
+    if (visitId && connectedUsers[myUserId]) {  // should be
+      console.log('closing out visit');
+      var leaveTime = Math.floor(Date.now() / 1000);
+      visitLogFunctions.closeOutVisit(visitId, connectedUsers[myUserId].score, leaveTime-startTime, connectedUsers[myUserId].gamesWon, connectedUsers[myUserId].gamesLost);
+    }
+
+    connectedUsers[myUserId] = undefined;
   });
 
 });
