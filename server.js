@@ -151,7 +151,10 @@ app.get('/js/mozilla-cookies.js', function(req, res, next) {
 });
 
 io.on('connection', function(socket) {
+  var clientIp = socket.request.connection.remoteAddress;
 
+  console.log(clientIp);
+  
   var endpoint = socket.request.connection._peername;
     console.log('Client connected from: ' + endpoint.address + ":" + endpoint.port);
 
