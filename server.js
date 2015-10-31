@@ -19,10 +19,11 @@ var topScore = 0;
 var waitingForPlayer = null;
 
 var dbFunctions = {
-  initTable: function() {
+  executeQuery: function(q) {
     pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-      var query = client.query('CREATE TABLE scores (dbId serial primary key, username VARCHAR(30) not null, score INT, handshake VARCHAR(60))');
-      console.log('created scores table');
+      //CREATE TABLE scores (dbId serial primary key, username VARCHAR(30) not null, score INT, handshake VARCHAR(60))
+      var query = client.query(q);
+      console.log('executed query ' + q);
       query.on('row', function(row) {
         console.log('row: ' + JSON.stringify(row));
       });
@@ -113,10 +114,27 @@ var dbFunctions = {
         done();
       });
     });
+  },
+  hasAnsweredRequest: function(userId, cb) {
+    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+        client.query('SELECT * FROM scores WHERE username = \'' + userId + '\'', function(err, result) {
+          done();
+
+          var dbRow = result.rows[0];
+          var answered = dbRow.paypalemail || dbRow.address;
+          cb(answered);
+
+        });
+    });
+  },
+  savePreferences: function(userId, preferences) {
+    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+      client.query('UPDATE scores SET contactemail = \'' + preferences.contactEmail + '\', paypalemail = \'' + preferences.paypalEmail + '\', address = \'' + preferences.address + '\' WHERE username=\'' + userId + '\'', function(err, result) {
+        done();
+      });
+    });
   }
 };
-
-//dbFunctions.initTable();
 
 app.get('/showAllScores', function(req, res, next) {
   dbFunctions.returnAllUsers(function(data) {
@@ -164,15 +182,35 @@ io.on('connection', function(socket) {
     console.log('user ' + mySocketId + ' sent score: ' + JSON.stringify(data));
     setTimeout(function() {
         // verify the data.userId and data.score and data.handshake
-        dbFunctions.authorizeScore(data.userId, data.score, data.handshake, function(response) {
+        dbFunctions.authorizeScore(data.userId, data.score, data.handshake, function(authorized) {
           console.log('made it to the cb authorize');
-          socket.emit('authorization', {response: response, userId: data.userId});
-          if (response) {
+
+          if (authorized) {
             myUserId = data.userId;
+
+            if (data.score / 0.9 > topScore) {
+              dbFunctions.hasAnsweredRequest(myUserId, function(bool) {
+                if (bool) {
+                  // within striking distance and already submitted paypal or cash info
+                  socket.emit('authorization', {response: true, userId: myUserId});
+                } else {
+                  // within striking distance and have not submitted the info
+                  socket.emit('authorization', {response: true, userId: myUserId, requestContact: true});
+                }
+              });
+            } else {
+              // not within striking distance and it doesnt matter if they have or have not submitted the info
+              socket.emit('authorization', {response: true, userId: myUserId});
+            }
+
             dbFunctions.getTopScore(function(score) {
                 socket.emit('scoreToBeat', {score: score});
             });
+
+          } else {
+            socket.emit('authorization', {response: false});
           }
+
         });
 
     }, 1800);
@@ -231,7 +269,11 @@ io.on('connection', function(socket) {
     // todo: update db of both winner and loser by data.round
     myOpp = null;
     waitingForPlayer = returnUserToken();
-  })
+  });
+
+  socket.on('sendPreferences', function(data) {
+    dbFunctions.savePreferences(myUserId, data);
+  });
 
   socket.on('disconnect', function() {
     if (myOpp) {

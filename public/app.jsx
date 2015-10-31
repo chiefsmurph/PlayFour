@@ -98,10 +98,15 @@ var GameArea = React.createClass({
 				this.setState({
 					userId: data.userId
 				})
-				this.props.headerChange('you have been authorized...<br>waiting for opponent');
-				setTimeout(function() {
-					mySocket.emit('checkForWaiting');
-				}.bind(this), 700);
+				if (data.requestContact) {
+					this.props.headerChange('you have been authorized...<br>more info needed');
+					this.props.showRequestInfo();
+				} else {
+					this.props.headerChange('you have been authorized...<br>waiting for opponent');
+					setTimeout(function() {
+						mySocket.emit('checkForWaiting');
+					}.bind(this), 700);
+				}
 			} else {
 				this.props.headerChange('AUTHENTICATION ERROR...<br>chiefsmurph@gmail.com to reclaim lost scores or click <a href="/reAuth">here</a> to start over.');
 			}
@@ -491,6 +496,110 @@ var HeaderBoard = React.createClass({
 		);
 	}
 });
+var ContactRequest = React.createClass({
+	getInitialState: function() {
+		return {
+			currentChoice: null,
+			showCash: false,
+			showPaypal: false,
+			errMessage: ''
+		}
+	},
+	showCash: function() {
+		this.setState({
+			currentChoice: 'cash',
+			showCash: true,
+			showPaypal: false
+		});
+	},
+	showPaypal: function() {
+		this.setState({
+			currentChoice: 'paypal',
+			showCash: false,
+			showPaypal: true
+		});
+	},
+	hideAll: function() {
+		this.setState({
+			currentChoice: 'asklater',
+			showCash: false,
+			showPaypal: false
+		});
+	},
+	submitForm: function() {
+		if (this.state.currentChoice === 'asklater') {
+			this.props.hideMe();
+			this.props.headerChange('well alright then...<br>now waiting for opponent');
+			console.log('asklater');
+		} else {
+			mySocket.emit('sendPreferences', {
+				contactEmail: (this.refs.contactEmail) ? this.refs.contactEmail.getDOMNode().value : '',
+				paypalEmail: (this.refs.paypalEmail) ? this.refs.paypalEmail.getDOMNode().value : '',
+				address: (this.refs.address) ? this.refs.address.getDOMNode().value : ''
+			});
+			this.props.hideMe();
+
+			this.props.headerChange('thank you for that info...<br>now waiting for opponent');
+		}
+
+		setTimeout(function() {
+			mySocket.emit('checkForWaiting');
+		}.bind(this), 700);
+
+	},
+	render: function() {
+
+		var optionalCash;
+		if (this.state.showCash) {
+			optionalCash = (
+				<div>
+					Contact Email:<br/><input type='text' ref='contactEmail'/><br/>
+					Address:<br/><input type='text' ref='address'/>
+				</div>
+			);
+		};
+
+		var optionalPaypal;
+		if (this.state.showPaypal) {
+			optionalPaypal = (
+				<div>
+					Contact Email:<br/><input type='text' ref='contactEmail' /><br/>
+					Paypal Email:<br/><input type='text' ref='paypalEmail' />
+				</div>
+			);
+		}
+
+
+		return (
+			<div className='panel' id='requestPanel'>
+				<div>
+					<h3>we see you are doing pretty well...</h3>
+					<h2>If you end up winning, how would you like your $10?</h2>
+					<table>
+						<tbody>
+							<tr>
+								<td>
+									<input type='radio' name='payMethod' id='cash' onChange={this.showCash} /><label htmlFor='cash'>Cash</label><br/>
+									<input type='radio' name='payMethod' id='paypal' onChange={this.showPaypal} /><label htmlFor='paypal'>Paypal</label><br/>
+									<input type='radio' name='payMethod' id='asklater' onChange={this.hideAll} /><label htmlFor='asklater'>Ask me later</label><br/>
+								</td>
+								<td>
+									{optionalCash}
+									{optionalPaypal}
+								</td>
+							</tr>
+							<tr>
+								<td colSpan='2'>
+									<button onClick={this.submitForm}>SUBMIT</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		);
+	}
+});
 var WelcomeMessage = React.createClass({
 	getInitialState: function() {
 		return {
@@ -510,27 +619,27 @@ var WelcomeMessage = React.createClass({
 	},
 	render: function() {
 		return (
-			<div id='welcomeMessage'>
+			<div className='panel' id='welcomeMessage'>
 				<div>
 					<p>Hi there!  We see this is{this.state.isnt} your first visit to Tap Four (The Win-Big $10 Giveaway) and even though it is a very simple game, we just wanted to give you a quick rundown on the specifics.</p>
 					<div id='examplePullout'>
 						<h2>Example match</h2>
 						<div>
 							<p>
-								Player #1: 3-4-2-2<span className='good'>Good move!</span>
-								Player #2: 3-4-1-2<span className='good'>Good move!</span>
-								Player #1: 3-2-1-2<span className='good'>Good move!</span>
-								Player #2: 3-1-3!<span className='bad'>Bad move!</span>
+								Player #1: 3-4-2-2<span className='good'>Good move!</span><br/>
+								Player #2: 3-4-1-2<span className='good'>Good move!</span><br/>
+								Player #1: 3-2-1-2<span className='good'>Good move!</span><br/>
+								Player #2: 3-1-3 !<span className='bad'>Bad move!</span>
 							</p>
 							<p>
-								Player #1: 1-4-1-3<span className='good'>Good move!</span>
-								Player #2: 1-1-1-3<span className='good'>Good move!</span>
-								Player #1: 1-1 !<span className='good'>Bad move!</span>
+								Player #1: 1-4-1-3<span className='good'>Good move!</span><br/>
+								Player #2: 1-1-1-3<span className='good'>Good move!</span><br/>
+								Player #1: 1-1 !<span className='bad'>Bad move!</span>
 							</p>
 							<p>
-								Player #1: 3-2-1-4<span className='good'>Good move!</span>
-								Player #2: 2-2-1-4<span className='good'>Good move!</span>
-								Player #1: 1-2-1-3 !<span className='good'>Bad move!</span>
+								Player #1: 3-2-1-4<span className='good'>Good move!</span><br/>
+								Player #2: 2-2-1-4<span className='good'>Good move!</span><br/>
+								Player #1: 1-2-1-3 !<span className='bad'>Bad move!</span>
 							</p>
 						</div>
 					</div>
@@ -554,6 +663,7 @@ var TapFour = React.createClass({
 			curRound: 0,
 			inGame: false,
 			displayWelcome: false,
+			displayRequest: false,
 			scoreToBeat: null,
 			emitOnContinue: true
 		};
@@ -631,20 +741,39 @@ var TapFour = React.createClass({
 		});
 	},
 
+	showRequestInfo: function() {
+		console.log('show requestpanel');
+		this.setState({
+			displayRequest: true,
+			displayWelcome: false
+		});
+	},
+	closeRequestPanel: function() {
+		this.setState({
+			displayRequest: false,
+			displayWelcome: false
+		});
+	},
+
 	render: function() {
 
-		var optionalEl;
+		var optionalWelcome;
 		if (this.state.displayWelcome) {
-			optionalEl = (<WelcomeMessage continueOnNewUser={this.continueOnNewUser} />);
+			optionalWelcome = (<WelcomeMessage continueOnNewUser={this.continueOnNewUser} />);
+		}
+		var optionalRequest;
+		if (this.state.displayRequest) {
+			optionalRequest = (<ContactRequest hideMe={this.closeRequestPanel} headerChange={this.headerChange} />);
 		}
 
 		return (
 			<div id='container'>
 				<table>
 					<tr><td><HeaderBoard toggleInfo={this.toggleInfo} score={this.state.score} curRound={this.state.curRound} scoreToBeat={this.state.scoreToBeat} headerText={this.state.headerText} getInGame={this.state.inGame} displayingInfo={this.state.displayWelcome} /></td></tr>
-					<tr><td><GameArea toggleInfo={this.toggleInfo} scoreChange={this.scoreChange} roundChange={this.roundChange} updateScoreToBeat={this.updateScoreToBeat} score={this.state.score} curRound={this.state.curRound} headerChange={this.headerChange} currentlyInGame={this.state.inGame} inGameChange={this.inGameChange} /></td></tr>
+					<tr><td><GameArea toggleInfo={this.toggleInfo} scoreChange={this.scoreChange} roundChange={this.roundChange} updateScoreToBeat={this.updateScoreToBeat} score={this.state.score} curRound={this.state.curRound} headerChange={this.headerChange} currentlyInGame={this.state.inGame} inGameChange={this.inGameChange} showRequestInfo={this.showRequestInfo} /></td></tr>
 				</table>
-				{optionalEl}
+				{optionalWelcome}
+				{optionalRequest}
 			</div>
 		);
 	}
