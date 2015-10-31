@@ -283,7 +283,9 @@ io.on('connection', function(socket) {
             socket.emit('scoreToBeat', {score: score});
         });
 
-        visitLogFunctions.logNewVisit(myUserId, clientIp, 0);
+        visitLogFunctions.logNewVisit(myUserId, clientIp, 0, function(vid) {
+          visitId = vid;
+        });
       });
     }, 1800);
   });
