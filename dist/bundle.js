@@ -80,7 +80,6 @@
 				selected: resetselected
 			});
 		}).bind(this), time);
-		console.log('displaying ' + num);
 	};
 	var GameArea = React.createClass({
 		displayName: "GameArea",
@@ -197,7 +196,6 @@
 							myTurn: true
 						});
 						this.props.inGameChange(true);
-						console.log('here');
 					}).bind(this), 1800);
 				});
 			}).bind(this));
@@ -330,18 +328,13 @@
 					numOff++;
 				}
 			}
-			console.log('currentplay ' + this.state.currentPlay);
-			console.log('pastplay ' + this.state.pastPlay);
-			console.log('numoff ' + numOff);
 
 			return numOff;
 		},
 
 		handleClick: function handleClick(index) {
 
-			console.log('myturn ' + this.state.myTurn);
 			console.log('isNoneSelected ' + this.isNoneSelected());
-			console.log('selected ' + this.state.selected);
 
 			if (this.isNoneSelected() && this.state.justClicked !== index) {
 
@@ -355,15 +348,11 @@
 					});
 				}).bind(this), 500);
 
-				console.log('here');
-
 				if (this.state.myTurn) {
 
 					this.setState({
 						currentPlay: this.state.currentPlay.concat(index)
 					}, function () {
-
-						console.log(this.state.currentPlay);
 
 						// first off...is it a bad move?
 						if (this.state.pastPlay.length !== 0 && (this.getNumOff() > 1 || this.getNumOff() !== 1 && this.state.currentPlay.length === 4)) {
@@ -372,7 +361,7 @@
 							displayNum.call(this, index, 'red', 1000);
 
 							console.log('num off ' + this.getNumOff());
-							console.log('pastplay ' + this.state.pastPlay);
+
 							this.props.headerChange('YOU LOSE :( you played ' + this.state.currentPlay + ' after ' + this.state.pastPlay);
 
 							mySocket.emit('fail', { move: this.state.currentPlay, round: this.props.curRound });
@@ -408,8 +397,6 @@
 						} else {
 
 								// in case of good click :-)
-
-								console.log('sending');
 
 								mySocket.emit("sendClick", { play: index });
 
@@ -580,7 +567,6 @@
 			if (this.state.currentChoice === 'asklater') {
 				this.props.hideMe();
 				this.props.headerChange('well alright then...<br>now waiting for opponent');
-				console.log('asklater');
 			} else {
 				mySocket.emit('sendPreferences', {
 					contactEmail: this.refs.contactEmail ? this.refs.contactEmail.getDOMNode().value : '',
@@ -885,7 +871,7 @@
 			}
 
 			if (docCookies.hasItem('userStatus')) {
-				console.log('woops');
+
 				this.blockEmitOnContinue();
 			}
 		},
@@ -938,14 +924,14 @@
 		},
 
 		updateScoreToBeat: function updateScoreToBeat(s) {
-			console.log('score updaet ' + s);
+
 			this.setState({
 				scoreToBeat: s
 			});
 		},
 
 		showRequestInfo: function showRequestInfo() {
-			console.log('show requestpanel');
+
 			this.setState({
 				displayRequest: true,
 				displayWelcome: false

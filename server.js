@@ -246,21 +246,7 @@ app.get('/js/mozilla-cookies.js', function(req, res, next) {
 });
 
 io.on('connection', function(socket) {
-  var clientIp = socket.request.connection.remoteAddress.split(':')[3];
-  console.log('clientip ' + clientIp);
-
-
-  var address = socket.handshake.address;
-  console.log('New connection from ' + address.address + ':' + address.port);
-
-
-  var sHeaders = socket.handshake.headers;
-  console.info('[%s:%s] CONNECT', sHeaders['x-forwarded-for'], sHeaders['x-forwarded-port']);
-
-
-console.log('connection :', socket.request.connection._peername);
-
-  console.log('socket handshake big    ' + JSON.stringify(socket.handshake));
+  var clientIp = socket.handshake.headers['x-forwarded-for'];
 
   var myUserId = null;
   var mySocketId = socket.id;
@@ -427,10 +413,14 @@ console.log('connection :', socket.request.connection._peername);
       waitingForPlayer = null;
     }
     console.log('here disconnect')
-    if (visitId && connectedUsers[myUserId]) {  // should be
+    if (visitId && connectedUsers[myUserId]) {  // should be if authorized or new user'd
       console.log('closing out visit');
       var leaveTime = Math.floor(Date.now() / 1000);
       visitLogFunctions.closeOutVisit(visitId, connectedUsers[myUserId].score, leaveTime-startTime, connectedUsers[myUserId].gamesWon, connectedUsers[myUserId].gamesLost);
+      
+    } else if (!myUserId) {
+      var leaveTime = Math.floor(Date.now() / 1000);
+      generalLogFunctions.logMessage('user from ' + clientIp + ' stayed for ' + (leaveTime-startTime) + ' then left without continue');
     }
 
     connectedUsers[myUserId] = undefined;
