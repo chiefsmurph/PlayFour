@@ -205,7 +205,6 @@
 			mySocket.on('winner', (function (data) {
 				this.props.headerChange('you win! opp played ' + data.move + ' after ' + this.state.pastPlay);
 				var newScore = this.props.score + this.props.curRound;
-				this.props.scoreChange(newScore);
 				this.props.roundChange(0);
 				this.props.inGameChange(false);
 				this.setState({
@@ -237,7 +236,6 @@
 
 				mySocket.emit('loner', { round: this.props.curRound });
 				var newScore = this.props.score + this.props.curRound;
-				this.props.scoreChange(newScore);
 				this.props.roundChange(0);
 
 				this.setState({
@@ -287,6 +285,7 @@
 			}).bind(this));
 
 			mySocket.on('updateLocal', (function (data) {
+				this.props.changeScore(data.score);
 				docCookies.setItem('userStatus', JSON.stringify({
 					userId: this.state.userId,
 					score: data.score,
@@ -382,7 +381,6 @@
 								this.props.inGameChange(false);
 							}).bind(this), 1000);
 
-							this.props.scoreChange(this.props.score - this.props.curRound / 2);
 							this.props.roundChange(0);
 
 							this.setState({
