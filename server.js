@@ -146,6 +146,10 @@ app.get('/reauth', function(req, res, next) {
   res.sendfile(__dirname + '/public/reauth.html');
 });
 
+app.get('/js/mozilla-cookies.js', function(req, res, next) {
+  res.sendfile(__dirname + '/public/js/mozilla-cookies.js');
+});
+
 io.on('connection', function(socket) {
 
   var myUserId = null;
