@@ -626,7 +626,7 @@ var WelcomeMessage = React.createClass({
 				<div>
 					<p>Hi there!  We see this is{this.state.isnt} your first visit to Tap Four (The Win-Big $10 Giveaway) and even though it is a very simple game, we just wanted to give you a quick rundown on the specifics.</p>
 					<div id='examplePullout'>
-						<h2>Example match</h2>
+						<h2>Example matches</h2>
 						<div>
 							<p>
 								Player #1: 3-4-2-2<span className='good'>Good move!</span><br/>

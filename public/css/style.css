@@ -38,7 +38,7 @@ body {
 	padding: 1vh 3vh 2.5vh 3vh;
 	font-style: italic;
 	color: white;
-	font-size:calc(70% + 1.1vh);
+	font-size:calc(70% + 0.8vh);
 	background-image: url('../img/absurdity.png');
 	/*background-color: #fff;
 background-image:
@@ -68,8 +68,10 @@ body.no-touch .panel > div {
 .no-touch #requestPanel > div {
   width: 30%;
 }
-#requestPanel input {
+#requestPanel input[type='radio'] {
   margin-right: 1em;;
+  cursor: pointer;
+  transform: scale(1.5);
 }
 #requestPanel input[type='text'] {
   width: 70%;
@@ -296,7 +298,7 @@ body.no-touch .headerBoard #infoIcon img.faded:hover {
   float: right;
   padding: 0;
   border: 3px solid brown;
-  margin: 0 1vh 10px 3vh;
+  margin: -1vh 1vh 10px 3vh;
   /*width: 30%;*/
   background-color: white;
   color: black;

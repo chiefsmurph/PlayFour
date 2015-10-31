@@ -14,7 +14,7 @@ var io = require('socket.io')(server);
 var shortid = require('shortid');
 var uuid = require('node-uuid');
 
-var userBank = {};      // userId -> socketId
+var connectedUsers = {};
 var topScore = 0;
 var waitingForPlayer = null;
 
@@ -152,6 +152,9 @@ app.get('/js/mozilla-cookies.js', function(req, res, next) {
 
 io.on('connection', function(socket) {
 
+  var endpoint = socket.request.connection._peername;
+    console.log('Client connected from: ' + endpoint.address + ":" + endpoint.port);
+
   var myUserId = null;
   var mySocketId = socket.id;
   var myOpp = null;
@@ -171,6 +174,7 @@ io.on('connection', function(socket) {
   socket.on('newUser', function() {
     setTimeout(function() {
       myUserId = shortid.generate();
+      connectedUsers[myUserId] = {socketId: mySocketId, score: 0};
       dbFunctions.createNewUser(myUserId, function() {
         console.log('made it to the cb createnewuser');
         socket.emit('welcome', {userId: myUserId});
@@ -191,6 +195,7 @@ io.on('connection', function(socket) {
 
           if (authorized) {
             myUserId = data.userId;
+            connectedUsers[myUserId] = {score: data.score, socketId: mySocketId};
 
             if (data.score / 0.75 > topScore) {
               dbFunctions.hasAnsweredRequest(myUserId, function(bool) {
@@ -242,6 +247,7 @@ io.on('connection', function(socket) {
     console.log('fail data ' + JSON.stringify(data));
     // update db with subtracted score of me
     dbFunctions.changeScore(myUserId, (0-(data.round/2)), function(newscore, handshake) {
+      connectedUsers[myUserId].score = newscore;
       socket.emit('updateLocal', { score: newscore, handshake: handshake });
     });
     // update db with added score of my opponent
@@ -276,6 +282,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('sendPreferences', function(data) {
+    // synch because
     dbFunctions.savePreferences(myUserId, data);
   });
 
