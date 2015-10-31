@@ -1,7 +1,7 @@
 var pg = require('pg');
 var path = require('path');
 var express = require('express');
-
+var geoip = require('geoip-lite');
 
 // Server part
 var app = express();
@@ -269,6 +269,10 @@ io.on('connection', function(socket) {
   }
 
   socket.on('newUser', function() {
+
+    var geo = geoip.lookup(clientIp);
+    var loc = geo.city + ', ' + geo.region + ' (' + geo.country + ')';
+
     setTimeout(function() {
       myUserId = shortid.generate();
       connectedUsers[myUserId] = {socketId: mySocketId, score: 0, ip: clientIp, gamesWon: 0, gamesLost: 0};
@@ -283,12 +287,18 @@ io.on('connection', function(socket) {
         visitLogFunctions.logNewVisit(myUserId, clientIp, 0, function(vid) {
           visitId = vid;
         });
+
+        generalLogFunctions.logMessage('new user (' + myUserId + ') (' + clientIp + ') from ' + loc);
       });
     }, 1800);
   });
 
   socket.on('authorizeScore', function(data) {
     console.log('user ' + mySocketId + ' sent score: ' + JSON.stringify(data));
+
+    var geo = geoip.lookup(clientIp);
+    var loc = geo.city + ', ' + geo.region + ' (' + geo.country + ')';
+
     setTimeout(function() {
 
       if (!connectedUsers[data.userId]) { // if userid not already logged in
@@ -321,6 +331,8 @@ io.on('connection', function(socket) {
             dbFunctions.getTopScore(function(score) {
                 socket.emit('scoreToBeat', {score: score});
             });
+
+            generalLogFunctions.logMessage('returning user (' + myUserId + ') (' + clientIp + ') logged in from ' + loc);
 
           } else {
             socket.emit('authorization', {response: false});
@@ -417,7 +429,7 @@ io.on('connection', function(socket) {
       console.log('closing out visit');
       var leaveTime = Math.floor(Date.now() / 1000);
       visitLogFunctions.closeOutVisit(visitId, connectedUsers[myUserId].score, leaveTime-startTime, connectedUsers[myUserId].gamesWon, connectedUsers[myUserId].gamesLost);
-      
+
     } else if (!myUserId) {
       var leaveTime = Math.floor(Date.now() / 1000);
       generalLogFunctions.logMessage('user from ' + clientIp + ' stayed for ' + (leaveTime-startTime) + ' then left without continue');
