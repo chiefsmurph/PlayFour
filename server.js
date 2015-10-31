@@ -256,6 +256,9 @@ io.on('connection', function(socket) {
   var startTime = Math.floor(Date.now() / 1000);
   var visitId;
 
+  var geo = geoip.lookup(clientIp);
+  var loc = geo.city + ', ' + geo.region + ' (' + geo.country + ')';
+
   console.log('new connection: ' + socket.id);
 
   var sendToOpp = function(event, obj) {
@@ -269,9 +272,6 @@ io.on('connection', function(socket) {
   }
 
   socket.on('newUser', function() {
-
-    var geo = geoip.lookup(clientIp);
-    var loc = geo.city + ', ' + geo.region + ' (' + geo.country + ')';
 
     setTimeout(function() {
       myUserId = shortid.generate();
@@ -295,9 +295,6 @@ io.on('connection', function(socket) {
 
   socket.on('authorizeScore', function(data) {
     console.log('user ' + mySocketId + ' sent score: ' + JSON.stringify(data));
-
-    var geo = geoip.lookup(clientIp);
-    var loc = geo.city + ', ' + geo.region + ' (' + geo.country + ')';
 
     setTimeout(function() {
 
@@ -432,7 +429,7 @@ io.on('connection', function(socket) {
 
     } else if (!myUserId) {
       var leaveTime = Math.floor(Date.now() / 1000);
-      generalLogFunctions.logMessage('user from ' + clientIp + ' stayed for ' + (leaveTime-startTime) + ' then left without continue');
+      generalLogFunctions.logMessage('user ' + clientIp + ' from ' + loc + ' stayed for ' + (leaveTime-startTime) + ' then left without continue');
     }
 
     connectedUsers[myUserId] = undefined;
