@@ -87,7 +87,9 @@
 	var startCount = function startCount() {
 		clearCount();
 		playerTimeout = setTimeout((function () {
+
 			mySocket.emit('fail', { round: this.props.curRound, timedout: true });
+			window.location.replace('https://www.youtube.com/watch?v=9zdNdjF-htY'); // wake up
 		}).bind(this), 10000); /// you have 10 sec to make a move
 	};
 	var clearCount = function clearCount() {
@@ -215,6 +217,7 @@
 								myTurn: true
 							});
 							this.props.inGameChange(true);
+							startCount.call(this);
 						}
 					}).bind(this), 1800);
 				});
