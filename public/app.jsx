@@ -369,7 +369,7 @@ var GameArea = React.createClass({
 												this.props.headerChange('YOU LOSE :( you played ' + this.state.currentPlay + ' after ' + this.state.pastPlay);
 												mySocket.emit('fail', {move: this.state.currentPlay, round: this.props.curRound});
 											} else {
-												this.props.headerChange('YOU LOSE :( you cant repeat moves (played' + this.state.currentPlay  + ' twice)');
+												this.props.headerChange('YOU LOSE :( cant repeat moves (you played ' + this.state.currentPlay  + ' twice)');
 												mySocket.emit('fail', {move: this.state.currentPlay, round: this.props.curRound, repeat: true});
 											}
 
