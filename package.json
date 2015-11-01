@@ -25,6 +25,7 @@
     "babel-loader": "^5.3.3",
     "css-loader": "^0.21.0",
     "file-loader": "^0.8.4",
+    "image-webpack-loader": "^1.6.2",
     "img-loader": "^1.2.0",
     "indexhtml-webpack-plugin": "^0.1.9",
     "jsx-loader": "^0.13.2",

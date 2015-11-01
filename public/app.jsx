@@ -8,6 +8,7 @@ var ReactFitText = require('react-fittext');
 require("./index.html");
 require('./css/style.css');
 require('./css/tooltip.css');
+require('./img/tapfour.png');
 require('./js/odometer-0.4.6/themes/odometer-theme-minimal.css');
 
 var infoIconPNG = require('./img/info_icon2.png');
