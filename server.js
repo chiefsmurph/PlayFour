@@ -122,7 +122,7 @@ var dbFunctions = {
           var handshake = uuid.v1();
           client.query('UPDATE scores SET score = ' + newScore + ', handshake = \'' + handshake + '\' WHERE username=\'' + userId + '\'', function(err, result) {
             cb(newScore, handshake);
-            if (curScore === topScore) {
+            if (curScore === topScore || newScore > topScore) {
               // if they were previously the reigning champ...
               // update the scoretobeat on all connected clients
               dbFunctions.getTopScore(function(score) {
