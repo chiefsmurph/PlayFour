@@ -25,7 +25,7 @@ function getCurrentTimestamp() {
 
     var hour = date.getHours();
     var ampm = hour >= 12 ? 'pm' : 'am';
-    hour = hours % 12;
+    hour = hour % 12;
     hour = hour ? hour : 12; // the hour '0' should be '12'
 
     var min  = date.getMinutes();
