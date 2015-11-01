@@ -19,8 +19,9 @@ var topScore = 0;
 var waitingForPlayer = null;
 
 function getCurrentTimestamp() {
-
+    var d = new Date();
     var date = new Date();
+    date.setHours(d.getHours() - 7);
     var ampm = "";
 
     var hour = date.getHours();
