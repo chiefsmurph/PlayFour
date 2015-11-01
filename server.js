@@ -272,6 +272,18 @@ io.on('connection', function(socket) {
 
   var returnUserToken = function() {
     return {userId: myUserId, socketId: mySocketId};
+  };
+
+  var checkforwaiting = function() {
+    if (waitingForPlayer) {
+      myOpp = waitingForPlayer;
+      sendToOpp('opp', {opp: returnUserToken(), passback: true});
+      socket.emit('opp', {opp: myOpp});
+      console.log(mySocketId + ' ');
+    } else {
+      waitingForPlayer = returnUserToken();
+      console.log(myUserId + ' waiting for player');
+    }
   }
 
   socket.on('newUser', function() {
@@ -348,15 +360,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('checkForWaiting', function() {
-    if (waitingForPlayer) {
-      myOpp = waitingForPlayer;
-      sendToOpp('opp', {opp: returnUserToken(), passback: true});
-      socket.emit('opp', {opp: myOpp});
-      console.log(mySocketId + ' ');
-    } else {
-      waitingForPlayer = returnUserToken();
-      console.log(myUserId + ' waiting for player');
-    }
+    checkforwaiting();
   });
 
   socket.on('sendClick', function(data) {
@@ -409,7 +413,9 @@ io.on('connection', function(socket) {
     console.log('loner');
     // todo: update db of both winner and loser by data.round
     myOpp = null;
-    waitingForPlayer = returnUserToken();
+    setTimeout(function() {
+      checkforwaiting();
+    }, 800);
   });
 
   socket.on('sendPreferences', function(data) {
