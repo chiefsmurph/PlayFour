@@ -842,7 +842,7 @@
 					React.createElement(
 						"p",
 						null,
-						"How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed."
+						"How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed.  You also are not allowed to repeat the same move twice in a row."
 					),
 					React.createElement(
 						"p",

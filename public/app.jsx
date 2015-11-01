@@ -672,7 +672,7 @@ var WelcomeMessage = React.createClass({
 							</p>
 						</div>
 					</div>
-					<p>How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed.</p>
+					<p>How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed.  You also are not allowed to repeat the same move twice in a row.</p>
 					<p>Whoever possesses the highest score at the time of the next Win-Big $10 Giveaway will receive $10 in cash or paypal.</p>
 					<div id='countDown'>
 						Time of next $10 Giveaway:
