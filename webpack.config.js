@@ -27,8 +27,8 @@ var config = {
       {
         test: /\.(png|jpg)$/,
         loaders: [
-          'file?hash=sha512&digest=hex&name=[hash].[ext]',
-          'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
+            'file?hash=sha512&digest=hex&name=[hash].[ext]',
+            'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
         ]
       } // inline base64 URLs for <=8k images, direct URLs for the rest
     ]
