@@ -381,7 +381,7 @@
 
 							console.log('num off ' + this.getNumOff());
 
-							if (this.repeatedMove()) {
+							if (!this.repeatedMove()) {
 								this.props.headerChange('YOU LOSE :( you played ' + this.state.currentPlay + ' after ' + this.state.pastPlay);
 								mySocket.emit('fail', { move: this.state.currentPlay, round: this.props.curRound });
 							} else {
