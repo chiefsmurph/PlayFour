@@ -22,15 +22,11 @@ function getCurrentTimestamp() {
     var d = new Date();
     var date = new Date();
     date.setHours(d.getHours() - 8);
-    var ampm = "";
 
     var hour = date.getHours();
-    if (hour > 12) {
-      ampm = "pm";
-      hour = hour - 12;
-    } else {
-      ampm = "am";
-    }
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
 
     var min  = date.getMinutes();
     min = (min < 10 ? "0" : "") + min;
