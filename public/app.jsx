@@ -46,6 +46,7 @@ var GameArea = React.createClass({
 			myTurn: false,
 			currentPlay: [],
 			pastPlay: [],
+			myLastPlay: [],
 			selected: [null, null, null, null, null],
 			justClicked: 0,
 			selectedQueue: [],
@@ -170,7 +171,11 @@ var GameArea = React.createClass({
 		}.bind(this));
 
 		mySocket.on('winner', function(data) {
-			this.props.headerChange('you win! opp played ' + data.move + ' after ' + this.state.pastPlay);
+			if (!data.repeat) {
+				this.props.headerChange('you win! opp played ' + data.move + ' after ' + this.state.pastPlay);
+			} else {
+				this.props.headerChange('you win! opp played ' + data.move + ' twice in a row');
+			}
 			var newScore = this.props.score + this.props.curRound;
 			this.props.roundChange(0);
 			this.props.inGameChange(false);
@@ -178,6 +183,7 @@ var GameArea = React.createClass({
 				myTurn: false,
 				currentPlay: [],
 				pastPlay: [],
+				myLastPlay: [],
 				selected: [null, false, false, false, false],
 				selectedQueue: []
 			});
@@ -211,6 +217,7 @@ var GameArea = React.createClass({
 				myTurn: false,
 				currentPlay: [],
 				pastPlay: [],
+				myLastPlay: [],
 				selected: [null, false, false, false, false],
 				selectedQueue: [],
 				opp: null
@@ -227,6 +234,8 @@ var GameArea = React.createClass({
 			}, function() {
 
 				if (this.state.currentPlay.length === 4) {
+
+					// end of move its a good one
 
 					setTimeout(function() {
 
@@ -314,6 +323,10 @@ var GameArea = React.createClass({
 		return numOff;
 	},
 
+	repeatedMove: function() {
+		return (this.state.currentPlay.length === 4 && JSON.stringify(this.state.currentPlay) === JSON.stringify(this.state.myLastPlay) );
+	},
+
 
 	handleClick: function(index) {
 
@@ -344,16 +357,21 @@ var GameArea = React.createClass({
 								console.log(this.state.currentPlay);
 
 								// first off...is it a bad move?
-								if (this.state.pastPlay.length !== 0 && (this.getNumOff() > 1 || (this.getNumOff() !== 1 && this.state.currentPlay.length === 4))) {
+								if (this.state.pastPlay.length !== 0 && (this.getNumOff() > 1 || (this.getNumOff() !== 1 && this.state.currentPlay.length === 4) || (this.repeatedMove()) ) ) {
 
 											// in case of wrong click
 											displayNum.call(this, index, 'red', 1000);
 
 											console.log('num off ' + this.getNumOff());
 											console.log('pastplay ' + this.state.pastPlay);
-											this.props.headerChange('YOU LOSE :( you played ' + this.state.currentPlay + ' after ' + this.state.pastPlay);
 
-											mySocket.emit('fail', {move: this.state.currentPlay, round: this.props.curRound});
+											if (this.repeatedMove()) {
+												this.props.headerChange('YOU LOSE :( you played ' + this.state.currentPlay + ' after ' + this.state.pastPlay);
+												mySocket.emit('fail', {move: this.state.currentPlay, round: this.props.curRound});
+											} else {
+												this.props.headerChange('YOU LOSE :( you cant repeat moves (played' + this.state.currentPlay  + ' twice)');
+												mySocket.emit('fail', {move: this.state.currentPlay, round: this.props.curRound, repeat: true});
+											}
 
 											setTimeout(function() {
 												this.props.inGameChange(false);
@@ -365,6 +383,7 @@ var GameArea = React.createClass({
 												myTurn: false,
 												currentPlay: [],
 												pastPlay: [],
+												myLastPlay: [],
 												selectedQueue: []
 											});
 
@@ -408,6 +427,7 @@ var GameArea = React.createClass({
 												this.setState({
 													currentPlay: [],
 													pastPlay: this.state.currentPlay,
+													myLastPlay: this.state.currentPlay,
 													myTurn: false
 												});
 
