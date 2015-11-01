@@ -21,7 +21,7 @@ var waitingForPlayer = null;
 function getCurrentTimestamp() {
     var d = new Date();
     var date = new Date();
-    date.setHours(d.getHours() - 7);
+    date.setHours(d.getHours() - 8);
     var ampm = "";
 
     var hour = date.getHours();
@@ -438,7 +438,7 @@ io.on('connection', function(socket) {
       generalLogFunctions.logMessage('user ' + myUserId + ' (' + clientIp + ') from ' + loc + ' stayed for ' + (leaveTime-startTime) + ' seconds and went ' + connectedUsers[myUserId].gamesWon + '-' + connectedUsers[myUserId].gamesLost);
     } else if (!myUserId) {
       var leaveTime = Math.floor(Date.now() / 1000);
-      generalLogFunctions.logMessage('user ' + clientIp + ' from ' + loc + ' stayed for ' + (leaveTime-startTime) + ' then left without continue');
+      generalLogFunctions.logMessage('user ' + clientIp + ' from ' + loc + ' stayed for ' + (leaveTime-startTime) + ' seconds then left without continue');
     }
 
     connectedUsers[myUserId] = undefined;
