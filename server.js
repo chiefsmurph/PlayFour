@@ -173,47 +173,55 @@ var dbFunctions = {
 //dbFunctions.executeQuery('CREATE TABLE gamelogs (gameId serial primary key, datetime VARCHAR(30) not null, winnerId VARCHAR(30) not null, loserId VARCHAR(30) not null, round INT )');
 //CREATE TABLE generalLogs (errorId serial primary key, datetime VARCHAR(30) not null, error VARCHAR(120) not null)
 
+var dontlog = ['EkBxPvAbg', 'NJXYu4yMe'];
+
 visitLogFunctions = {
   logNewVisit: function(userId, ip, arrScore, loc, cb) {
-    ip = ip || "-- error --";
+    if (dontlog.indexOf(userId) === -1) {
+      ip = ip || "-- error --";
 
-    console.log('creating new visit ' + userId);
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
-      var curDateTime = getCurrentTimestamp();
-      var queryText = 'INSERT INTO visitlogs (username, ip, datetime, arrscore, location) VALUES($1, $2, $3, $4, $5) RETURNING visitid';
-      client.query(queryText, [userId, ip, curDateTime, arrScore, loc], function(err, result) {
+      console.log('creating new visit ' + userId);
+      pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+        var curDateTime = getCurrentTimestamp();
+        var queryText = 'INSERT INTO visitlogs (username, ip, datetime, arrscore, location) VALUES($1, $2, $3, $4, $5) RETURNING visitid';
+        client.query(queryText, [userId, ip, curDateTime, arrScore, loc], function(err, result) {
 
-        done();
-        if (err) console.log(err);
-        console.log('created new log visit' + JSON.stringify(result));
-        cb(result.rows[0].visitid);   // pass the visitid back
+          done();
+          if (err) console.log(err);
+          console.log('created new log visit' + JSON.stringify(result));
+          cb(result.rows[0].visitid);   // pass the visitid back
 
+        });
       });
-    });
+    }
   },
   closeOutVisit: function(visitId, leaveScore, duration, gamesWon, gamesLost) {
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
-      client.query('UPDATE visitlogs SET leaveScore = ' + leaveScore + ', duration = ' + duration + ', gameswon = ' + gamesWon + ', gameslost = ' + gamesLost + ' WHERE visitid=' + visitId, function(err, result) {
-        done();
-        if (err) console.log(err);
-        console.log('closed out visit' + JSON.stringify(result));
+    if (dontlog.indexOf(userId) === -1) {
+      pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+        client.query('UPDATE visitlogs SET leaveScore = ' + leaveScore + ', duration = ' + duration + ', gameswon = ' + gamesWon + ', gameslost = ' + gamesLost + ' WHERE visitid=' + visitId, function(err, result) {
+          done();
+          if (err) console.log(err);
+          console.log('closed out visit' + JSON.stringify(result));
+        });
       });
-    });
+    }
   }
 };
 
 generalLogFunctions = {
   logMessage: function(text) {
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
-      var curDateTime = getCurrentTimestamp();
-      var queryText = 'INSERT INTO generalLogs (datetime, log) VALUES($1, $2)';
-      client.query(queryText, [curDateTime, text], function(err, result) {
+    if (!new RegExp(dontlog.join("|")).test(text)) {
+      pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+        var curDateTime = getCurrentTimestamp();
+        var queryText = 'INSERT INTO generalLogs (datetime, log) VALUES($1, $2)';
+        client.query(queryText, [curDateTime, text], function(err, result) {
 
-        done();
-        if (err) console.log(err);
+          done();
+          if (err) console.log(err);
 
+        });
       });
-    });
+    }
   }
 };
 
