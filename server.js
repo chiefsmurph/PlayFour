@@ -260,7 +260,7 @@ io.on('connection', function(socket) {
   var visitId;
 
   var geo = geoip.lookup(clientIp);
-  var loc = geo.city + ', ' + geo.region + ' (' + geo.country + ')';
+  var loc = (geo) ? geo.city + ', ' + geo.region + ' (' + geo.country + ')' : 'n/a';
 
   console.log('new connection: ' + socket.id);
 
