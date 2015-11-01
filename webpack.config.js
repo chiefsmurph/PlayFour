@@ -17,7 +17,7 @@ var config = {
         ]
       },
       {
-          test: /(index\.html|odometer\.min\.js)$/,
+          test: /(index\.html|odometer\.min\.js|\.mp3)$/,
           loader: 'file?name=[name].[ext]'
       },
       {

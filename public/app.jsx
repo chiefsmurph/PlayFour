@@ -16,6 +16,7 @@ var docCookies = require('./js/mozilla-cookies.js');
 require('./js/odometer-0.4.6/odometer.min.js');
 
 var OdometerComponent = require('./js/react-odometer.js');
+var connectedSound = new Audio(require('./audio/connected.mp3'));
 
 var mySocket;
 
@@ -139,9 +140,13 @@ var GameArea = React.createClass({
 
 			});
 
+			connectedSound.play();
+
 		}.bind(this));
 
 		mySocket.on('connected', function(data) {
+
+			connectedSound.play();
 
 			this.setState({
 				opp: data.opp.userId

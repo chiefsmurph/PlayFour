@@ -61,6 +61,7 @@
 	__webpack_require__(178);
 
 	var OdometerComponent = __webpack_require__(179);
+	var connectedSound = new Audio(__webpack_require__(180));
 
 	var mySocket;
 
@@ -180,9 +181,13 @@
 						}).bind(this), 1800);
 					}
 				});
+
+				connectedSound.play();
 			}).bind(this));
 
 			mySocket.on('connected', (function (data) {
+
+				connectedSound.play();
 
 				this.setState({
 					opp: data.opp.userId
@@ -21217,6 +21222,12 @@
 
 	module.exports = OdometerComponent;
 
+
+/***/ },
+/* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__.p + "connected.mp3"
 
 /***/ }
 /******/ ]);
