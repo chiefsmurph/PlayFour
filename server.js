@@ -174,14 +174,14 @@ var dbFunctions = {
 //CREATE TABLE generalLogs (errorId serial primary key, datetime VARCHAR(30) not null, error VARCHAR(120) not null)
 
 visitLogFunctions = {
-  logNewVisit: function(userId, ip, arrScore, cb) {
+  logNewVisit: function(userId, ip, arrScore, loc, cb) {
     ip = ip || "-- error --";
 
     console.log('creating new visit ' + userId);
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
       var curDateTime = getCurrentTimestamp();
-      var queryText = 'INSERT INTO visitlogs (username, ip, datetime, arrscore) VALUES($1, $2, $3, $4) RETURNING visitid';
-      client.query(queryText, [userId, ip, curDateTime, arrScore], function(err, result) {
+      var queryText = 'INSERT INTO visitlogs (username, ip, datetime, arrscore, location) VALUES($1, $2, $3, $4, $5) RETURNING visitid';
+      client.query(queryText, [userId, ip, curDateTime, arrScore, loc], function(err, result) {
 
         done();
         if (err) console.log(err);
@@ -285,7 +285,7 @@ io.on('connection', function(socket) {
             socket.emit('scoreToBeat', {score: score});
         });
 
-        visitLogFunctions.logNewVisit(myUserId, clientIp, 0, function(vid) {
+        visitLogFunctions.logNewVisit(myUserId, clientIp, 0, loc, function(vid) {
           visitId = vid;
         });
 
@@ -307,7 +307,7 @@ io.on('connection', function(socket) {
           if (authorized) {
             myUserId = data.userId;
             connectedUsers[myUserId] = {score: data.score, socketId: mySocketId, ip: clientIp, gamesWon: 0, gamesLost: 0};
-            visitLogFunctions.logNewVisit(myUserId, clientIp, data.score, function(vid) {
+            visitLogFunctions.logNewVisit(myUserId, clientIp, data.score, loc, function(vid) {
               visitId = vid;
             });
 
