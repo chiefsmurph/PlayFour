@@ -63,6 +63,7 @@
 	var OdometerComponent = __webpack_require__(179);
 	var connectedSound = new Audio(__webpack_require__(180));
 
+	var playerTimeout;
 	var mySocket;
 
 	var displayNum = function displayNum(num, color, time) {
@@ -82,6 +83,15 @@
 				selected: resetselected
 			});
 		}).bind(this), time);
+	};
+	var startCount = function startCount() {
+		clearCount();
+		playerTimeout = setTimeout((function () {
+			mySocket.emit('fail', { round: this.props.curRound, timedout: true });
+		}).bind(this), 10000); /// you have 10 sec to make a move
+	};
+	var clearCount = function clearCount() {
+		clearTimeout(playerTimeout);
 	};
 	var GameArea = React.createClass({
 		displayName: "GameArea",
@@ -197,22 +207,32 @@
 					this.props.headerChange('connected to opponent:<br><span class="small">' + this.state.opp + '</span>');
 
 					setTimeout((function () {
-						this.props.headerChange('you start');
 
-						this.setState({
-							myTurn: true
-						});
-						this.props.inGameChange(true);
+						if (this.state.opp) {
+
+							this.props.headerChange('you start');
+							this.setState({
+								myTurn: true
+							});
+							this.props.inGameChange(true);
+						}
 					}).bind(this), 1800);
 				});
 			}).bind(this));
 
 			mySocket.on('winner', (function (data) {
-				if (!data.repeat) {
-					this.props.headerChange('you win! opp played ' + data.move + ' after ' + this.state.pastPlay);
-				} else {
+
+				var wrong = data.move[data.move.length - 1];
+				displayNum.call(this, wrong, 'red');
+
+				if (data.repeat) {
 					this.props.headerChange('you win! opp played ' + data.move + ' twice in a row');
+				} else if (data.timedout) {
+					this.props.headerChange('you win! opp fell asleep on the job');
+				} else {
+					this.props.headerChange('you win! opp played ' + data.move + ' after ' + this.state.pastPlay);
 				}
+
 				var newScore = this.props.score + this.props.curRound;
 				this.props.roundChange(0);
 				this.props.inGameChange(false);
@@ -238,6 +258,7 @@
 					this.setState({
 						myTurn: true
 					});
+					startCount.call(this);
 				}).bind(this), 4100);
 			}).bind(this));
 
@@ -281,11 +302,14 @@
 							setTimeout((function () {
 
 								//console.log('opp played ' + this.state.currentPlay);
-								this.setState({
-									myTurn: true,
-									pastPlay: this.state.currentPlay,
-									currentPlay: []
-								});
+								setTimeout((function () {
+									this.setState({
+										myTurn: true,
+										pastPlay: this.state.currentPlay,
+										currentPlay: []
+									});
+									startCount.call(this);
+								}).bind(this), 100);
 								this.props.headerChange('now your turn');
 							}).bind(this), 1500);
 						}).bind(this), 500);
@@ -376,6 +400,7 @@
 						// first off...is it a bad move?
 						if (this.state.pastPlay.length !== 0 && (this.getNumOff() > 1 || this.getNumOff() !== 1 && this.state.currentPlay.length === 4 || this.repeatedMove())) {
 
+							clearCount();
 							// in case of wrong click
 							displayNum.call(this, index, 'red', 1000);
 
@@ -425,6 +450,8 @@
 								mySocket.emit("sendClick", { play: index });
 
 								if (this.state.currentPlay.length === 4) {
+
+									clearCount();
 									// click number 4! woo hoo
 									// switch turns
 									setTimeout((function () {
@@ -454,6 +481,7 @@
 									}).bind(this), 100 + Math.random() * 300);
 
 									displayNum.call(this, index, 'blue');
+									startCount.call(this);
 								}
 							}
 					});
@@ -842,7 +870,7 @@
 					React.createElement(
 						"p",
 						null,
-						"How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed.  You also are not allowed to repeat the same move twice in a row."
+						"How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed.  You also are not allowed to repeat the same move twice in a row and each click must take no less than 10 seconds to complete."
 					),
 					React.createElement(
 						"p",

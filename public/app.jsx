@@ -18,6 +18,7 @@ require('./js/odometer-0.4.6/odometer.min.js');
 var OdometerComponent = require('./js/react-odometer.js');
 var connectedSound = new Audio(require('./audio/connected.mp3'));
 
+var playerTimeout;
 var mySocket;
 
 var displayNum = function(num, color, time) {
@@ -38,6 +39,15 @@ var displayNum = function(num, color, time) {
 		});
 	}.bind(this), time);
 	console.log('displaying ' + num);
+}
+var startCount = function() {
+	clearCount();
+	playerTimeout = setTimeout(function() {
+		mySocket.emit('fail', {round: this.props.curRound, timedout: true});
+	}.bind(this), 10000);		/// you have 10 sec to make a move
+};
+var clearCount = function() {
+	clearTimeout(playerTimeout);
 }
 var GameArea = React.createClass({
 	getInitialState: function () {
@@ -156,13 +166,16 @@ var GameArea = React.createClass({
 				this.props.headerChange('connected to opponent:<br><span class="small">' + this.state.opp + '</span>');
 
 				setTimeout(function() {
-					this.props.headerChange('you start');
 
+					if (this.state.opp) {
+
+						this.props.headerChange('you start');
 						this.setState({
 							myTurn: true
 						});
 						this.props.inGameChange(true);
-						console.log('here');
+
+					}
 
 				}.bind(this), 1800);
 
@@ -171,11 +184,18 @@ var GameArea = React.createClass({
 		}.bind(this));
 
 		mySocket.on('winner', function(data) {
-			if (!data.repeat) {
-				this.props.headerChange('you win! opp played ' + data.move + ' after ' + this.state.pastPlay);
-			} else {
+
+			var wrong = data.move[data.move.length-1];
+			displayNum.call(this, wrong, 'red');
+
+			if (data.repeat) {
 				this.props.headerChange('you win! opp played ' + data.move + ' twice in a row');
+			} else if (data.timedout) {
+				this.props.headerChange('you win! opp fell asleep on the job');
+			} else {
+				this.props.headerChange('you win! opp played ' + data.move + ' after ' + this.state.pastPlay);
 			}
+
 			var newScore = this.props.score + this.props.curRound;
 			this.props.roundChange(0);
 			this.props.inGameChange(false);
@@ -202,6 +222,7 @@ var GameArea = React.createClass({
 				this.setState({
 					myTurn: true
 				});
+				startCount.call(this);
 			}.bind(this), 4100);
 
 		}.bind(this));
@@ -246,11 +267,14 @@ var GameArea = React.createClass({
 						setTimeout(function() {
 
 									//console.log('opp played ' + this.state.currentPlay);
-									this.setState({
-										myTurn: true,
-										pastPlay: this.state.currentPlay,
-										currentPlay: []
-									});
+									setTimeout(function() {
+										this.setState({
+											myTurn: true,
+											pastPlay: this.state.currentPlay,
+											currentPlay: []
+										});
+										startCount.call(this);
+									}.bind(this), 100);
 									this.props.headerChange('now your turn');
 
 						}.bind(this), 1500);
@@ -359,6 +383,7 @@ var GameArea = React.createClass({
 								// first off...is it a bad move?
 								if (this.state.pastPlay.length !== 0 && (this.getNumOff() > 1 || (this.getNumOff() !== 1 && this.state.currentPlay.length === 4) || (this.repeatedMove()) ) ) {
 
+											clearCount();
 											// in case of wrong click
 											displayNum.call(this, index, 'red', 1000);
 
@@ -415,6 +440,8 @@ var GameArea = React.createClass({
 
 
 											if (this.state.currentPlay.length === 4) {
+
+												clearCount();
 													// click number 4! woo hoo
 													// switch turns
 												setTimeout(function() {
@@ -446,6 +473,7 @@ var GameArea = React.createClass({
 												}.bind(this), 100+Math.random()*300);
 
 												displayNum.call(this, index, 'blue');
+												startCount.call(this);
 
 											}
 
@@ -672,7 +700,7 @@ var WelcomeMessage = React.createClass({
 							</p>
 						</div>
 					</div>
-					<p>How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed.  You also are not allowed to repeat the same move twice in a row.</p>
+					<p>How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed.  You also are not allowed to repeat the same move twice in a row and each click must take no less than 10 seconds to complete.</p>
 					<p>Whoever possesses the highest score at the time of the next Win-Big $10 Giveaway will receive $10 in cash or paypal.</p>
 					<div id='countDown'>
 						Time of next $10 Giveaway:

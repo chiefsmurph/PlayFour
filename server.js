@@ -384,7 +384,8 @@ io.on('connection', function(socket) {
     // notify opponent they won
     sendToOpp('winner', {
       move: data.move,
-      repeat: data.repeat
+      repeat: data.repeat,
+      timedout: data.timedout
     });
 
     gameLogFunctions.logGame(myOpp.userId, myUserId, data.round);
