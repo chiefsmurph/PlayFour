@@ -186,17 +186,17 @@ var GameArea = React.createClass({
 			setTimeout(function() {
 				this.props.headerChange('new game...');
 				this.props.inGameChange(true);
-			}.bind(this), 5000);
+			}.bind(this), 3700);
 
 			setTimeout(function() {
 				this.props.headerChange('your move / winner starts');
-			}.bind(this), 5500);
+			}.bind(this), 4000);
 
 			setTimeout(function() {
 				this.setState({
 					myTurn: true
 				});
-			}.bind(this), 5700);
+			}.bind(this), 4100);
 
 		}.bind(this));
 
@@ -374,7 +374,7 @@ var GameArea = React.createClass({
 												});
 												this.props.headerChange('new game...<br>opponent starts');
 												this.props.inGameChange(true);
-											}.bind(this), 5500);
+											}.bind(this), 4000);
 
 											// setTimeout(function() {
 											// 	this.props.headerChange('new game...your turn');
