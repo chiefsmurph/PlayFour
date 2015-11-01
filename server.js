@@ -276,6 +276,7 @@ io.on('connection', function(socket) {
       sendToOpp('opp', {opp: returnUserToken(), passback: true});
       socket.emit('opp', {opp: myOpp});
       console.log(mySocketId + ' ');
+      waitingForPlayer = null;
     } else {
       waitingForPlayer = returnUserToken();
       console.log(myUserId + ' waiting for player');
