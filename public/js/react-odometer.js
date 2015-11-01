@@ -6,7 +6,8 @@ var OdometerComponent = React.createClass({
       el: this.getDOMNode(),
       value: this.props.value,
       theme: 'minimal',
-      duration: 300
+      duration: 300,
+      format: ''
     });
   },
   componentDidUpdate: function() {
