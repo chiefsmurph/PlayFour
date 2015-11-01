@@ -427,7 +427,7 @@ io.on('connection', function(socket) {
       console.log('closing out visit');
       var leaveTime = Math.floor(Date.now() / 1000);
       visitLogFunctions.closeOutVisit(visitId, connectedUsers[myUserId].score, leaveTime-startTime, connectedUsers[myUserId].gamesWon, connectedUsers[myUserId].gamesLost);
-
+      generalLogFunctions.logMessage('user ' + myUserId + ' (' + clientIp + ') from ' + loc + ' stayed for ' + (leaveTime-startTime) + ' seconds and went ' + connectedUsers[myUserId].gamesWon + '-' + connectedUsers[myUserId].gamesLost);
     } else if (!myUserId) {
       var leaveTime = Math.floor(Date.now() / 1000);
       generalLogFunctions.logMessage('user ' + clientIp + ' from ' + loc + ' stayed for ' + (leaveTime-startTime) + ' then left without continue');
