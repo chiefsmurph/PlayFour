@@ -375,12 +375,14 @@ io.on('connection', function(socket) {
       socket.emit('updateLocal', { score: newscore, handshake: handshake });
     });
 
-    // update db with added score of my opponent
-    dbFunctions.changeScore(myOpp.userId, data.round, function(newscore, handshake) {
-      connectedUsers[myOpp.userId].score = newscore;
-      connectedUsers[myOpp.userId].gamesWon++;
-      sendToOpp('updateLocal', { score: newscore, handshake: handshake });
-    });
+    if (myOpp) {
+      // update db with added score of my opponent
+      dbFunctions.changeScore(myOpp.userId, data.round, function(newscore, handshake) {
+        connectedUsers[myOpp.userId].score = newscore;
+        connectedUsers[myOpp.userId].gamesWon++;
+        sendToOpp('updateLocal', { score: newscore, handshake: handshake });
+      });
+    }
 
     // notify opponent they won
     sendToOpp('winner', {
