@@ -19,7 +19,8 @@
     "react-odometer": "0.0.1",
     "sendmail": "^0.2.1",
     "shortid": "^2.2.4",
-    "socket.io": "~1.3.4"
+    "socket.io": "~1.3.4",
+    "strip-loader": "^0.1.0"
   },
   "devDependencies": {
     "babel-core": "^5.8.33",

@@ -79,7 +79,7 @@ var GameArea = React.createClass({
 			this.props.scoreChange(userStatus.score);
 
 			setTimeout(function() {
-				this.props.headerChange('welcome back<br>authorizing now');
+				this.props.headerChange('welcome back | sorry about the downtime<br>authorizing now');
 				mySocket.emit('authorizeScore', userStatus);
 			}.bind(this), 1200);
 
