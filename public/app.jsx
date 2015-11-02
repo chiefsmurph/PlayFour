@@ -231,6 +231,7 @@ var GameArea = React.createClass({
 		}.bind(this));
 
 		mySocket.on('loner', function() {
+			clearCount();
 			this.props.headerChange(this.state.opp + ' left.  <br>waiting for new player. ');
 
 			mySocket.emit('loner', {round: this.props.curRound});
