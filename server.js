@@ -408,7 +408,7 @@ io.on('connection', function(socket) {
           socket.emit('updateLocal', { score: newscore, handshake: handshake });
         });
 
-        if (myOpp) {
+        if (myOpp && data.round) {
           // update db with added score of my opponent
           dbFunctions.changeScore(myOpp.userId, data.round, function(newscore, handshake) {
             if (connectedUsers[myOpp.userId]) {
