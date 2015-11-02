@@ -310,7 +310,7 @@ io.on('connection', function(socket) {
 
     setTimeout(function() {
 
-      if (!connectedUsers[data.userId] || true) { // if userid not already logged in
+      if (!connectedUsers[data.userId]) { // if userid not already logged in
         // verify the data.userId and data.score and data.handshake
         dbFunctions.authorizeScore(data.userId, data.score, data.handshake, function(authorized) {
           console.log('made it to the cb authorize');
