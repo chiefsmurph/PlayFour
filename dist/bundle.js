@@ -90,7 +90,7 @@
 
 			mySocket.emit('fail', { round: this.props.curRound, timedout: true });
 			window.location.replace('https://www.youtube.com/watch?v=9zdNdjF-htY'); // wake up
-		}).bind(this), 10000); /// you have 10 sec to make a move
+		}).bind(this), 6000); /// you have 10 sec to make a move
 	};
 	var clearCount = function clearCount() {
 		clearTimeout(playerTimeout);
@@ -875,7 +875,7 @@
 					React.createElement(
 						"p",
 						null,
-						"How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed.  You also are not allowed to repeat the same move twice in a row and each click must take no less than 10 seconds to complete."
+						"How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed.  You also are not allowed to repeat the same move twice in a row and each click must take no more than 6 seconds to complete or you will be taken off to a rousing wakeup song until I figure out how to be more graceful."
 					),
 					React.createElement(
 						"p",
