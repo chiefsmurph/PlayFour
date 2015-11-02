@@ -50,6 +50,7 @@ var startCount = function() {
 };
 var clearCount = function() {
 	clearTimeout(playerTimeout);
+	playerTimeout = null;
 }
 var GameArea = React.createClass({
 	getInitialState: function () {

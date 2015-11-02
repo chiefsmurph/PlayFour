@@ -94,6 +94,7 @@
 	};
 	var clearCount = function clearCount() {
 		clearTimeout(playerTimeout);
+		playerTimeout = null;
 	};
 	var GameArea = React.createClass({
 		displayName: "GameArea",
