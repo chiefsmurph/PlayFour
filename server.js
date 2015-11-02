@@ -240,6 +240,11 @@ app.get('/reauth', function(req, res, next) {
   res.sendfile(__dirname + '/public/reauth.html');
 });
 
+app.get('/sleeping', function(req, res, next) {
+  res.sendfile(__dirname + '/public/sleeping.html');
+});
+
+
 app.get('/js/mozilla-cookies.js', function(req, res, next) {
   res.sendfile(__dirname + '/public/js/mozilla-cookies.js');
 });
@@ -424,6 +429,10 @@ io.on('connection', function(socket) {
     // synch because
     dbFunctions.savePreferences(myUserId, data);
     generalLogFunctions.logMessage(myUserId + ' sent payment preferences: ' + JSON.stringify(data));
+  });
+
+  socket.on('sleep', function() {
+
   });
 
   socket.on('disconnect', function() {

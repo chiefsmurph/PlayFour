@@ -89,7 +89,7 @@
 		playerTimeout = setTimeout((function () {
 
 			mySocket.emit('fail', { round: this.props.curRound, timedout: true });
-			window.location.replace('https://www.youtube.com/watch?v=9zdNdjF-htY'); // wake up
+			window.location.replace('http://www.tapfour10dollars.com/sleeping'); // wake up
 		}).bind(this), 6000); /// you have 10 sec to make a move
 	};
 	var clearCount = function clearCount() {
@@ -173,7 +173,7 @@
 						}).bind(this), 700);
 					}
 				} else {
-					this.props.headerChange('AUTHENTICATION ERROR...<br>chiefsmurph@gmail.com to reclaim lost scores or click <a href="/reAuth">here</a> to start over.');
+					this.props.headerChange('Database reached maximum storage and in the process of upgrading it had to be cleared...<br>click <a href="/reAuth">here</a> to start fresh and enter the game.');
 				}
 			}).bind(this));
 
@@ -875,7 +875,7 @@
 					React.createElement(
 						"p",
 						null,
-						"How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed.  You also are not allowed to repeat the same move twice in a row and each click must take no more than 6 seconds to complete or you will be taken off to a rousing wakeup song until I figure out how to be more graceful."
+						"How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed.  You also are not allowed to repeat the same move twice in a row.  Click must take no more than 6 seconds to complete or you will be taken off to a rousing wakeup song."
 					),
 					React.createElement(
 						"p",
