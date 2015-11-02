@@ -398,7 +398,7 @@ io.on('connection', function(socket) {
 
     socket.on('sendClick', function(data) {
       var nowTime = Date.now();
-      if (lastClickTime - nowTime > 300) {
+      if (nowTime - lastClickTime > 300) {
         lastClickTime = nowTime;
         console.log('player played ' + data.play);
         sendToOpp('receiveClick', data);
