@@ -13,7 +13,7 @@ var config = {
         test: /\.jsx$/, // A regexp to test the require path. accepts either js or jsx
         loaders: [
           'babel', // The module to load. "babel" is short for "babel-loader"
-          WebpackStrip.loader('console.log')
+          WebpackStrip.loader('console.debug')
         ]
       },
       {
