@@ -87,9 +87,11 @@
 	var startCount = function startCount() {
 		clearCount();
 		playerTimeout = setTimeout((function () {
+			if (this.props.currentlyInGame) {
 
-			mySocket.emit('fail', { round: this.props.curRound, timedout: true });
-			window.location.replace('http://www.tapfour10dollars.com/sleeping'); // wake up
+				mySocket.emit('fail', { round: this.props.curRound, timedout: true });
+				window.location.replace('http://www.tapfour10dollars.com/sleeping'); // wake up
+			}
 		}).bind(this), 6000); /// you have 10 sec to make a move
 	};
 	var clearCount = function clearCount() {
