@@ -19,6 +19,7 @@ var ipblacklist = ['24.99.159.47', '137.205.1.96', '128.61.149.136', '76.3.13.17
 
 var connectedUsers = {};
 var topScore = 0;
+var topLoggedIn = false;
 var waitingForPlayer = null;
 
 sendmail({
@@ -327,6 +328,24 @@ io.on('connection', function(socket) {
     });
 
     socket.on('authorizeScore', function(data) {
+
+      var checkAndEmit = function() {
+        if (data.score / 0.75 > topScore) {
+          dbFunctions.hasAnsweredRequest(myUserId, function(bool) {
+            if (bool) {
+              // within striking distance and already submitted paypal or cash info
+              socket.emit('authorization', {response: true, userId: myUserId});
+            } else {
+              // within striking distance and have not submitted the info
+              socket.emit('authorization', {response: true, userId: myUserId, requestContact: true});
+            }
+          });
+        } else {
+          // not within striking distance and it doesnt matter if they have or have not submitted the info
+          socket.emit('authorization', {response: true, userId: myUserId});
+        }
+      };
+
       console.log('user ' + mySocketId + ' sent score: ' + JSON.stringify(data));
 
       setTimeout(function() {
@@ -343,19 +362,15 @@ io.on('connection', function(socket) {
                 visitId = vid;
               });
 
-              if (data.score / 0.75 > topScore) {
-                dbFunctions.hasAnsweredRequest(myUserId, function(bool) {
-                  if (bool) {
-                    // within striking distance and already submitted paypal or cash info
-                    socket.emit('authorization', {response: true, userId: myUserId});
-                  } else {
-                    // within striking distance and have not submitted the info
-                    socket.emit('authorization', {response: true, userId: myUserId, requestContact: true});
-                  }
-                });
+              if (data.score === topScore) {
+                topLoggedIn = true;
+                checkAndEmit();
+                io.sockets.emit('roundInc', 10);
               } else {
-                // not within striking distance and it doesnt matter if they have or have not submitted the info
-                socket.emit('authorization', {response: true, userId: myUserId});
+                socket.emit('roundInc', 20);
+                setTimeout(function() {
+                  checkAndEmit();
+                }, 1500);
               }
 
               dbFunctions.getTopScore(function(score) {
@@ -398,7 +413,7 @@ io.on('connection', function(socket) {
         // 150pts - 236 sec
         // 100 - 147
         lastcall = nowTime;
-        return (data.round < 2 * timepast);
+        return (data.round < 2.5 * timepast);
       };
 
       console.log('fail data ' + JSON.stringify(data));
@@ -470,7 +485,7 @@ io.on('connection', function(socket) {
         // 150pts - 236 sec
         // 100 - 147
         lastcall = nowTime;
-        return (data.round < 2 * timepast);
+        return (data.round < 2.5 * timepast);
       };
 
       console.log('fail data ' + JSON.stringify(data));
@@ -513,6 +528,12 @@ io.on('connection', function(socket) {
         var leaveTime = Math.floor(Date.now() / 1000);
         visitLogFunctions.closeOutVisit(visitId, connectedUsers[myUserId].score, leaveTime-startTime, connectedUsers[myUserId].gamesWon, connectedUsers[myUserId].gamesLost);
         generalLogFunctions.logMessage('user ' + myUserId + ' (' + clientIp + ') from ' + loc + ' stayed for ' + (leaveTime-startTime) + ' seconds and went ' + connectedUsers[myUserId].gamesWon + '-' + connectedUsers[myUserId].gamesLost);
+
+
+        if (connectedUsers[myUserId].score === topScore) {
+          topLoggedIn = false;
+        }
+
       } else if (!myUserId) {
         var leaveTime = Math.floor(Date.now() / 1000);
         generalLogFunctions.logMessage('user ' + clientIp + ' from ' + loc + ' stayed for ' + (leaveTime-startTime) + ' seconds then left without continue');

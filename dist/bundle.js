@@ -110,6 +110,7 @@
 				myLastPlay: [],
 				selected: [null, null, null, null, null],
 				justClicked: 0,
+				roundInc: 10,
 				selectedQueue: [],
 				opp: null,
 				myId: null,
@@ -288,6 +289,17 @@
 				this.props.inGameChange(false);
 			}).bind(this));
 
+			mySocket.on('roundInc', (function (data) {
+				this.setState({
+					roundInc: data.roundInc
+				});
+				if (data === 20) {
+					this.props.headerChange('-- double time mode! -- <br>rounds worth 20!');
+				} else {
+					this.props.headerChange('-- double time mode ended --');
+				}
+			}).bind(this));
+
 			mySocket.on('receiveClick', (function (data) {
 
 				var num = data.play;
@@ -304,7 +316,7 @@
 
 							this.props.headerChange('opponent played valid move');
 
-							this.props.roundChange(this.props.curRound + 10);
+							this.props.roundChange(this.props.curRound + this.state.roundInc);
 
 							setTimeout((function () {
 
@@ -474,7 +486,7 @@
 										myTurn: false
 									});
 
-									this.props.roundChange(this.props.curRound + 10);
+									this.props.roundChange(this.props.curRound + this.state.roundInc);
 
 									setTimeout((function () {
 
