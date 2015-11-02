@@ -275,6 +275,7 @@ io.on('connection', function(socket) {
 
     // visit
     var startTime = Math.floor(Date.now() / 1000);
+    var lastcall = startTime;
     var visitId;
 
     console.log('new connection: ' + socket.id);
@@ -388,9 +389,10 @@ io.on('connection', function(socket) {
 
       var isLegit = function() {
         var nowTime = Math.floor(Date.now() / 1000);
-        var timepast = nowTime - startTime;
+        var timepast = nowTime - lastcall;
         // 150pts - 236 sec
         // 100 - 147
+        lastcall = nowTime;
         return (data.round < 2 * timepast);
       };
 
@@ -459,10 +461,11 @@ io.on('connection', function(socket) {
 
       var isLegit = function() {
         var nowTime = Math.floor(Date.now() / 1000);
-        var timepast = nowTime - startTime;
+        var timepast = nowTime - lastcall;
         // 150pts - 236 sec
         // 100 - 147
-        return (data && (data.round < 2 * timepast));
+        lastcall = nowTime;
+        return (data.round < 2 * timepast);
       };
 
       console.log('fail data ' + JSON.stringify(data));
