@@ -4,7 +4,7 @@ var express = require('express');
 var geoip = require('geoip-lite');
 sendmail = require('sendmail')();
 
-// Server part
+/// Server part
 var app = express();
 app.use('/', express.static(path.join(__dirname, 'dist')));
 
