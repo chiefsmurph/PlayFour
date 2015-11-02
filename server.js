@@ -462,7 +462,7 @@ io.on('connection', function(socket) {
         var timepast = nowTime - startTime;
         // 150pts - 236 sec
         // 100 - 147
-        return (data.round < 2 * timepast);
+        return (data && (data.round < 2 * timepast));
       };
 
       console.log('fail data ' + JSON.stringify(data));
