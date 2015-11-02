@@ -532,6 +532,7 @@ io.on('connection', function(socket) {
 
         if (connectedUsers[myUserId].score === topScore) {
           topLoggedIn = false;
+          io.sockets.emit('roundInc', 10);
         }
 
       } else if (!myUserId) {
