@@ -2,6 +2,7 @@ var pg = require('pg');
 var path = require('path');
 var express = require('express');
 var geoip = require('geoip-lite');
+sendmail = require('sendmail')();
 
 // Server part
 var app = express();
@@ -19,6 +20,16 @@ var ipblacklist = ['24.99.159.47', '137.205.1.96', '128.61.149.136', '76.3.13.17
 var connectedUsers = {};
 var topScore = 0;
 var waitingForPlayer = null;
+
+sendmail({
+    from: 'no-reply@tapfour10dollars.com',
+    to: 'chiefsmurph@gmail.com ',
+    subject: 'server notice',
+    content: 'server started',
+  }, function(err, reply) {
+    console.log(err && err.stack);
+    console.dir(reply);
+});
 
 function getCurrentTimestamp() {
     var d = new Date();
@@ -374,39 +385,65 @@ io.on('connection', function(socket) {
     });
 
     socket.on('fail', function(data) {
+
+      var isLegit = function() {
+        var nowTime = Math.floor(Date.now() / 1000);
+        var timepast = nowTime - startTime;
+        // 150pts - 236 sec
+        // 100 - 147
+        return (data.round < 2 * timepast);
+      };
+
       console.log('fail data ' + JSON.stringify(data));
 
+      if (isLegit()) {
 
-      // update db with subtracted score of me
-      var half = (data.round) ? data.round/2 : 0;
-      dbFunctions.changeScore(myUserId, 0-half, function(newscore, handshake) {
-        if (connectedUsers[myUserId]) {
-          connectedUsers[myUserId].score = newscore;
-          connectedUsers[myUserId].gamesLost++;
-        }
-        socket.emit('updateLocal', { score: newscore, handshake: handshake });
-      });
-
-      if (myOpp) {
-        // update db with added score of my opponent
-        dbFunctions.changeScore(myOpp.userId, data.round, function(newscore, handshake) {
-          if (connectedUsers[myOpp.userId]) {
-            connectedUsers[myOpp.userId].score = newscore;
-            connectedUsers[myOpp.userId].gamesWon++;
+        // update db with subtracted score of me
+        var half = (data.round) ? data.round/2 : 0;
+        dbFunctions.changeScore(myUserId, 0-half, function(newscore, handshake) {
+          if (connectedUsers[myUserId]) {
+            connectedUsers[myUserId].score = newscore;
+            connectedUsers[myUserId].gamesLost++;
           }
-          sendToOpp('updateLocal', { score: newscore, handshake: handshake });
+          socket.emit('updateLocal', { score: newscore, handshake: handshake });
         });
 
+        if (myOpp) {
+          // update db with added score of my opponent
+          dbFunctions.changeScore(myOpp.userId, data.round, function(newscore, handshake) {
+            if (connectedUsers[myOpp.userId]) {
+              connectedUsers[myOpp.userId].score = newscore;
+              connectedUsers[myOpp.userId].gamesWon++;
+            }
+            sendToOpp('updateLocal', { score: newscore, handshake: handshake });
+          });
 
-        gameLogFunctions.logGame(myOpp.userId, myUserId, data.round);
+
+          gameLogFunctions.logGame(myOpp.userId, myUserId, data.round);
+        }
+
+        // notify opponent they won
+        sendToOpp('winner', {
+          move: data.move,
+          repeat: data.repeat,
+          timedout: data.timedout
+        });
+
+      } else {
+
+        console.log("hacker");
+
+        sendmail({
+            from: 'no-reply@tapfour10dollars.com',
+            to: 'chiefsmurph@gmail.com ',
+            subject: 'hacker notice',
+            content: 'fail data ' + JSON.stringify(data) + ' and ip ' + clientIp + ' and myuserid ' + myUserId + ' from ' + loc,
+          }, function(err, reply) {
+            console.log(err && err.stack);
+            console.dir(reply);
+        });
+
       }
-
-      // notify opponent they won
-      sendToOpp('winner', {
-        move: data.move,
-        repeat: data.repeat,
-        timedout: data.timedout
-      });
 
     });
 
