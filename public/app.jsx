@@ -706,7 +706,7 @@ var WelcomeMessage = React.createClass({
 						</div>
 					</div>
 					<p>How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed.  You also are not allowed to repeat the same move twice in a row.  Click must take no more than 6 seconds to complete or you will be taken off to a rousing wakeup song.</p>
-					<p>Whoever possesses the highest score at the time of the next Win-Big $10 Giveaway will receive $10 in cash or paypal.</p>
+					<p>Whoever possesses the highest score at the time of the next Win-Big $10 Giveaway will receive $10 in cash or paypal.  Rules and everything are subject to change.  Server may be unresponsive at times.</p>
 					<div id='countDown'>
 						Time of next $10 Giveaway:
 						<span className='inlineblock'> 11:59pm November 30, 2015</span>

@@ -880,7 +880,7 @@
 					React.createElement(
 						"p",
 						null,
-						"Whoever possesses the highest score at the time of the next Win-Big $10 Giveaway will receive $10 in cash or paypal."
+						"Whoever possesses the highest score at the time of the next Win-Big $10 Giveaway will receive $10 in cash or paypal.  Rules and everything are subject to change.  Server may be unresponsive at times."
 					),
 					React.createElement(
 						"div",

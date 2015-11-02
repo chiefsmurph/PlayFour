@@ -379,18 +379,25 @@ io.on('connection', function(socket) {
       // update db with subtracted score of me
       var half = (data.round) ? data.round/2 : 0;
       dbFunctions.changeScore(myUserId, 0-half, function(newscore, handshake) {
-        connectedUsers[myUserId].score = newscore;
-        connectedUsers[myUserId].gamesLost++;
+        if (connectedUsers[myUserId]) {
+          connectedUsers[myUserId].score = newscore;
+          connectedUsers[myUserId].gamesLost++;
+        }
         socket.emit('updateLocal', { score: newscore, handshake: handshake });
       });
 
       if (myOpp) {
         // update db with added score of my opponent
         dbFunctions.changeScore(myOpp.userId, data.round, function(newscore, handshake) {
-          connectedUsers[myOpp.userId].score = newscore;
-          connectedUsers[myOpp.userId].gamesWon++;
+          if (connectedUsers[myOpp.userId]) {
+            connectedUsers[myOpp.userId].score = newscore;
+            connectedUsers[myOpp.userId].gamesWon++;
+          }
           sendToOpp('updateLocal', { score: newscore, handshake: handshake });
         });
+
+
+        gameLogFunctions.logGame(myOpp.userId, myUserId, data.round);
       }
 
       // notify opponent they won
@@ -400,7 +407,6 @@ io.on('connection', function(socket) {
         timedout: data.timedout
       });
 
-      gameLogFunctions.logGame(myOpp.userId, myUserId, data.round);
     });
 
     socket.on('opp', function(data) {
