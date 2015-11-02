@@ -276,6 +276,7 @@ io.on('connection', function(socket) {
     // visit
     var startTime = Math.floor(Date.now() / 1000);
     var lastcall = startTime;
+    var lastClickTime = startTime;
     var visitId;
 
     console.log('new connection: ' + socket.id);
@@ -381,8 +382,12 @@ io.on('connection', function(socket) {
     });
 
     socket.on('sendClick', function(data) {
-      console.log('player played ' + data.play);
-      sendToOpp('receiveClick', data);
+      var nowTime = Math.floor(Date.now() / 1000);
+      if (lastClickTime - nowTime > 300) {
+        lastClickTime = nowTime;
+        console.log('player played ' + data.play);
+        sendToOpp('receiveClick', data);
+      }
     });
 
     socket.on('fail', function(data) {

@@ -711,7 +711,7 @@ var WelcomeMessage = React.createClass({
 					<p>Whoever possesses the highest score at the time of the next Win-Big $10 Giveaway will receive $10 in cash or paypal.  Rules and everything are subject to change.  Server may be unresponsive at times.</p>
 					<div id='countDown'>
 						Time of next $10 Giveaway:
-						<span className='inlineblock'> 11:59pm November 30, 2015</span>
+						<span className='inlineblock'> 11:59pm November 16, 2015 PST</span>
 					</div>
 					<button onClick={this.continueClick}>click here to continue</button>
 				</div>
