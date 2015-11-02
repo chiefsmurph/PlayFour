@@ -398,7 +398,7 @@ io.on('connection', function(socket) {
 
     socket.on('sendClick', function(data) {
       var nowTime = Math.floor(Date.now() / 1000);
-      if (lastClickTime - nowTime > 300) {
+      if (lastClickTime - nowTime > 300 || true) {
         lastClickTime = nowTime;
         console.log('player played ' + data.play);
         sendToOpp('receiveClick', data);
@@ -485,7 +485,7 @@ io.on('connection', function(socket) {
         // 150pts - 236 sec
         // 100 - 147
         lastcall = nowTime;
-        return (data.round < 2.5 * timepast);
+        return (data.round < 3.5 * timepast);
       };
 
       console.log('fail data ' + JSON.stringify(data));
