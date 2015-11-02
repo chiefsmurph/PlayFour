@@ -256,7 +256,7 @@ var GameArea = React.createClass({
 
 		mySocket.on('roundInc', function(data) {
 			this.setState({
-				roundInc: data.roundInc
+				roundInc: data
 			});
 			if (data === 20) {
 				this.props.headerChange('-- double time mode! -- <br>rounds worth 20!');
