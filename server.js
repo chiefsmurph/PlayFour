@@ -267,7 +267,7 @@ io.on('connection', function(socket) {
   var geo = geoip.lookup(clientIp);
   var loc = (geo) ? geo.city + ', ' + geo.region + ' (' + geo.country + ')' : 'n/a';
 
-  if (ipblacklist.indexOf(clientIp) === -1 && loc.indexOf('Atlanta') === -1) {
+  if (ipblacklist.indexOf(clientIp) === -1) {
 
     var myUserId = null;
     var mySocketId = socket.id;
