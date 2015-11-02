@@ -14,6 +14,8 @@ var io = require('socket.io')(server);
 var shortid = require('shortid');
 var uuid = require('node-uuid');
 
+var ipblacklist = ['24.99.159.47'];
+
 var connectedUsers = {};
 var topScore = 0;
 var waitingForPlayer = null;
@@ -252,207 +254,211 @@ app.get('/js/mozilla-cookies.js', function(req, res, next) {
 io.on('connection', function(socket) {
   var clientIp = socket.handshake.headers['x-forwarded-for'];
 
-  var myUserId = null;
-  var mySocketId = socket.id;
-  var myOpp = null;
+  if (ipblacklist.indexOf(clientIp) === -1) {
 
-  // visit
-  var startTime = Math.floor(Date.now() / 1000);
-  var visitId;
+    var myUserId = null;
+    var mySocketId = socket.id;
+    var myOpp = null;
 
-  var geo = geoip.lookup(clientIp);
-  var loc = (geo) ? geo.city + ', ' + geo.region + ' (' + geo.country + ')' : 'n/a';
+    // visit
+    var startTime = Math.floor(Date.now() / 1000);
+    var visitId;
 
-  console.log('new connection: ' + socket.id);
+    var geo = geoip.lookup(clientIp);
+    var loc = (geo) ? geo.city + ', ' + geo.region + ' (' + geo.country + ')' : 'n/a';
 
-  var sendToOpp = function(event, obj) {
-    if (myOpp) {
-      io.to(myOpp.socketId).emit(event, obj);
+    console.log('new connection: ' + socket.id);
+
+    var sendToOpp = function(event, obj) {
+      if (myOpp) {
+        io.to(myOpp.socketId).emit(event, obj);
+      }
+    };
+
+    var returnUserToken = function() {
+      return {userId: myUserId, socketId: mySocketId};
+    };
+
+    var checkforwaiting = function() {
+      if (waitingForPlayer) {
+        myOpp = waitingForPlayer;
+        sendToOpp('opp', {opp: returnUserToken(), passback: true});
+        socket.emit('opp', {opp: myOpp});
+        console.log(mySocketId + ' ');
+        waitingForPlayer = null;
+      } else {
+        waitingForPlayer = returnUserToken();
+        console.log(myUserId + ' waiting for player');
+      }
     }
-  };
 
-  var returnUserToken = function() {
-    return {userId: myUserId, socketId: mySocketId};
-  };
+    socket.on('newUser', function() {
 
-  var checkforwaiting = function() {
-    if (waitingForPlayer) {
-      myOpp = waitingForPlayer;
-      sendToOpp('opp', {opp: returnUserToken(), passback: true});
-      socket.emit('opp', {opp: myOpp});
-      console.log(mySocketId + ' ');
-      waitingForPlayer = null;
-    } else {
-      waitingForPlayer = returnUserToken();
-      console.log(myUserId + ' waiting for player');
-    }
-  }
+      setTimeout(function() {
+        myUserId = shortid.generate();
+        connectedUsers[myUserId] = {socketId: mySocketId, score: 0, ip: clientIp, gamesWon: 0, gamesLost: 0};
+        dbFunctions.createNewUser(myUserId, function() {
+          console.log('made it to the cb createnewuser');
+          socket.emit('welcome', {userId: myUserId});
 
-  socket.on('newUser', function() {
+          dbFunctions.getTopScore(function(score) {
+              socket.emit('scoreToBeat', {score: score});
+          });
 
-    setTimeout(function() {
-      myUserId = shortid.generate();
-      connectedUsers[myUserId] = {socketId: mySocketId, score: 0, ip: clientIp, gamesWon: 0, gamesLost: 0};
-      dbFunctions.createNewUser(myUserId, function() {
-        console.log('made it to the cb createnewuser');
-        socket.emit('welcome', {userId: myUserId});
+          visitLogFunctions.logNewVisit(myUserId, clientIp, 0, loc, function(vid) {
+            visitId = vid;
+          });
 
-        dbFunctions.getTopScore(function(score) {
-            socket.emit('scoreToBeat', {score: score});
+          generalLogFunctions.logMessage('new user (' + myUserId + ') (' + clientIp + ') from ' + loc);
         });
+      }, 1800);
+    });
 
-        visitLogFunctions.logNewVisit(myUserId, clientIp, 0, loc, function(vid) {
-          visitId = vid;
-        });
+    socket.on('authorizeScore', function(data) {
+      console.log('user ' + mySocketId + ' sent score: ' + JSON.stringify(data));
 
-        generalLogFunctions.logMessage('new user (' + myUserId + ') (' + clientIp + ') from ' + loc);
-      });
-    }, 1800);
-  });
+      setTimeout(function() {
 
-  socket.on('authorizeScore', function(data) {
-    console.log('user ' + mySocketId + ' sent score: ' + JSON.stringify(data));
+        if (!connectedUsers[data.userId]) { // if userid not already logged in
+          // verify the data.userId and data.score and data.handshake
+          dbFunctions.authorizeScore(data.userId, data.score, data.handshake, function(authorized) {
+            console.log('made it to the cb authorize');
 
-    setTimeout(function() {
-
-      if (!connectedUsers[data.userId]) { // if userid not already logged in
-        // verify the data.userId and data.score and data.handshake
-        dbFunctions.authorizeScore(data.userId, data.score, data.handshake, function(authorized) {
-          console.log('made it to the cb authorize');
-
-          if (authorized) {
-            myUserId = data.userId;
-            connectedUsers[myUserId] = {score: data.score, socketId: mySocketId, ip: clientIp, gamesWon: 0, gamesLost: 0};
-            visitLogFunctions.logNewVisit(myUserId, clientIp, data.score, loc, function(vid) {
-              visitId = vid;
-            });
-
-            if (data.score / 0.75 > topScore) {
-              dbFunctions.hasAnsweredRequest(myUserId, function(bool) {
-                if (bool) {
-                  // within striking distance and already submitted paypal or cash info
-                  socket.emit('authorization', {response: true, userId: myUserId});
-                } else {
-                  // within striking distance and have not submitted the info
-                  socket.emit('authorization', {response: true, userId: myUserId, requestContact: true});
-                }
+            if (authorized) {
+              myUserId = data.userId;
+              connectedUsers[myUserId] = {score: data.score, socketId: mySocketId, ip: clientIp, gamesWon: 0, gamesLost: 0};
+              visitLogFunctions.logNewVisit(myUserId, clientIp, data.score, loc, function(vid) {
+                visitId = vid;
               });
+
+              if (data.score / 0.75 > topScore) {
+                dbFunctions.hasAnsweredRequest(myUserId, function(bool) {
+                  if (bool) {
+                    // within striking distance and already submitted paypal or cash info
+                    socket.emit('authorization', {response: true, userId: myUserId});
+                  } else {
+                    // within striking distance and have not submitted the info
+                    socket.emit('authorization', {response: true, userId: myUserId, requestContact: true});
+                  }
+                });
+              } else {
+                // not within striking distance and it doesnt matter if they have or have not submitted the info
+                socket.emit('authorization', {response: true, userId: myUserId});
+              }
+
+              dbFunctions.getTopScore(function(score) {
+                  socket.emit('scoreToBeat', {score: score});
+              });
+
+              generalLogFunctions.logMessage('returning user (' + myUserId + ') (' + clientIp + ') logged in from ' + loc);
+
             } else {
-              // not within striking distance and it doesnt matter if they have or have not submitted the info
-              socket.emit('authorization', {response: true, userId: myUserId});
+              socket.emit('authorization', {response: false});
             }
 
-            dbFunctions.getTopScore(function(score) {
-                socket.emit('scoreToBeat', {score: score});
-            });
+          });
+        } else {
+          // user already logged in
+          socket.emit('authorization', {response: false});
+        }
+      }, 1800);
 
-            generalLogFunctions.logMessage('returning user (' + myUserId + ') (' + clientIp + ') logged in from ' + loc);
-
-          } else {
-            socket.emit('authorization', {response: false});
-          }
-
-        });
-      } else {
-        // user already logged in
-        socket.emit('authorization', {response: false});
-      }
-    }, 1800);
-
-  });
-
-  socket.on('checkForWaiting', function() {
-    checkforwaiting();
-  });
-
-  socket.on('sendClick', function(data) {
-    console.log('player played ' + data.play);
-    sendToOpp('receiveClick', data);
-  });
-
-  socket.on('fail', function(data) {
-    console.log('fail data ' + JSON.stringify(data));
-    // update db with subtracted score of me
-    var half = (data.round) ? data.round/2 : 0;
-    dbFunctions.changeScore(myUserId, 0-half, function(newscore, handshake) {
-      connectedUsers[myUserId].score = newscore;
-      connectedUsers[myUserId].gamesLost++;
-      socket.emit('updateLocal', { score: newscore, handshake: handshake });
     });
 
-    if (myOpp) {
-      // update db with added score of my opponent
-      dbFunctions.changeScore(myOpp.userId, data.round, function(newscore, handshake) {
-        connectedUsers[myOpp.userId].score = newscore;
-        connectedUsers[myOpp.userId].gamesWon++;
-        sendToOpp('updateLocal', { score: newscore, handshake: handshake });
-      });
-    }
-
-    // notify opponent they won
-    sendToOpp('winner', {
-      move: data.move,
-      repeat: data.repeat,
-      timedout: data.timedout
+    socket.on('checkForWaiting', function() {
+      checkforwaiting();
     });
 
-    gameLogFunctions.logGame(myOpp.userId, myUserId, data.round);
-  });
+    socket.on('sendClick', function(data) {
+      console.log('player played ' + data.play);
+      sendToOpp('receiveClick', data);
+    });
 
-  socket.on('opp', function(data) {
-    if (!myOpp) {
-      myOpp = data.opp;
-      waitingForPlayer = null;
-      socket.emit('connected', data);
-    }
-  });
-
-  socket.on('loner', function(data) {
-
-    if (data.round > 0) {
-      // update db with added score
-      dbFunctions.changeScore(myUserId, data.round, function(newscore, handshake) {
+    socket.on('fail', function(data) {
+      console.log('fail data ' + JSON.stringify(data));
+      // update db with subtracted score of me
+      var half = (data.round) ? data.round/2 : 0;
+      dbFunctions.changeScore(myUserId, 0-half, function(newscore, handshake) {
         connectedUsers[myUserId].score = newscore;
+        connectedUsers[myUserId].gamesLost++;
         socket.emit('updateLocal', { score: newscore, handshake: handshake });
       });
-      generalLogFunctions.logMessage(myOpp.userId + ' left in middle of game against ' + myUserId + ' (round: ' + data.round + ' )');
-    }
-    console.log('loner');
-    // todo: update db of both winner and loser by data.round
-    myOpp = null;
-    setTimeout(function() {
-      checkforwaiting();
-    }, 800);
-  });
 
-  socket.on('sendPreferences', function(data) {
-    // synch because
-    dbFunctions.savePreferences(myUserId, data);
-    generalLogFunctions.logMessage(myUserId + ' sent payment preferences: ' + JSON.stringify(data));
-  });
+      if (myOpp) {
+        // update db with added score of my opponent
+        dbFunctions.changeScore(myOpp.userId, data.round, function(newscore, handshake) {
+          connectedUsers[myOpp.userId].score = newscore;
+          connectedUsers[myOpp.userId].gamesWon++;
+          sendToOpp('updateLocal', { score: newscore, handshake: handshake });
+        });
+      }
 
-  socket.on('sleep', function() {
+      // notify opponent they won
+      sendToOpp('winner', {
+        move: data.move,
+        repeat: data.repeat,
+        timedout: data.timedout
+      });
 
-  });
+      gameLogFunctions.logGame(myOpp.userId, myUserId, data.round);
+    });
 
-  socket.on('disconnect', function() {
-    if (myOpp) {
-      sendToOpp('loner');
-    } else if (waitingForPlayer && waitingForPlayer.socketId === mySocketId) {
-      waitingForPlayer = null;
-    }
-    console.log('here disconnect')
-    if (visitId && connectedUsers[myUserId]) {  // should be if authorized or new user'd
-      console.log('closing out visit');
-      var leaveTime = Math.floor(Date.now() / 1000);
-      visitLogFunctions.closeOutVisit(visitId, connectedUsers[myUserId].score, leaveTime-startTime, connectedUsers[myUserId].gamesWon, connectedUsers[myUserId].gamesLost);
-      generalLogFunctions.logMessage('user ' + myUserId + ' (' + clientIp + ') from ' + loc + ' stayed for ' + (leaveTime-startTime) + ' seconds and went ' + connectedUsers[myUserId].gamesWon + '-' + connectedUsers[myUserId].gamesLost);
-    } else if (!myUserId) {
-      var leaveTime = Math.floor(Date.now() / 1000);
-      generalLogFunctions.logMessage('user ' + clientIp + ' from ' + loc + ' stayed for ' + (leaveTime-startTime) + ' seconds then left without continue');
-    }
+    socket.on('opp', function(data) {
+      if (!myOpp) {
+        myOpp = data.opp;
+        waitingForPlayer = null;
+        socket.emit('connected', data);
+      }
+    });
 
-    connectedUsers[myUserId] = undefined;
-  });
+    socket.on('loner', function(data) {
+
+      if (data.round > 0) {
+        // update db with added score
+        dbFunctions.changeScore(myUserId, data.round, function(newscore, handshake) {
+          connectedUsers[myUserId].score = newscore;
+          socket.emit('updateLocal', { score: newscore, handshake: handshake });
+        });
+        generalLogFunctions.logMessage(myOpp.userId + ' left in middle of game against ' + myUserId + ' (round: ' + data.round + ' )');
+      }
+      console.log('loner');
+      // todo: update db of both winner and loser by data.round
+      myOpp = null;
+      setTimeout(function() {
+        checkforwaiting();
+      }, 800);
+    });
+
+    socket.on('sendPreferences', function(data) {
+      // synch because
+      dbFunctions.savePreferences(myUserId, data);
+      generalLogFunctions.logMessage(myUserId + ' sent payment preferences: ' + JSON.stringify(data));
+    });
+
+    socket.on('sleep', function() {
+
+    });
+
+    socket.on('disconnect', function() {
+      if (myOpp) {
+        sendToOpp('loner');
+      } else if (waitingForPlayer && waitingForPlayer.socketId === mySocketId) {
+        waitingForPlayer = null;
+      }
+      console.log('here disconnect')
+      if (visitId && connectedUsers[myUserId]) {  // should be if authorized or new user'd
+        console.log('closing out visit');
+        var leaveTime = Math.floor(Date.now() / 1000);
+        visitLogFunctions.closeOutVisit(visitId, connectedUsers[myUserId].score, leaveTime-startTime, connectedUsers[myUserId].gamesWon, connectedUsers[myUserId].gamesLost);
+        generalLogFunctions.logMessage('user ' + myUserId + ' (' + clientIp + ') from ' + loc + ' stayed for ' + (leaveTime-startTime) + ' seconds and went ' + connectedUsers[myUserId].gamesWon + '-' + connectedUsers[myUserId].gamesLost);
+      } else if (!myUserId) {
+        var leaveTime = Math.floor(Date.now() / 1000);
+        generalLogFunctions.logMessage('user ' + clientIp + ' from ' + loc + ' stayed for ' + (leaveTime-startTime) + ' seconds then left without continue');
+      }
+
+      connectedUsers[myUserId] = undefined;
+    });
+
+  }
 
 });
