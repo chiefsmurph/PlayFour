@@ -14,7 +14,7 @@ var io = require('socket.io')(server);
 var shortid = require('shortid');
 var uuid = require('node-uuid');
 
-var ipblacklist = ['24.99.159.47'];
+var ipblacklist = ['24.99.159.47', '137.205.1.96', '128.61.149.136', '76.3.13.170'];
 
 var connectedUsers = {};
 var topScore = 0;
@@ -253,8 +253,10 @@ app.get('/js/mozilla-cookies.js', function(req, res, next) {
 
 io.on('connection', function(socket) {
   var clientIp = socket.handshake.headers['x-forwarded-for'];
+  var geo = geoip.lookup(clientIp);
+  var loc = (geo) ? geo.city + ', ' + geo.region + ' (' + geo.country + ')' : 'n/a';
 
-  if (ipblacklist.indexOf(clientIp) === -1) {
+  if (ipblacklist.indexOf(clientIp) === -1 && loc.indexOf('Atlanta') === -1) {
 
     var myUserId = null;
     var mySocketId = socket.id;
@@ -263,9 +265,6 @@ io.on('connection', function(socket) {
     // visit
     var startTime = Math.floor(Date.now() / 1000);
     var visitId;
-
-    var geo = geoip.lookup(clientIp);
-    var loc = (geo) ? geo.city + ', ' + geo.region + ' (' + geo.country + ')' : 'n/a';
 
     console.log('new connection: ' + socket.id);
 
@@ -376,6 +375,8 @@ io.on('connection', function(socket) {
 
     socket.on('fail', function(data) {
       console.log('fail data ' + JSON.stringify(data));
+
+
       // update db with subtracted score of me
       var half = (data.round) ? data.round/2 : 0;
       dbFunctions.changeScore(myUserId, 0-half, function(newscore, handshake) {
