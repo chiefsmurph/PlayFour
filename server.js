@@ -457,7 +457,17 @@ io.on('connection', function(socket) {
 
     socket.on('loner', function(data) {
 
-      if (data.round > 0) {
+      var isLegit = function() {
+        var nowTime = Math.floor(Date.now() / 1000);
+        var timepast = nowTime - startTime;
+        // 150pts - 236 sec
+        // 100 - 147
+        return (data.round < 2 * timepast);
+      };
+
+      console.log('fail data ' + JSON.stringify(data));
+
+      if (isLegit() && data.round > 0) {
         // update db with added score
         dbFunctions.changeScore(myUserId, data.round, function(newscore, handshake) {
           connectedUsers[myUserId].score = newscore;
