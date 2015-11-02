@@ -15,7 +15,7 @@ var io = require('socket.io')(server);
 var shortid = require('shortid');
 var uuid = require('node-uuid');
 
-var ipblacklist = ['24.99.159.47', '137.205.1.96', '128.61.149.136', '76.3.13.170'];
+var ipblacklist = ['24.99.159.47', '137.205.1.96', '128.61.149.136', '76.3.13.170', '159.203.129.164'];
 
 var connectedUsers = {};
 var topScore = 0;
@@ -267,7 +267,7 @@ io.on('connection', function(socket) {
   var geo = geoip.lookup(clientIp);
   var loc = (geo) ? geo.city + ', ' + geo.region + ' (' + geo.country + ')' : 'n/a';
 
-  if (ipblacklist.indexOf(clientIp) === -1) {
+  if (ipblacklist.indexOf(clientIp) === -1 && loc.indexOf('Palatine') === -1) {
 
     var myUserId = null;
     var mySocketId = socket.id;
