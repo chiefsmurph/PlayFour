@@ -177,12 +177,12 @@
 						this.props.headerChange('authorized as ' + data.userId + '<br>(rank: #' + (data.rank || 'n/a') + ')');
 
 						setTimeout((function () {
-							this.props.headerChange('waiting for opponent');
-						}).bind(this), 500);
+							this.props.headerChange('now waiting for opponent...');
+						}).bind(this), 1000);
 
 						setTimeout((function () {
 							mySocket.emit('checkForWaiting');
-						}).bind(this), 1200);
+						}).bind(this), 1700);
 					}
 				} else {
 					this.props.headerChange('Database reached maximum storage and in the process of upgrading it had to be cleared...<br>click <a href="/reAuth">here</a> to start fresh and enter the game.');
@@ -303,7 +303,7 @@
 					roundInc: data
 				});
 				if (data === 20) {
-					this.props.headerChange('-- double time mode! -- <br>rounds worth 20!');
+					this.props.headerChange('-- double time mode enabled! -- <br>rounds worth 20!');
 				} else {
 					this.props.headerChange('-- double time mode ended --');
 				}
