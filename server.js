@@ -178,7 +178,7 @@ var dbFunctions = {
   },
   getUserRank: function(userId, score, cb) {
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
-        client.query('SELECT * FROM scores WHERE score >= ' + score + 'ORDER BY score desc', function(err, result) {
+        client.query('SELECT * FROM scores WHERE score >= ' + score + ' ORDER BY score desc', function(err, result) {
           done();
           console.log(JSON.stringify(result.rows.length));
           cb(result.rows.length);
@@ -187,6 +187,10 @@ var dbFunctions = {
     });
   }
 };
+
+dbFunctions.getUserRank('V1XXQ7-ze', 5, function(d) {
+  console.log('dddddd ' + d);
+});
 
 //dbFunctions.executeQuery('CREATE TABLE visitlogs (visitId serial primary key, username VARCHAR(30) not null, ip VARCHAR(30) not null, datetime VARCHAR(30) not null, arrscore INT, leavescore INT, duration INT, gamesWon INT, gamesLost INT )');
 //dbFunctions.executeQuery('CREATE TABLE visitlogs (visitId serial primary key, username VARCHAR(30) not null, ip VARCHAR(30) not null, datetime VARCHAR(30) not null, arrscore INT, leavescore INT, duration INT, gamesWon INT, gamesLost INT )');
@@ -252,7 +256,7 @@ gameLogFunctions = {
       });
     });
   }
-}
+};
 
 app.get('/showAllScores', function(req, res, next) {
   dbFunctions.returnAllUsers(function(data) {
