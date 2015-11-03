@@ -168,10 +168,10 @@
 						userId: data.userId
 					});
 					if (data.requestContact) {
-						this.props.headerChange('authorized as ' + data.userId + ' (rank #' + (data.rank | 'n/a') + ')...<br>more info needed');
+						this.props.headerChange('authorized as ' + data.userId + ' (rank #' + (data.rank || 'n/a') + ')...<br>more info needed');
 						this.props.showRequestInfo();
 					} else {
-						this.props.headerChange('authorized as ' + data.userId + ' (rank #' + (data.rank | 'n/a') + ')...<br>waiting for opponent');
+						this.props.headerChange('authorized as ' + data.userId + ' (rank #' + (data.rank || 'n/a') + ')...<br>waiting for opponent');
 						setTimeout((function () {
 							mySocket.emit('checkForWaiting');
 						}).bind(this), 700);
@@ -191,7 +191,7 @@
 						this.props.headerChange('connecting to opponent:<br><span class="small">' + this.state.opp + '</span>');
 						mySocket.emit('opp', { opp: data.opp });
 					} else {
-						this.props.headerChange('connected to opponent:<br><span class="small">' + this.state.opp + ' (' + (data.rank | 'n/a') + ')</span>');
+						this.props.headerChange('connected to opponent:<br><span class="small">' + this.state.opp + ' (' + (data.rank || 'n/a') + ')</span>');
 						this.props.inGameChange(true);
 
 						setTimeout((function () {
@@ -211,7 +211,7 @@
 					opp: data.opp.userId
 				}, function () {
 
-					this.props.headerChange('connected to opponent:<br><span class="small">' + this.state.opp + ' (' + (data.rank | 'n/a') + ')</span>');
+					this.props.headerChange('connected to opponent:<br><span class="small">' + this.state.opp + ' (' + (data.rank || 'n/a') + ')</span>');
 
 					setTimeout((function () {
 
