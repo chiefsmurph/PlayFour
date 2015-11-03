@@ -188,10 +188,6 @@ var dbFunctions = {
   }
 };
 
-dbFunctions.getUserRank('V1XXQ7-ze', 5, function(d) {
-  console.log('dddddd ' + d);
-});
-
 //dbFunctions.executeQuery('CREATE TABLE visitlogs (visitId serial primary key, username VARCHAR(30) not null, ip VARCHAR(30) not null, datetime VARCHAR(30) not null, arrscore INT, leavescore INT, duration INT, gamesWon INT, gamesLost INT )');
 //dbFunctions.executeQuery('CREATE TABLE visitlogs (visitId serial primary key, username VARCHAR(30) not null, ip VARCHAR(30) not null, datetime VARCHAR(30) not null, arrscore INT, leavescore INT, duration INT, gamesWon INT, gamesLost INT )');
 //dbFunctions.executeQuery('CREATE TABLE gamelogs (gameId serial primary key, datetime VARCHAR(30) not null, winnerId VARCHAR(30) not null, loserId VARCHAR(30) not null, round INT )');
