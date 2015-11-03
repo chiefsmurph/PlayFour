@@ -168,13 +168,21 @@
 						userId: data.userId
 					});
 					if (data.requestContact) {
-						this.props.headerChange('authorized as ' + data.userId + ' (rank #' + (data.rank || 'n/a') + ')...<br>more info needed');
-						this.props.showRequestInfo();
+						this.props.headerChange('authorized as ' + data.userId + '<br>(rank #' + (data.rank || 'n/a') + ')...');
+						etTimeout((function () {
+							this.props.headerChange('more info needed');
+							this.props.showRequestInfo();
+						}).bind(this), 500);
 					} else {
-						this.props.headerChange('authorized as ' + data.userId + ' (rank #' + (data.rank || 'n/a') + ')...<br>waiting for opponent');
+						this.props.headerChange('authorized as ' + data.userId + '<br>(rank: #' + (data.rank || 'n/a') + ')');
+
+						setTimeout((function () {
+							this.props.headerChange('waiting for opponent');
+						}).bind(this), 500);
+
 						setTimeout((function () {
 							mySocket.emit('checkForWaiting');
-						}).bind(this), 700);
+						}).bind(this), 1200);
 					}
 				} else {
 					this.props.headerChange('Database reached maximum storage and in the process of upgrading it had to be cleared...<br>click <a href="/reAuth">here</a> to start fresh and enter the game.');
@@ -191,7 +199,7 @@
 						this.props.headerChange('connecting to opponent:<br><span class="small">' + this.state.opp + '</span>');
 						mySocket.emit('opp', { opp: data.opp });
 					} else {
-						this.props.headerChange('connected to opponent:<br><span class="small">' + this.state.opp + ' (' + (data.rank || 'n/a') + ')</span>');
+						this.props.headerChange('connected to opponent:<br><span class="small">' + this.state.opp + ' (#' + (data.rank || 'n/a') + ')</span>');
 						this.props.inGameChange(true);
 
 						setTimeout((function () {
@@ -211,7 +219,7 @@
 					opp: data.opp.userId
 				}, function () {
 
-					this.props.headerChange('connected to opponent:<br><span class="small">' + this.state.opp + ' (' + (data.rank || 'n/a') + ')</span>');
+					this.props.headerChange('connected to opponent:<br><span class="small">' + this.state.opp + ' (#' + (data.rank || 'n/a') + ')</span>');
 
 					setTimeout((function () {
 
