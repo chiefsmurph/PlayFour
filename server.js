@@ -400,7 +400,7 @@ io.on('connection', function(socket) {
       var nowTime = Date.now();
       if (nowTime - lastClickTime > 30) {
         lastClickTime = nowTime;
-        console.log('player played ' + data.play);
+        console.log(myUserId + ' played ' + data.play);
         sendToOpp('receiveClick', data);
       } else {
         console.log('overload ' + myUserId + ' and ' + clientIp);
