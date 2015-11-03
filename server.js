@@ -422,7 +422,9 @@ io.on('connection', function(socket) {
 
         // update db with subtracted score of me
         var half = (data.round) ? data.round/2 : 0;
-        dbFunctions.changeScore(myUserId, 0-half, function(newscore, handshake) {
+        var quarter = (data.round) ? data.round/4 : 0;
+
+        dbFunctions.changeScore(myUserId, (!topLoggedIn) ? 0-half : 0-quarter, function(newscore, handshake) {
           if (connectedUsers[myUserId]) {
             connectedUsers[myUserId].score = newscore;
             connectedUsers[myUserId].gamesLost++;
@@ -532,7 +534,7 @@ io.on('connection', function(socket) {
 
         if (connectedUsers[myUserId].score === topScore) {
           topLoggedIn = false;
-          io.sockets.emit('roundInc', 10);
+          io.sockets.emit('roundInc', 20);
         }
 
       } else if (!myUserId) {

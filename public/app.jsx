@@ -417,10 +417,8 @@ var GameArea = React.createClass({
 												mySocket.emit('fail', {move: this.state.currentPlay, round: this.props.curRound, repeat: true});
 											}
 
-											setTimeout(function() {
-												this.props.inGameChange(false);
-											}.bind(this), 1000);
 
+											this.props.inGameChange(false);
 											this.props.roundChange(0);
 
 											this.setState({
@@ -464,7 +462,9 @@ var GameArea = React.createClass({
 													// click number 4! woo hoo
 													// switch turns
 												setTimeout(function() {
-													this.props.headerChange('great move!');
+													if (this.props.currentlyInGame) {
+														this.props.headerChange('great move!');
+													}
 												}.bind(this), 100);
 
 												displayNum.call(this, index, 'green');
@@ -480,15 +480,17 @@ var GameArea = React.createClass({
 												this.props.roundChange(this.props.curRound + this.state.roundInc);
 
 												setTimeout(function() {
-
+													if (this.props.currentlyInGame) {
 														this.props.headerChange('now opponents turn');
-
+													}
 												}.bind(this), 1000);
 
 											} else {		// click 1,2,3
 
 												setTimeout(function() {
-													this.props.headerChange('valid click');
+													if (this.props.currentlyInGame) {
+														this.props.headerChange('valid click');
+													}
 												}.bind(this), 100+Math.random()*300);
 
 												displayNum.call(this, index, 'blue');
