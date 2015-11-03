@@ -398,10 +398,12 @@ io.on('connection', function(socket) {
 
     socket.on('sendClick', function(data) {
       var nowTime = Date.now();
-      if (nowTime - lastClickTime > 50) {
+      if (nowTime - lastClickTime > 140) {
         lastClickTime = nowTime;
         console.log('player played ' + data.play);
         sendToOpp('receiveClick', data);
+      } else {
+        console.log('overload ' + myUserId + ' and ' + clientIp);
       }
     });
 
@@ -456,6 +458,8 @@ io.on('connection', function(socket) {
       } else {
 
         console.log("hacker");
+
+        console.error('fail data ' + JSON.stringify(data) + ' and ip ' + clientIp + ' and myuserid ' + myUserId + ' from ' + loc);
 
         sendmail({
             from: 'no-reply@tapfour10dollars.com',
