@@ -919,7 +919,7 @@
 						React.createElement(
 							"span",
 							{ className: "inlineblock" },
-							" 11:59pm November 16, 2015 PST"
+							"11:59pm November 8, 2015 PST"
 						)
 					),
 					React.createElement(
