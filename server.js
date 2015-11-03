@@ -175,6 +175,16 @@ var dbFunctions = {
         done();
       });
     });
+  },
+  getUserRank: function(userId, score, cb) {
+    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+        client.query('SELECT * FROM scores WHERE score >= ' + score + 'ORDER BY score desc', function(err, result) {
+          done();
+          console.log(JSON.stringify(result.rows.length));
+          cb(result.rows.length);
+
+        });
+    });
   }
 };
 
@@ -294,11 +304,16 @@ io.on('connection', function(socket) {
 
     var checkforwaiting = function() {
       if (waitingForPlayer) {
+
         myOpp = waitingForPlayer;
-        sendToOpp('opp', {opp: returnUserToken(), passback: true});
-        socket.emit('opp', {opp: myOpp});
-        console.log(mySocketId + ' ');
         waitingForPlayer = null;
+
+        dbFunctions.getUserRank(myUserId, connectedUsers[myUserId].score, function(rank) {
+          sendToOpp('opp', {opp: returnUserToken(), passback: true, rank: rank});
+        });
+        dbFunctions.getUserRank(myOpp.userId, connectedUsers[myOpp.userId].score, function(rank) {
+          socket.emit('opp', {opp: myOpp, rank: rank});
+        });
       } else {
         waitingForPlayer = returnUserToken();
         console.log(myUserId + ' waiting for player');
@@ -334,15 +349,21 @@ io.on('connection', function(socket) {
           dbFunctions.hasAnsweredRequest(myUserId, function(bool) {
             if (bool) {
               // within striking distance and already submitted paypal or cash info
-              socket.emit('authorization', {response: true, userId: myUserId});
+              dbFunctions.getUserRank(myUserId, data.score, function(rank) {
+                socket.emit('authorization', {response: true, userId: myUserId, rank: rank});
+              });
             } else {
               // within striking distance and have not submitted the info
-              socket.emit('authorization', {response: true, userId: myUserId, requestContact: true});
+              dbFunctions.getUserRank(myUserId, data.score, function(rank) {
+                socket.emit('authorization', {response: true, userId: myUserId, requestContact: true, rank: rank});
+              });
             }
           });
         } else {
           // not within striking distance and it doesnt matter if they have or have not submitted the info
-          socket.emit('authorization', {response: true, userId: myUserId});
+          dbFunctions.getUserRank(myUserId, data.score, function(rank) {
+            socket.emit('authorization', {response: true, userId: myUserId, rank: rank});
+          });
         }
       };
 
