@@ -15,7 +15,7 @@ var io = require('socket.io')(server);
 var shortid = require('shortid');
 var uuid = require('node-uuid');
 
-var ipblacklist = ['24.99.159.47', '137.205.1.96', '128.61.149.136', '76.3.13.170', '159.203.129.164', '46.101.144.150', '24.17.161.112'];
+var ipblacklist = ['24.99.159.47', '137.205.1.96', '128.61.149.136', '76.3.13.170', '159.203.129.164', '46.101.144.150', '24.17.161.112', '107.170.249.182'];
 
 var connectedUsers = {};
 var topScore = 0;
