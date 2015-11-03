@@ -398,7 +398,7 @@ io.on('connection', function(socket) {
 
     socket.on('sendClick', function(data) {
       var nowTime = Date.now();
-      if (nowTime - lastClickTime > 140) {
+      if (nowTime - lastClickTime > 300) {
         lastClickTime = nowTime;
         console.log('player played ' + data.play);
         sendToOpp('receiveClick', data);
@@ -415,7 +415,7 @@ io.on('connection', function(socket) {
         // 150pts - 236 sec
         // 100 - 147
         lastcall = nowTime;
-        return (data.round < 2.5 * timepast);
+        return (data.round < 4.5 * timepast);
       };
 
       console.log('fail data ' + JSON.stringify(data));
@@ -491,7 +491,7 @@ io.on('connection', function(socket) {
         // 150pts - 236 sec
         // 100 - 147
         lastcall = nowTime;
-        return (data.round < 3.5 * timepast);
+        return (data.round < 4.5 * timepast);
       };
 
       console.log('fail data ' + JSON.stringify(data));
