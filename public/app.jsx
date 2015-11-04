@@ -6,6 +6,7 @@ var ReactFitText = require('react-fittext');
 
 
 require("./index.html");
+
 require('./css/style.css');
 require('./css/tooltip.css');
 require('./img/tapfour.png');

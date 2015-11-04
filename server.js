@@ -2,6 +2,8 @@ var pg = require('pg');
 var path = require('path');
 var express = require('express');
 var geoip = require('geoip-lite');
+var async = require('async');
+
 sendmail = require('sendmail')();
 
 /// Server part
@@ -21,16 +23,16 @@ var connectedUsers = {};
 var topScore = 0;
 var topLoggedIn = false;
 var waitingForPlayer = null;
-
-sendmail({
-    from: 'no-reply@tapfour10dollars.com',
-    to: 'chiefsmurph@gmail.com ',
-    subject: 'server notice',
-    content: 'server started',
-  }, function(err, reply) {
-    console.log(err && err.stack);
-    console.dir(reply);
-});
+//
+// sendmail({
+//     from: 'no-reply@tapfour10dollars.com',
+//     to: 'chiefsmurph@gmail.com ',
+//     subject: 'server notice',
+//     content: 'server started',
+//   }, function(err, reply) {
+//     console.log(err && err.stack);
+//     console.dir(reply);
+// });
 
 function getCurrentTimestamp() {
     var d = new Date();
@@ -254,6 +256,8 @@ gameLogFunctions = {
   }
 };
 
+// routes
+
 app.get('/showAllScores', function(req, res, next) {
   dbFunctions.returnAllUsers(function(data) {
     res.json(data);
@@ -268,10 +272,16 @@ app.get('/sleeping', function(req, res, next) {
   res.sendfile(__dirname + '/public/sleeping.html');
 });
 
+app.get('/admin', function(req, res, next) {
+  res.sendfile(__dirname + '/public/admin.html');
+});
+
 
 app.get('/js/mozilla-cookies.js', function(req, res, next) {
   res.sendfile(__dirname + '/public/js/mozilla-cookies.js');
 });
+
+// socket handlers
 
 io.on('connection', function(socket) {
   var clientIp = socket.handshake.headers['x-forwarded-for'];
@@ -308,12 +318,30 @@ io.on('connection', function(socket) {
         myOpp = waitingForPlayer;
         waitingForPlayer = null;
 
-        dbFunctions.getUserRank(myUserId, connectedUsers[myUserId].score, function(rank) {
-          sendToOpp('opp', {opp: returnUserToken(), passback: true, rank: rank});
+        async.series([
+          function(cb) {
+            dbFunctions.getUserRank(myUserId, connectedUsers[myUserId].score, function(rank) {
+              cb(null, rank);
+            });
+          },
+          function(cb){
+            dbFunctions.getUserRank(myOpp.userId, connectedUsers[myOpp.userId].score, function(rank) {
+              cb(null, rank);
+            });
+          }
+        ],
+        function(err, results) {
+          sendToOpp('opp', {opp: returnUserToken(), passback: true, rank: results[0]});
+          socket.emit('opp', {opp: myOpp, rank: results[1]});
         });
-        dbFunctions.getUserRank(myOpp.userId, connectedUsers[myOpp.userId].score, function(rank) {
-          socket.emit('opp', {opp: myOpp, rank: rank});
-        });
+
+        // dbFunctions.getUserRank(myUserId, connectedUsers[myUserId].score, function(rank) {
+        //   sendToOpp('opp', {opp: returnUserToken(), passback: true, rank: rank});
+        // });
+        // dbFunctions.getUserRank(myOpp.userId, connectedUsers[myOpp.userId].score, function(rank) {
+        //   socket.emit('opp', {opp: myOpp, rank: rank});
+        // });
+
       } else {
         waitingForPlayer = returnUserToken();
         console.log(myUserId + ' waiting for player');
@@ -568,6 +596,15 @@ io.on('connection', function(socket) {
       }
 
       connectedUsers[myUserId] = undefined;
+    });
+
+    // admin sa6TLZiNcIQWzUxgUZlkYG6cUngj3r1NiLwZJlSeBL78VqIkOScJGzKxtnaZLc8V1qWVOjywfWsC5ZfDOuh5d
+    socket.on('admin', function(data) {
+      if (data.pwd === 'dogbreath') {
+        socket.emit('welcomeadmin');
+      } else {
+        socket.emit('hackeradmin');
+      }
     });
 
   }
