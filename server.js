@@ -386,7 +386,7 @@ io.on('connection', function(socket) {
               if (data.score === topScore) {
                 topLoggedIn = true;
                 checkAndEmit();
-                io.sockets.emit('roundInc', 10);
+                socket.broadcast.emit('roundInc', 10);
               } else {
                 socket.emit('roundInc', 20);
                 setTimeout(function() {
