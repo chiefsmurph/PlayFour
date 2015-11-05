@@ -323,7 +323,7 @@ var GameArea = React.createClass({
 		mySocket.on('updateLocal', function(data) {
 			this.props.scoreChange(data.score);
 			docCookies.setItem('userStatus', JSON.stringify({
-				userId: this.state.userId,
+				userId: (data.userId) ? data.userId : this.state.userId,
 				score: data.score,
 				handshake: data.handshake
 			}));
@@ -721,7 +721,7 @@ var WelcomeMessage = React.createClass({
 							<p>
 								Player #1: 1-4-1-3<span className='good'>Good move!</span><br/>
 								Player #2: 1-1-1-3<span className='good'>Good move!</span><br/>
-								Player #1: 1-1 !<span className='bad'>Bad move!</span>
+								Player #1: 1-1-1-3 !<span className='bad'>Bad move!</span>
 							</p>
 							<p>
 								Player #1: 3-2-1-4<span className='good'>Good move!</span><br/>
@@ -731,10 +731,11 @@ var WelcomeMessage = React.createClass({
 						</div>
 					</div>
 					<p>How to play: Players alternate turns.  Each turn consists of four clicks.  The player that starts has complete freedom for all four clicks.  Subsequent turns must be the exact same sequence as the opponent's last turn but must have one click changed.  You also are not allowed to repeat the same move twice in a row.  Click must take no more than 8 seconds to complete.</p>
-					<p>Whoever possesses the highest score at the time of the next Win-Big $10 Giveaway will receive $10 in cash or paypal.  Rules and everything are subject to change.  Server may be unresponsive at times.</p>
+					<p>Whoever possesses the highest score at the time of the next Win-Big $10 Giveaway will receive $10 in cash or paypal.  Rules and everything are subject to change.</p>
 					<div id='countDown'>
 						Time of next $10 Giveaway:
-						<span className='inlineblock'>11:59pm November 8, 2015 PST</span>
+						<b className='inlineblock'>11:59pm November 8, 2015 PST</b><br/>
+						<i>Note: new $10 Giveaway begins right after.  Winner can't win more than once</i>
 					</div>
 					<button onClick={this.continueClick}>click here to continue</button>
 				</div>
@@ -745,7 +746,7 @@ var WelcomeMessage = React.createClass({
 var TapFour = React.createClass({
 	getInitialState: function() {
 		return {
-			headerText: "Welcome to Tap Four<br><i>the monthly $10 giveaway</i>",
+			headerText: "Welcome to Tap Four<br><i>next $10 giveaway: 11:59pm 11/8</i>",
 			score: 0,
 			curRound: 0,
 			inGame: false,

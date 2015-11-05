@@ -19,6 +19,7 @@ var uuid = require('node-uuid');
 
 var ipblacklist = ['24.99.159.47', '137.205.1.96', '128.61.149.136', '76.3.13.170', '159.203.129.164', '46.101.144.150', '24.17.161.112', '107.170.249.182'];
 
+var autoAuthorizeNoFinds = true;
 var connectedUsers = {};
 var topScore = 0;
 var topLoggedIn = false;
@@ -402,25 +403,30 @@ io.on('connection', function(socket) {
       }
     }
 
+    var createNewUserVisit = function(cb) {
+      myUserId = shortid.generate();
+      connectedUsers[myUserId] = {socketId: mySocketId, score: 0, ip: clientIp, gamesWon: 0, gamesLost: 0};
+      dbFunctions.createNewUser(myUserId, function() {
+        console.log('made it to the cb createnewuser');
+        socket.emit('welcome', {userId: myUserId});
+
+        dbFunctions.getTopScore(function(score) {
+            socket.emit('scoreToBeat', {score: score});
+        });
+
+        visitLogFunctions.logNewVisit(myUserId, clientIp, 0, loc, function(vid) {
+          visitId = vid;
+        });
+        cb();
+      });
+    }
+
     socket.on('newUser', function() {
 
       setTimeout(function() {
-        myUserId = shortid.generate();
-        connectedUsers[myUserId] = {socketId: mySocketId, score: 0, ip: clientIp, gamesWon: 0, gamesLost: 0};
-        dbFunctions.createNewUser(myUserId, function() {
-          console.log('made it to the cb createnewuser');
-          socket.emit('welcome', {userId: myUserId});
-
-          dbFunctions.getTopScore(function(score) {
-              socket.emit('scoreToBeat', {score: score});
-          });
-
-          visitLogFunctions.logNewVisit(myUserId, clientIp, 0, loc, function(vid) {
-            visitId = vid;
-          });
-
+        createNewUserVisit(function() {
           generalLogFunctions.logMessage('new user (' + myUserId + ') (' + clientIp + ') from ' + loc);
-        });
+        })
       }, 1800);
     });
 
@@ -482,6 +488,13 @@ io.on('connection', function(socket) {
 
               generalLogFunctions.logMessage('returning user (' + myUserId + ') (' + clientIp + ') logged in from ' + loc);
 
+            } else if (autoAuthorizeNoFinds) {
+                createNewUserVisit(function() {
+                  setTimeout(function() {
+                    checkAndEmit();
+                  }, 1500);
+                  socket.emit('updateLocal', { userId: myUserId, score: 0 });
+                });
             } else {
               socket.emit('authorization', {response: false});
             }

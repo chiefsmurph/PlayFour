@@ -353,7 +353,7 @@
 			mySocket.on('updateLocal', (function (data) {
 				this.props.scoreChange(data.score);
 				docCookies.setItem('userStatus', JSON.stringify({
-					userId: this.state.userId,
+					userId: data.userId ? data.userId : this.state.userId,
 					score: data.score,
 					handshake: data.handshake
 				}));
@@ -878,7 +878,7 @@
 									"Good move!"
 								),
 								React.createElement("br", null),
-								"Player #1: 1-1 !",
+								"Player #1: 1-1-1-3 !",
 								React.createElement(
 									"span",
 									{ className: "bad" },
@@ -919,16 +919,22 @@
 					React.createElement(
 						"p",
 						null,
-						"Whoever possesses the highest score at the time of the next Win-Big $10 Giveaway will receive $10 in cash or paypal.  Rules and everything are subject to change.  Server may be unresponsive at times."
+						"Whoever possesses the highest score at the time of the next Win-Big $10 Giveaway will receive $10 in cash or paypal.  Rules and everything are subject to change."
 					),
 					React.createElement(
 						"div",
 						{ id: "countDown" },
 						"Time of next $10 Giveaway:",
 						React.createElement(
-							"span",
+							"b",
 							{ className: "inlineblock" },
 							"11:59pm November 8, 2015 PST"
+						),
+						React.createElement("br", null),
+						React.createElement(
+							"i",
+							null,
+							"Note: new $10 Giveaway begins right after.  Winner can't win more than once"
 						)
 					),
 					React.createElement(
@@ -945,7 +951,7 @@
 
 		getInitialState: function getInitialState() {
 			return {
-				headerText: "Welcome to Tap Four<br><i>the monthly $10 giveaway</i>",
+				headerText: "Welcome to Tap Four<br><i>next $10 giveaway: 11:59pm 11/8</i>",
 				score: 0,
 				curRound: 0,
 				inGame: false,
