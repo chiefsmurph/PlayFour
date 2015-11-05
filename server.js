@@ -256,6 +256,60 @@ gameLogFunctions = {
   }
 };
 
+// admin
+
+var adminStatFunctions = {
+  getSingleDayGameCount: function(day, cb) {
+    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+      var curDateTime = getCurrentTimestamp();
+      client.query('SELECT count(*) from gameLogs WHERE datetime like \'%' + day + '%\'', function(err, result) {
+
+        done();
+        if (err) console.log(err);
+        cb(null, result.rows[0].count);
+
+      });
+    });
+  },
+  getTotalDailyGameCount: function(cb) {
+
+    Date.prototype.addDays = function(days) {
+        var dat = new Date(this.valueOf())
+        dat.setDate(dat.getDate() + days);
+        return dat;
+    }
+
+    function getDates(startDate, stopDate) {
+        var dateArray = new Array();
+        var currentDate = startDate;
+        while (currentDate <= stopDate) {
+            dateArray.push( new Date (currentDate) )
+            currentDate = currentDate.addDays(1);
+        }
+        return dateArray;
+    }
+
+    var arrayOfDates = getDates(new Date('11/01/15'), new Date());
+    arrayOfDates = arrayOfDates.map(function(date) {
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      month = (month < 10 ? "0" : "") + month;
+      var day  = date.getDate();
+      day = (day < 10 ? "0" : "") + day;
+      return month + '/' + day + '/' + year;
+    });
+
+    async.map(arrayOfDates, this.getSingleDayGameCount, function(err, results) {
+      var daily = {};
+      arrayOfDates.forEach(function(day, i) {
+        daily[day] = results[i];
+      });
+      cb(daily);
+    });
+
+  }
+};
+
 // routes
 
 app.get('/showAllScores', function(req, res, next) {
@@ -602,6 +656,11 @@ io.on('connection', function(socket) {
     socket.on('admin', function(data) {
       if (data.pwd === 'dogbreath') {
         socket.emit('welcomeadmin');
+        adminStatFunctions.getTotalDailyGameCount(function(total) {
+          socket.emit('stats', {
+            totalDailyGameCount: total
+          });
+        })
       } else {
         socket.emit('hackeradmin');
       }

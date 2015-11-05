@@ -13,14 +13,23 @@
 			console.log('welcome admin');
 		});
 
-		var submitpwd = function() {
-			mySocket.emit('admin', {pwd: $('#pwd').val()});
-		};
+		mySocket.on('stats', function(data) {
+			console.log(JSON.stringify(data));
+		});
 
+		$(document).ready(function() {
+
+			$('form').on('submit', function(e) {
+				console.log('here');
+				mySocket.emit('admin', {pwd: $('#pwd').val()});
+				e.preventDefault();
+			});
+
+		});
 		</script>
 	</head>
 	<body>
-		<form onsubmit="submitpwd()">
+		<form>
 			<input type='text' id='pwd'>
 			<input type='submit'>
 		</form>
