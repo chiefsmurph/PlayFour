@@ -47,7 +47,7 @@ linear-gradient(#eee .1em, transparent .1em);
 background-size: 100% 1.2em;*/
 }
 body.no-touch .panel > div {
-	font-size:calc(40% + 1.65vh);
+	font-size:calc(40% + 1.45vh);
 }
 #requestPanel h2 {
   font-size: 3vh;
