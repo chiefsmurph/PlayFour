@@ -490,9 +490,6 @@ io.on('connection', function(socket) {
 
             } else if (autoAuthorizeNoFinds) {
                 createNewUserVisit(function() {
-                  setTimeout(function() {
-                    checkAndEmit();
-                  }, 1500);
                   socket.emit('updateLocal', { userId: myUserId, score: 0 });
                 });
             } else {
