@@ -493,6 +493,9 @@ io.on('connection', function(socket) {
 
             } else if (autoAuthorizeNoFinds) {
                 createNewUserVisit(function() {
+                  if (!topLoggedIn) {
+                    socket.emit('roundInc', 20);
+                  }
                   socket.emit('updateLocal', { userId: myUserId, score: 0 });
                 });
             } else {
