@@ -425,6 +425,9 @@ io.on('connection', function(socket) {
 
       setTimeout(function() {
         createNewUserVisit(function() {
+          if (!topLoggedIn) {
+            socket.emit('roundInc', 20);
+          }
           generalLogFunctions.logMessage('new user (' + myUserId + ') (' + clientIp + ') from ' + loc);
         })
       }, 1800);

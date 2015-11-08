@@ -264,6 +264,7 @@ var GameArea = React.createClass({
 		}.bind(this));
 
 		mySocket.on('roundInc', function(data) {
+			console.debug('roundinc ' + data);
 			this.setState({
 				roundInc: data
 			});

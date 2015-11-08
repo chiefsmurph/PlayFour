@@ -300,6 +300,7 @@
 			}).bind(this));
 
 			mySocket.on('roundInc', (function (data) {
+
 				this.setState({
 					roundInc: data
 				});
