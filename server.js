@@ -408,6 +408,9 @@ io.on('connection', function(socket) {
       connectedUsers[myUserId] = {socketId: mySocketId, score: 0, ip: clientIp, gamesWon: 0, gamesLost: 0};
       dbFunctions.createNewUser(myUserId, function() {
         console.log('made it to the cb createnewuser');
+
+        cb();
+
         socket.emit('welcome', {userId: myUserId});
 
         dbFunctions.getTopScore(function(score) {
@@ -417,7 +420,7 @@ io.on('connection', function(socket) {
         visitLogFunctions.logNewVisit(myUserId, clientIp, 0, loc, function(vid) {
           visitId = vid;
         });
-        cb();
+
       });
     }
 
