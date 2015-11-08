@@ -123,26 +123,6 @@
 
 			mySocket = io();
 
-			if (docCookies.hasItem('userStatus')) {
-				var userStatus = JSON.parse(docCookies.getItem('userStatus'));
-				this.props.scoreChange(userStatus.score);
-
-				setTimeout((function () {
-					this.props.headerChange('welcome back<br>authorizing now');
-					mySocket.emit('authorizeScore', userStatus);
-				}).bind(this), 1200);
-			} else {
-
-				setTimeout((function () {
-					this.props.toggleInfo();
-				}).bind(this), 200);
-
-				// setTimeout(function() {
-				// 	this.props.headerChange('welcome new user...<br>now registering');
-				// 	mySocket.emit('newUser');
-				// }.bind(this), 1200);
-			}
-
 			mySocket.on('scoreToBeat', (function (data) {
 				console.log('score to beat ' + JSON.stringify(data));
 				this.props.updateScoreToBeat(data.score);
@@ -368,6 +348,30 @@
 					}));
 				}
 			}).bind(this));
+
+			//	//	//
+			//	//	//
+			//	//	//
+
+			if (docCookies.hasItem('userStatus')) {
+				var userStatus = JSON.parse(docCookies.getItem('userStatus'));
+				this.props.scoreChange(userStatus.score);
+
+				setTimeout((function () {
+					this.props.headerChange('welcome back<br>authorizing now');
+					mySocket.emit('authorizeScore', userStatus);
+				}).bind(this), 1200);
+			} else {
+
+				setTimeout((function () {
+					this.props.toggleInfo();
+				}).bind(this), 200);
+
+				// setTimeout(function() {
+				// 	this.props.headerChange('welcome new user...<br>now registering');
+				// 	mySocket.emit('newUser');
+				// }.bind(this), 1200);
+			}
 
 			// setTimeout(function() {
 			// 	this.props.headerChange('Alright everybody...here we go!');
