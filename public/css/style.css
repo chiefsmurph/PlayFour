@@ -264,7 +264,10 @@ table#gameArea td.red {
 	position: relative;
 	top: 1.4vh;
 	line-height: 0.9;
-	margin: 0 0 1vh 5px;
+	margin: 0 0 3vh 5px;
+}
+.no-touch .headerBoard #mainText {
+  margin: 0 0 1vh 5px;
 }
 .headerBoard .icon {
 	width: 8vh;
