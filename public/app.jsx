@@ -317,7 +317,8 @@ var GameArea = React.createClass({
 			} else {
 				docCookies.setItem('userStatus', JSON.stringify({
 					score: data.score,
-					handshake: data.handshake
+					handshake: data.handshake,
+					userId: this.state.userId
 				}));
 			}
 
