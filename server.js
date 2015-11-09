@@ -193,7 +193,7 @@ var dbFunctions = {
 //dbFunctions.executeQuery('CREATE TABLE scores (dbId serial primary key, username VARCHAR(30) not null, score INT, handshake VARCHAR(60))');
 //dbFunctions.executeQuery('CREATE TABLE visitlogs (visitId serial primary key, username VARCHAR(30) not null, ip VARCHAR(30) not null, datetime VARCHAR(30) not null, arrscore INT, leavescore INT, duration INT, gamesWon INT, gamesLost INT )');
 //dbFunctions.executeQuery('CREATE TABLE gamelogs (gameId serial primary key, datetime VARCHAR(30) not null, winnerId VARCHAR(30) not null, loserId VARCHAR(30) not null, round INT )');
-//CREATE TABLE generalLogs (errorId serial primary key, datetime VARCHAR(30) not null, error VARCHAR(120) not null)
+//CREATE TABLE generalLogs (logid serial primary key, datetime VARCHAR(30) not null, log VARCHAR(120) not null)
 
 var dontlog = ['EkBxPvAbg', 'NJXYu4yMe'];
 

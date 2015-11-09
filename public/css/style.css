@@ -275,6 +275,9 @@ table#gameArea td.red {
 	z-index: 100;
   margin-right: 20px;
 }
+.no-touch .headerBoard .icon {
+  top: 0;
+}
 .headerBoard .icon img {
 	width: 8vh;
 	border-radius: 4vh;
