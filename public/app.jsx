@@ -13,6 +13,10 @@ require('./img/tapfour.png');
 require('./js/odometer-0.4.6/themes/odometer-theme-minimal.css');
 
 var infoIconPNG = require('./img/info_icon2.png');
+var winnersIconPNG = require('./img/winnersicon2.png');
+var winnersIconOverPNG = require('./img/winnersiconover.png');
+var winnersIconDownPNG = require('./img/winnersdown.png');
+
 var docCookies = require('./js/mozilla-cookies.js');
 require('./js/odometer-0.4.6/odometer.min.js');
 
@@ -111,7 +115,7 @@ var GameArea = React.createClass({
 					this.props.headerChange('authorized as ' + data.userId + '<br>(rank: #' + (data.rank || 'n/a') + ')');
 
 					setTimeout(function() {
-						this.props.headerChange('now waiting for opponent...');
+						this.props.headerChange('authorized as ' + data.userId + '<br>now waiting for opponent...');
 					}.bind(this), 1000);
 
 					setTimeout(function() {
@@ -119,7 +123,7 @@ var GameArea = React.createClass({
 					}.bind(this), 1700);
 				}
 			} else {
-				this.props.headerChange('Database reached maximum storage and in the process of upgrading it had to be cleared...<br>click <a href="/reAuth">here</a> to start fresh and enter the game.');
+				this.props.headerChange('you are already logged in ya bozo<br>click <a href="/reAuth">here</a> if you continue to have problems');
 			}
 		}.bind(this));
 
@@ -572,8 +576,25 @@ var MyButton = React.createClass({
 	}
 });
 var HeaderBoard = React.createClass({
+	getInitialState: function() {
+		return {
+			mouthPos: 'norm'
+		}
+	},
 	componentDidMount: function() {
+	},
+	swapMouth: function() {
+		console.log('swap');
+		if (this.state.mouthPos === 'norm') {
+			this.setState({ mouthPos: 'open'});
+		} else if (this.state.mouthPos === 'open') {
+			this.setState({ mouthPos: 'norm'})
+		}
+	},
 
+	toggleWinners: function() {
+		//this.changeWinners();
+		this.props.toggleWinners();
 	},
 	render: function() {
 		var optionalCurrent;
@@ -590,9 +611,22 @@ var HeaderBoard = React.createClass({
 					{optionalScoreToBeat}
 				</div>
 
-				<span id='infoIcon' className="tooltip-bottom" data-tooltip="Info">
+				<span id="infoIcon" className="icon tooltip-bottom icon" data-tooltip="Info">
 					<img src={infoIconPNG} onClick={this.props.toggleInfo} className={(this.props.displayingInfo) ? 'faded' : ''} />
 				</span>
+
+				<div className="no-touch">
+					<span id="winnersIcon" className="icon tooltip-bottom" style={{display: (this.state.mouthPos === 'norm' && !this.props.displayingWinners) ? '' : 'none'}} data-tooltip="Winners">
+						<img src={winnersIconPNG} onMouseOver={this.swapMouth} className={(this.props.displayingWinners) ? 'faded' : ''} />
+					</span>
+					<span id="winnersIconOver" className="icon tooltip-bottom" style={{display: (this.state.mouthPos === 'open' && !this.props.displayingWinners) ? '' : 'none'}} data-tooltip="Winners">
+						<img src={winnersIconOverPNG} onMouseOut={this.swapMouth} onClick={this.toggleWinners} className={(this.props.displayingWinners) ? 'faded' : ''} />
+					</span>
+					<span id="winnersIconDown" className="icon tooltip-bottom" style={{display: (this.props.displayingWinners) ? '' : 'none'}} data-tooltip="Winners">
+						<img src={winnersIconDownPNG} onClick={this.toggleWinners} className={(this.props.displayingWinners) ? 'faded' : ''} />
+					</span>
+				</div>
+
 				<div id='mainText' dangerouslySetInnerHTML={{__html: this.props.headerText}}></div>
 			</div>
 		);
@@ -749,7 +783,7 @@ var WelcomeMessage = React.createClass({
 					<p>Whoever possesses the highest score at the time of the next Win-Big $10 Giveaway will receive $10 in cash or paypal.  Rules and everything are subject to change.</p>
 					<div id='countDown'>
 						Time of next $10 Giveaway:
-						<b className='inlineblock'>11:59pm November 8, 2015 PST</b><br/>
+						<b className='inlineblock'>11:59pm November 30, 2015 PST</b><br/>
 						<i>Note: new $10 Giveaway begins right after.  Winner can't win more than once</i>
 					</div>
 					<button onClick={this.continueClick}>click here to continue</button>
@@ -758,15 +792,31 @@ var WelcomeMessage = React.createClass({
 		);
 	}
 });
+var WinnersBoard = React.createClass({
+	render: function() {
+		return (
+			<div className="panel" id='winnersBoard'>
+				<div>
+					<span id='x' onClick={this.props.toggleWinners}>[x]</span>
+					<h2>Congratulations to our first winner</h2>
+					<h1>Bob</h1>
+					<code>from Ann Arbor, Michigan (USA)</code><br/>
+					<code>Date won... November 9, 2015</code>
+				</div>
+			</div>
+		);
+	}
+});
 var TapFour = React.createClass({
 	getInitialState: function() {
 		return {
-			headerText: "Welcome to Tap Four<br><i>next $10 giveaway: 11:59pm 11/8</i>",
+			headerText: "Welcome to Tap Four<br><i>next $10 giveaway: 11:59pm 11/30</i>",
 			score: 0,
 			curRound: 0,
 			inGame: false,
 			displayWelcome: false,
 			displayRequest: false,
+			displayingWinners: false,
 			scoreToBeat: null,
 			emitOnContinue: true
 		};
@@ -832,9 +882,27 @@ var TapFour = React.createClass({
 	},
 
 	toggleInfo: function() {
+		if (this.state.displayingWinners && !this.state.displayWelcome) {
+			this.setState({
+				displayingWinners: false
+			});
+		}
 		this.setState({
 			displayWelcome: !this.state.displayWelcome
 		});
+	},
+
+	toggleWinners: function() {
+		if (this.state.displayWelcome && !this.state.displayingWinners) {
+			this.setState({
+				displayWelcome: false
+			});
+		}
+		this.setState({
+			displayingWinners: !this.state.displayingWinners
+		});
+
+		return false;
 	},
 
 	updateScoreToBeat: function(s) {
@@ -868,15 +936,20 @@ var TapFour = React.createClass({
 		if (this.state.displayRequest) {
 			optionalRequest = (<ContactRequest hideMe={this.closeRequestPanel} headerChange={this.headerChange} />);
 		}
+		var optionalWinners;
+		if (this.state.displayingWinners) {
+			optionalWinners = (<WinnersBoard toggleWinners={this.toggleWinners} />)
+		}
 
 		return (
 			<div id='container'>
 				<table>
-					<tr><td><HeaderBoard toggleInfo={this.toggleInfo} score={this.state.score} curRound={this.state.curRound} scoreToBeat={this.state.scoreToBeat} headerText={this.state.headerText} getInGame={this.state.inGame} displayingInfo={this.state.displayWelcome} /></td></tr>
+					<tr><td><HeaderBoard toggleInfo={this.toggleInfo} toggleWinners={this.toggleWinners} score={this.state.score} curRound={this.state.curRound} scoreToBeat={this.state.scoreToBeat} headerText={this.state.headerText} getInGame={this.state.inGame} displayingInfo={this.state.displayWelcome} displayingWinners={this.state.displayingWinners} /></td></tr>
 					<tr><td><GameArea toggleInfo={this.toggleInfo} scoreChange={this.scoreChange} roundChange={this.roundChange} updateScoreToBeat={this.updateScoreToBeat} score={this.state.score} curRound={this.state.curRound} headerChange={this.headerChange} currentlyInGame={this.state.inGame} inGameChange={this.inGameChange} showRequestInfo={this.showRequestInfo} /></td></tr>
 				</table>
 				{optionalWelcome}
 				{optionalRequest}
+				{optionalWinners}
 			</div>
 		);
 	}

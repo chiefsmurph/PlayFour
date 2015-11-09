@@ -49,6 +49,27 @@ background-size: 100% 1.2em;*/
 body.no-touch .panel > div {
 	font-size:calc(40% + 1.45vh);
 }
+#winnersBoard {
+  text-align: center;
+}
+#winnersBoard h2 {
+  text-decoration: underline;
+}
+#winnersBoard #x {
+  color: blue;
+  float: right;
+  font-size: 2vh;
+  margin: 2vh 2vh;
+  background-color: rgba(255,255,255,0.6);
+  padding: 5px;
+  text-decoration: none;
+  text-align: center;
+  font-style: normal;
+  cursor: pointer;
+}
+#winnersBoard #x:hover {
+  background-color: rgba(255,255,255,0.9);
+}
 #requestPanel h2 {
   font-size: 3vh;
   text-decoration: underline;
@@ -245,34 +266,35 @@ table#gameArea td.red {
 	line-height: 0.9;
 	margin: 0 0 1vh 5px;
 }
-.headerBoard #infoIcon {
-	width: 6vh;
+.headerBoard .icon {
+	width: 8vh;
 	float: right;
 	position: relative;
 	top: -3vh;
 	left: -4.7vw;
 	z-index: 100;
+  margin-right: 20px;
 }
-.headerBoard #infoIcon img {
-	width: 6vh;
-	background-color: white;
-	border-radius: 3vh;
-
-  background-color: white;
-  border-radius: 3vh;
+.headerBoard .icon img {
+	width: 8vh;
+	border-radius: 4vh;
   /*border: 0.25vh solid brown;*/
   box-shadow: 5 10px 10px #888888;
+    background-color: white;
   opacity: 0.9;
-}
-body.no-touch .headerBoard #infoIcon img:hover {
-	background-color: yellow;
 	cursor: pointer !important;
 }
-.headerBoard #infoIcon img.faded {
+.headerBoard .icon img {
+  background-color: white;
+}
+body.no-touch .headerBoard .icon img:hover {
+	background-color: yellow;
+}
+.headerBoard .icon img.faded {
 	opacity: 0.6;
 	background-color: rgba(255,255,0,0.4);
 }
-body.no-touch .headerBoard #infoIcon img.faded:hover {
+body.no-touch .headerBoard .icon img.faded:hover {
 	background-color: yellow;
 }
 #infoPanel > div {
