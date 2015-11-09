@@ -270,13 +270,13 @@ table#gameArea td.red {
 	width: 8vh;
 	float: right;
 	position: relative;
-	top: -3vh;
+	top: 0;
 	left: -4.7vw;
 	z-index: 100;
   margin-right: 20px;
 }
 .no-touch .headerBoard .icon {
-  top: 0;
+	top: -3vh;
 }
 .headerBoard .icon img {
 	width: 8vh;
