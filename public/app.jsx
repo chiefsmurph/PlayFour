@@ -802,7 +802,7 @@ var WinnersBoard = React.createClass({
 					<span id='x' onClick={this.props.toggleWinners}>[x]</span>
 					<h2>Congratulations to our first winner</h2>
 					<h1>Bob</h1>
-					<code>from Ann Arbor, Michigan (USA)</code><br/>
+					<code>from Michigan (USA)</code><br/>
 					<code>Date won... November 9, 2015</code>
 				</div>
 			</div>

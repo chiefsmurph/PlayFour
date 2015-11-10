@@ -1031,7 +1031,7 @@
 					React.createElement(
 						"code",
 						null,
-						"from Ann Arbor, Michigan (USA)"
+						"from Michigan (USA)"
 					),
 					React.createElement("br", null),
 					React.createElement(
