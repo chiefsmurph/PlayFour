@@ -12,6 +12,23 @@
 
 	</head>
 	<body class='no-touch'>
+		<script>
+		  window.fbAsyncInit = function() {
+		    FB.init({
+		      appId      : '1648892535390920',
+		      xfbml      : true,
+		      version    : 'v2.5'
+		    });
+		  };
+
+		  (function(d, s, id){
+		     var js, fjs = d.getElementsByTagName(s)[0];
+		     if (d.getElementById(id)) {return;}
+		     js = d.createElement(s); js.id = id;
+		     js.src = "//connect.facebook.net/en_US/sdk.js";
+		     fjs.parentNode.insertBefore(js, fjs);
+		   }(document, 'script', 'facebook-jssdk'));
+		</script>
 		<div id="content"></div>
 		<script src="http://localhost:8090/webpack-dev-server.js"></script>
 		<script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
