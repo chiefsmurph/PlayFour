@@ -17,6 +17,7 @@ var winnersIconPNG = require('./img/winnersicon2-sml.png');
 var winnersIconOverPNG = require('./img/winnersiconover-sml.png');
 var winnersIconDownPNG = require('./img/newjohnout2-sml.png');
 
+var bob = require('./img/bob.png');
 var docCookies = require('./js/mozilla-cookies.js');
 require('./js/odometer-0.4.6/odometer.min.js');
 
@@ -802,6 +803,7 @@ var WinnersBoard = React.createClass({
 					<span id='x' onClick={this.props.toggleWinners}>[x]</span>
 					<h2>Congratulations to our first winner</h2>
 					<h1>Bob</h1>
+					<img src={bob} className='winpic'/><br/>
 					<code>from Michigan (USA)</code><br/>
 					<code>Date won... November 9, 2015</code>
 				</div>

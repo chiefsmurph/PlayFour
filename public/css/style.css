@@ -49,8 +49,10 @@ background-size: 100% 1.2em;*/
 body.no-touch .panel > div {
 	font-size:calc(40% + 1.45vh);
 }
-#winnersBoard {
+#winnersBoard > div {
   text-align: center;
+  background-image: url('../img/diamond-upholstery.png');
+  background-color: #cc8800;
 }
 #winnersBoard h2 {
   text-decoration: underline;
@@ -69,6 +71,14 @@ body.no-touch .panel > div {
 }
 #winnersBoard #x:hover {
   background-color: rgba(255,255,255,0.9);
+}
+#winnersBoard .winpic {
+  width: 23%;
+  max-width: 300px;
+  padding: 2% 0 0 5%;
+  border: 2px solid white;
+  margin-bottom: 10px;
+  background-image: url('../img/forest.png')
 }
 #requestPanel h2 {
   font-size: 3vh;
