@@ -313,7 +313,7 @@ var adminStatFunctions = {
 // routes
 
 app.post('/', function(req, res, next) {
-  res.sendfile(__dirname + '/index.html');
+  res.sendfile(__dirname + '/dist/index.html');
 });
 
 app.get('/showAllScores', function(req, res, next) {
