@@ -13,9 +13,7 @@ require('./img/tapfour.png');
 require('./js/odometer-0.4.6/themes/odometer-theme-minimal.css');
 
 var infoIconPNG = require('./img/info_icon2.png');
-var winnersIconPNG = require('./img/winnersicon2-sml.png');
-var winnersIconOverPNG = require('./img/winnersiconover-sml.png');
-var winnersIconDownPNG = require('./img/newjohnout2-sml.png');
+var winnersIconPNG = require('./img/crown.png');
 
 var bob = require('./img/bob.png');
 var docCookies = require('./js/mozilla-cookies.js');
@@ -625,17 +623,9 @@ var HeaderBoard = React.createClass({
 					<img src={infoIconPNG} onClick={this.props.toggleInfo} className={(this.props.displayingInfo) ? 'faded' : ''} />
 				</span>
 
-				<div>
-					<span id="winnersIcon" className="icon tooltip-bottom" style={{display: (this.state.mouthPos === 'norm' && !this.props.displayingWinners) ? '' : 'none'}} data-tooltip="Winner">
-						<img src={winnersIconPNG} onMouseOver={this.swapMouth} className={(this.props.displayingWinners) ? 'faded' : ''} />
-					</span>
-					<span id="winnersIconOver" className="icon tooltip-bottom" style={{display: (this.state.mouthPos === 'open' && !this.props.displayingWinners) ? '' : 'none'}} data-tooltip="Winner">
-						<img src={winnersIconOverPNG} onMouseOut={this.swapMouth} onClick={this.toggleWinners} className={(this.props.displayingWinners) ? 'faded' : ''} />
-					</span>
-					<span id="winnersIconDown" className="icon tooltip-bottom" style={{display: (this.props.displayingWinners) ? '' : 'none'}} data-tooltip="Winner">
-						<img src={winnersIconDownPNG} onClick={this.toggleWinners} className={(this.props.displayingWinners) ? 'faded' : ''} />
-					</span>
-				</div>
+				<span id="winnersIcon" className="icon tooltip-bottom" data-tooltip="Winner">
+					<img src={winnersIconPNG} className={(this.props.displayingWinners) ? 'faded' : ''} onClick={this.toggleWinners} />
+				</span>
 
 				<div id='mainText' dangerouslySetInnerHTML={{__html: this.props.headerText}}></div>
 			</div>
@@ -811,8 +801,10 @@ var WinnersBoard = React.createClass({
 					<h2>Congratulations to our first winner</h2>
 					<h1>Bob</h1>
 					<img src={bob} className='winpic'/><br/>
-					<code>from Michigan (USA)</code><br/>
-					<code>Date won... November 9, 2015</code>
+					<section>
+						<code>from Michigan (USA)</code><br/>
+						<code>Date won... November 9, 2015</code>
+					</section>
 				</div>
 			</div>
 		);
