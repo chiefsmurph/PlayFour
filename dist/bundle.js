@@ -664,20 +664,20 @@
 				),
 				React.createElement(
 					"div",
-					{ className: "no-touch" },
+					null,
 					React.createElement(
 						"span",
-						{ id: "winnersIcon", className: "icon tooltip-bottom", style: { display: this.state.mouthPos === 'norm' && !this.props.displayingWinners ? '' : 'none' }, "data-tooltip": "Winners" },
+						{ id: "winnersIcon", className: "icon tooltip-bottom", style: { display: this.state.mouthPos === 'norm' && !this.props.displayingWinners ? '' : 'none' }, "data-tooltip": "Winner" },
 						React.createElement("img", { src: winnersIconPNG, onMouseOver: this.swapMouth, className: this.props.displayingWinners ? 'faded' : '' })
 					),
 					React.createElement(
 						"span",
-						{ id: "winnersIconOver", className: "icon tooltip-bottom", style: { display: this.state.mouthPos === 'open' && !this.props.displayingWinners ? '' : 'none' }, "data-tooltip": "Winners" },
+						{ id: "winnersIconOver", className: "icon tooltip-bottom", style: { display: this.state.mouthPos === 'open' && !this.props.displayingWinners ? '' : 'none' }, "data-tooltip": "Winner" },
 						React.createElement("img", { src: winnersIconOverPNG, onMouseOut: this.swapMouth, onClick: this.toggleWinners, className: this.props.displayingWinners ? 'faded' : '' })
 					),
 					React.createElement(
 						"span",
-						{ id: "winnersIconDown", className: "icon tooltip-bottom", style: { display: this.props.displayingWinners ? '' : 'none' }, "data-tooltip": "Winners" },
+						{ id: "winnersIconDown", className: "icon tooltip-bottom", style: { display: this.props.displayingWinners ? '' : 'none' }, "data-tooltip": "Winner" },
 						React.createElement("img", { src: winnersIconDownPNG, onClick: this.toggleWinners, className: this.props.displayingWinners ? 'faded' : '' })
 					)
 				),

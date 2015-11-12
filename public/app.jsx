@@ -618,14 +618,14 @@ var HeaderBoard = React.createClass({
 					<img src={infoIconPNG} onClick={this.props.toggleInfo} className={(this.props.displayingInfo) ? 'faded' : ''} />
 				</span>
 
-				<div className="no-touch">
-					<span id="winnersIcon" className="icon tooltip-bottom" style={{display: (this.state.mouthPos === 'norm' && !this.props.displayingWinners) ? '' : 'none'}} data-tooltip="Winners">
+				<div>
+					<span id="winnersIcon" className="icon tooltip-bottom" style={{display: (this.state.mouthPos === 'norm' && !this.props.displayingWinners) ? '' : 'none'}} data-tooltip="Winner">
 						<img src={winnersIconPNG} onMouseOver={this.swapMouth} className={(this.props.displayingWinners) ? 'faded' : ''} />
 					</span>
-					<span id="winnersIconOver" className="icon tooltip-bottom" style={{display: (this.state.mouthPos === 'open' && !this.props.displayingWinners) ? '' : 'none'}} data-tooltip="Winners">
+					<span id="winnersIconOver" className="icon tooltip-bottom" style={{display: (this.state.mouthPos === 'open' && !this.props.displayingWinners) ? '' : 'none'}} data-tooltip="Winner">
 						<img src={winnersIconOverPNG} onMouseOut={this.swapMouth} onClick={this.toggleWinners} className={(this.props.displayingWinners) ? 'faded' : ''} />
 					</span>
-					<span id="winnersIconDown" className="icon tooltip-bottom" style={{display: (this.props.displayingWinners) ? '' : 'none'}} data-tooltip="Winners">
+					<span id="winnersIconDown" className="icon tooltip-bottom" style={{display: (this.props.displayingWinners) ? '' : 'none'}} data-tooltip="Winner">
 						<img src={winnersIconDownPNG} onClick={this.toggleWinners} className={(this.props.displayingWinners) ? 'faded' : ''} />
 					</span>
 				</div>
