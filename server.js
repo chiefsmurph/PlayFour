@@ -312,6 +312,10 @@ var adminStatFunctions = {
 
 // routes
 
+app.post('/', function(req, res, next) {
+  res.sendfile(__dirname + '/index.html');
+});
+
 app.get('/showAllScores', function(req, res, next) {
   dbFunctions.returnAllUsers(function(data) {
     res.json(data);
