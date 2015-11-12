@@ -97,7 +97,7 @@ var GameArea = React.createClass({
 				userId: data.userId,
 				score: 0,
 				handshake: ''
-			}));
+			}), 31536e3, "/");
 		}.bind(this));
 
 		mySocket.on('authorization', function(data) {
@@ -310,7 +310,7 @@ var GameArea = React.createClass({
 				docCookies.setItem('userStatus', JSON.stringify({
 					userId: data.userId,
 					score: data.score
-				}));
+				}), 31536e3, "/");
 				this.setState({
 					userId: data.userId
 				});
@@ -319,7 +319,7 @@ var GameArea = React.createClass({
 					score: data.score,
 					handshake: data.handshake,
 					userId: this.state.userId
-				}));
+				}), 31536e3, "/");
 			}
 
 		}.bind(this));
