@@ -209,19 +209,26 @@ var GameArea = React.createClass({
 
 
 			setTimeout(function() {
-				this.props.headerChange('new game...');
-				this.props.inGameChange(true);
+				if(this.state.opp) {	// of most importance...constantly check for these settimeouts
+					this.props.headerChange('your move / winner starts');
+					this.props.headerChange('new game...');
+					this.props.inGameChange(true);
+				}
 			}.bind(this), 3700);
 
 			setTimeout(function() {
-				this.props.headerChange('your move / winner starts');
+				if(this.state.opp) {	// of most importance...constantly check for these settimeouts
+					this.props.headerChange('your move / winner starts');
+				}
 			}.bind(this), 4000);
 
 			setTimeout(function() {
-				this.setState({
-					myTurn: true
-				});
-				startCount.call(this);
+				if(this.state.opp) {	// of most importance...constantly check for these settimeouts
+					this.setState({
+						myTurn: true
+					});
+					startCount.call(this);
+				}
 			}.bind(this), 4100);
 
 		}.bind(this));
@@ -798,7 +805,7 @@ var WelcomeMessage = React.createClass({
 var WinnersBoard = React.createClass({
 	render: function() {
 		return (
-			<div className="panel" id='winnersBoard'>
+			<div className={(!this.props.showing) ? "hidden panel" : "panel"} id='winnersBoard' >
 				<div>
 					<span id='x' onClick={this.props.toggleWinners}>[x]</span>
 					<h2>Congratulations to our first winner</h2>
@@ -941,9 +948,7 @@ var TapFour = React.createClass({
 			optionalRequest = (<ContactRequest hideMe={this.closeRequestPanel} headerChange={this.headerChange} />);
 		}
 		var optionalWinners;
-		if (this.state.displayingWinners) {
-			optionalWinners = (<WinnersBoard toggleWinners={this.toggleWinners} />)
-		}
+		optionalWinners = (<WinnersBoard toggleWinners={this.toggleWinners} showing={this.state.displayingWinners} />)
 
 		return (
 			<div id='container'>

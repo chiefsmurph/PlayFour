@@ -248,19 +248,29 @@
 				});
 
 				setTimeout((function () {
-					this.props.headerChange('new game...');
-					this.props.inGameChange(true);
+					if (this.state.opp) {
+						// of most importance...constantly check for these settimeouts
+						this.props.headerChange('your move / winner starts');
+						this.props.headerChange('new game...');
+						this.props.inGameChange(true);
+					}
 				}).bind(this), 3700);
 
 				setTimeout((function () {
-					this.props.headerChange('your move / winner starts');
+					if (this.state.opp) {
+						// of most importance...constantly check for these settimeouts
+						this.props.headerChange('your move / winner starts');
+					}
 				}).bind(this), 4000);
 
 				setTimeout((function () {
-					this.setState({
-						myTurn: true
-					});
-					startCount.call(this);
+					if (this.state.opp) {
+						// of most importance...constantly check for these settimeouts
+						this.setState({
+							myTurn: true
+						});
+						startCount.call(this);
+					}
 				}).bind(this), 4100);
 			}).bind(this));
 
@@ -1010,7 +1020,7 @@
 		render: function render() {
 			return React.createElement(
 				"div",
-				{ className: "panel", id: "winnersBoard" },
+				{ className: !this.props.showing ? "hidden panel" : "panel", id: "winnersBoard" },
 				React.createElement(
 					"div",
 					null,
@@ -1177,9 +1187,7 @@
 				optionalRequest = React.createElement(ContactRequest, { hideMe: this.closeRequestPanel, headerChange: this.headerChange });
 			}
 			var optionalWinners;
-			if (this.state.displayingWinners) {
-				optionalWinners = React.createElement(WinnersBoard, { toggleWinners: this.toggleWinners });
-			}
+			optionalWinners = React.createElement(WinnersBoard, { toggleWinners: this.toggleWinners, showing: this.state.displayingWinners });
 
 			return React.createElement(
 				"div",
