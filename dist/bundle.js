@@ -153,7 +153,7 @@
 					});
 					if (data.requestContact) {
 						this.props.headerChange('authorized as ' + data.userId + '<br>(rank #' + (data.rank || 'n/a') + ')...');
-						etTimeout((function () {
+						setTimeout((function () {
 							this.props.headerChange('more info needed');
 							this.props.showRequestInfo();
 						}).bind(this), 500);
