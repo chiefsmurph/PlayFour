@@ -343,6 +343,7 @@ app.get('/js/mozilla-cookies.js', function(req, res, next) {
 
 io.on('connection', function(socket) {
   var clientIp = socket.handshake.headers['x-forwarded-for'];
+  clientIp = (clientIp.indexOf(',') > -1) ? clientIp.split(',')[1].trim() : clientIp;
   var geo = geoip.lookup(clientIp);
   var loc = (geo) ? geo.city + ', ' + geo.region + ' (' + geo.country + ')' : 'n/a';
 
