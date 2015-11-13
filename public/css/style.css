@@ -76,12 +76,12 @@ body.no-touch .panel > div {
   margin: 0;
 }
 #winnersBoard .winpic {
-  width: 20vh;
+  width: 30vh;
   max-width: 300px;
-  padding: 2% 0 0 5%;
+  /*padding: 2% 0 0 5%;*/
   border: 2px solid white;
   margin-bottom: 10px;
-  background-image: url('../img/forest.png')
+  /*background-image: url('../img/forest.png')*/
 }
 #winnersBoard section {
   background-color: rgba(24,24,24,0.7);
