@@ -13,7 +13,7 @@ require('./img/tapfour.png');
 require('./js/odometer-0.4.6/themes/odometer-theme-minimal.css');
 
 var infoIconPNG = require('./img/info_icon2.png');
-var winnersIconPNG = require('./img/crown.png');
+var winnersIconPNG = require('./img/winnericon2.png');
 
 var bob = require('./img/newbob.png');
 var docCookies = require('./js/mozilla-cookies.js');

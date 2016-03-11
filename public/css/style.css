@@ -326,12 +326,12 @@ body.no-touch .headerBoard .icon img.faded:hover {
 #winnersIcon {
   margin-left: 60px;
 }
-#winnersIcon img {
+/*#winnersIcon img {
   background-color: navy;
 }
 #winnersIcon img.faded {
   background-color: grey;
-}
+}*/
 #infoPanel > div {
 	display: inline-block;
 	padding: 1vh 2vh;

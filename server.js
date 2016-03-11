@@ -263,7 +263,7 @@ var adminStatFunctions = {
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
       var curDateTime = getCurrentTimestamp();
       client.query('SELECT count(*) from gameLogs WHERE datetime like \'%' + day + '%\'', function(err, result) {
-
+        
         done();
         if (err) console.log(err);
         cb(null, result.rows[0].count);
@@ -343,7 +343,7 @@ app.get('/js/mozilla-cookies.js', function(req, res, next) {
 
 io.on('connection', function(socket) {
   var clientIp = socket.handshake.headers['x-forwarded-for'];
-  clientIp = (clientIp.indexOf(',') > -1) ? clientIp.split(',')[1].trim() : clientIp;
+  clientIp = (clientIp && clientIp.indexOf(',') > -1) ? clientIp.split(',')[1].trim() : clientIp;
   var geo = geoip.lookup(clientIp);
   var loc = (geo) ? geo.city + ', ' + geo.region + ' (' + geo.country + ')' : 'n/a';
 
