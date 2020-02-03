@@ -3,6 +3,7 @@ var path = require('path');
 var express = require('express');
 var geoip = require('geoip-lite');
 var async = require('async');
+const { pgString } = require('./config');
 
 sendmail = require('sendmail')();
 
@@ -65,7 +66,7 @@ function getCurrentTimestamp() {
 
 var dbFunctions = {
   executeQuery: function(q) {
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    pg.connect(pgString, function(err, client, done) {
       //CREATE TABLE scores (dbId serial primary key, username VARCHAR(30) not null, score INT, handshake VARCHAR(60))
       var query = client.query(q);
       console.log('executed query ' + q);
@@ -78,7 +79,7 @@ var dbFunctions = {
     });
   },
   getTopScore: function(cb) {
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+    pg.connect(pgString, function(err, client, done) {
         client.query('SELECT * FROM scores ORDER BY score desc limit 1', function(err, result) {
           done();
 
@@ -94,7 +95,7 @@ var dbFunctions = {
 
     console.log('creating new user ' + userId);
     // insert
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+    pg.connect(pgString, function(err, client, done) {
       var queryText = 'INSERT INTO scores (username, score, handshake) VALUES($1, $2, $3)';
       client.query(queryText, [userId, 0, ''], function(err, result) {
 
@@ -110,7 +111,7 @@ var dbFunctions = {
   authorizeScore: function(userId, score, handshake, cb) {
     // select where
     console.log('authorizing ' + userId + ' ' + score + ' ' + handshake);
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+    pg.connect(pgString, function(err, client, done) {
         console.log('err ' + err);
         client.query('SELECT * FROM scores WHERE username=\'' + userId + '\' AND score = ' + score + ' AND handshake = \'' + handshake + '\'', function(err, result) {
 
@@ -126,7 +127,7 @@ var dbFunctions = {
   },
   changeScore: function(userId, increment, cb) {
     // return handshake via callback
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+    pg.connect(pgString, function(err, client, done) {
       client.query('SELECT * FROM scores WHERE username=\'' + userId + '\'', function(err, result) {
         console.log('result rows ' + JSON.stringify(result.rows));
         if (result.rows.length) {
@@ -152,7 +153,7 @@ var dbFunctions = {
 
   },
   returnAllUsers: function(cb) {
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+    pg.connect(pgString, function(err, client, done) {
       client.query('SELECT * FROM scores ORDER BY score desc', function(err, result) {
         console.log('got all scores');
         cb(result.rows);
@@ -161,7 +162,7 @@ var dbFunctions = {
     });
   },
   hasAnsweredRequest: function(userId, cb) {
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+    pg.connect(pgString, function(err, client, done) {
         client.query('SELECT * FROM scores WHERE username = \'' + userId + '\'', function(err, result) {
           done();
 
@@ -173,14 +174,14 @@ var dbFunctions = {
     });
   },
   savePreferences: function(userId, preferences) {
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+    pg.connect(pgString, function(err, client, done) {
       client.query('UPDATE scores SET contactemail = \'' + preferences.contactEmail + '\', paypalemail = \'' + preferences.paypalEmail + '\', address = \'' + preferences.address + '\' WHERE username=\'' + userId + '\'', function(err, result) {
         done();
       });
     });
   },
   getUserRank: function(userId, score, cb) {
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+    pg.connect(pgString, function(err, client, done) {
         client.query('SELECT * FROM scores WHERE score >= ' + score + ' ORDER BY score desc', function(err, result) {
           done();
           console.log(JSON.stringify(result.rows.length));
@@ -191,8 +192,8 @@ var dbFunctions = {
   }
 };
 //dbFunctions.executeQuery('CREATE TABLE scores (dbId serial primary key, username VARCHAR(30) not null, score INT, handshake VARCHAR(60))');
-//dbFunctions.executeQuery('CREATE TABLE visitlogs (visitId serial primary key, username VARCHAR(30) not null, ip VARCHAR(30) not null, datetime VARCHAR(30) not null, arrscore INT, leavescore INT, duration INT, gamesWon INT, gamesLost INT )');
-//dbFunctions.executeQuery('CREATE TABLE gamelogs (gameId serial primary key, datetime VARCHAR(30) not null, winnerId VARCHAR(30) not null, loserId VARCHAR(30) not null, round INT )');
+//dbFunctions.executeQuery('CREATE TABLE visitLogs (visitId serial primary key, username VARCHAR(30) not null, ip VARCHAR(30) not null, datetime VARCHAR(30) not null, arrscore INT, leavescore INT, duration INT, gamesWon INT, gamesLost INT )');
+//dbFunctions.executeQuery('CREATE TABLE gameLogs (gameId serial primary key, datetime VARCHAR(30) not null, winnerId VARCHAR(30) not null, loserId VARCHAR(30) not null, round INT )');
 //CREATE TABLE generalLogs (logid serial primary key, datetime VARCHAR(30) not null, log VARCHAR(120) not null)
 
 var dontlog = ['EkBxPvAbg', 'NJXYu4yMe'];
@@ -202,9 +203,9 @@ visitLogFunctions = {
     ip = ip || "-- error --";
 
     console.log('creating new visit ' + userId);
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+    pg.connect(pgString, function(err, client, done) {
       var curDateTime = getCurrentTimestamp();
-      var queryText = 'INSERT INTO visitlogs (username, ip, datetime, arrscore, location) VALUES($1, $2, $3, $4, $5) RETURNING visitid';
+      var queryText = 'INSERT INTO visitLogs (username, ip, datetime, arrscore, location) VALUES($1, $2, $3, $4, $5) RETURNING visitid';
       client.query(queryText, [userId, ip, curDateTime, arrScore, loc], function(err, result) {
 
         done();
@@ -216,8 +217,8 @@ visitLogFunctions = {
     });
   },
   closeOutVisit: function(visitId, leaveScore, duration, gamesWon, gamesLost) {
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
-      client.query('UPDATE visitlogs SET leaveScore = ' + leaveScore + ', duration = ' + duration + ', gameswon = ' + gamesWon + ', gameslost = ' + gamesLost + ' WHERE visitid=' + visitId, function(err, result) {
+    pg.connect(pgString, function(err, client, done) {
+      client.query('UPDATE visitLogs SET leaveScore = ' + leaveScore + ', duration = ' + duration + ', gameswon = ' + gamesWon + ', gameslost = ' + gamesLost + ' WHERE visitid=' + visitId, function(err, result) {
         done();
         if (err) console.log(err);
         console.log('closed out visit' + JSON.stringify(result));
@@ -228,7 +229,7 @@ visitLogFunctions = {
 
 generalLogFunctions = {
   logMessage: function(text) {
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+    pg.connect(pgString, function(err, client, done) {
       var curDateTime = getCurrentTimestamp();
       var queryText = 'INSERT INTO generalLogs (datetime, log) VALUES($1, $2)';
       client.query(queryText, [curDateTime, text], function(err, result) {
@@ -243,9 +244,9 @@ generalLogFunctions = {
 
 gameLogFunctions = {
   logGame: function(winnerId, loserId, round) {
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+    pg.connect(pgString, function(err, client, done) {
       var curDateTime = getCurrentTimestamp();
-      var queryText = 'INSERT INTO gamelogs (datetime, winnerId, loserId, round) VALUES($1, $2, $3, $4)';
+      var queryText = 'INSERT INTO gameLogs (datetime, winnerId, loserId, round) VALUES($1, $2, $3, $4)';
       client.query(queryText, [curDateTime, winnerId, loserId, round], function(err, result) {
 
         done();
@@ -260,7 +261,7 @@ gameLogFunctions = {
 
 var adminStatFunctions = {
   getSingleDayGameCount: function(day, cb) {
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+    pg.connect(pgString, function(err, client, done) {
       var curDateTime = getCurrentTimestamp();
       client.query('SELECT count(*) from gameLogs WHERE datetime like \'%' + day + '%\'', function(err, result) {
         
