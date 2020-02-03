@@ -1,7 +1,7 @@
 var pg = require('pg');
 var path = require('path');
 var express = require('express');
-var geoip = require('geoip-lite');
+// var geoip = require('geoip-lite');
 var async = require('async');
 const { pgString } = require('./config');
 
@@ -345,7 +345,8 @@ app.get('/js/mozilla-cookies.js', function(req, res, next) {
 io.on('connection', function(socket) {
   var clientIp = socket.handshake.headers['x-forwarded-for'];
   clientIp = (clientIp && clientIp.indexOf(',') > -1) ? clientIp.split(',')[1].trim() : clientIp;
-  var geo = geoip.lookup(clientIp);
+  // var geo = geoip.lookup(clientIp);
+  var geo = null;
   var loc = (geo) ? geo.city + ', ' + geo.region + ' (' + geo.country + ')' : 'n/a';
 
   if (ipblacklist.indexOf(clientIp) === -1 && loc.indexOf('Palatine') === -1) {
