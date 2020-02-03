@@ -205,8 +205,8 @@ visitLogFunctions = {
     console.log('creating new visit ' + userId);
     pg.connect(pgString, function(err, client, done) {
       var curDateTime = getCurrentTimestamp();
-      var queryText = 'INSERT INTO visitLogs (username, ip, datetime, arrscore, location) VALUES($1, $2, $3, $4, $5) RETURNING visitid';
-      client.query(queryText, [userId, ip, curDateTime, arrScore, loc], function(err, result) {
+      var queryText = 'INSERT INTO visitLogs (username, ip, datetime, arrscore) VALUES($1, $2, $3, $4) RETURNING visitid';
+      client.query(queryText, [userId, ip, curDateTime, arrScore], function(err, result) {
 
         done();
         if (err) console.log(err);
