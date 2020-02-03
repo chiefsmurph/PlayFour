@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "build": "sudo webpack",
-    "webpack": "webpack-dev-server --progress --colors --port 8090",
+    "webpack": "webpack-dev-server --progress --colors --port 8090"
   },
   "dependencies": {
     "async": "^1.5.0",
