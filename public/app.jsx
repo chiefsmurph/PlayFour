@@ -50,7 +50,7 @@ var startCount = function() {
 		if (this.props.currentlyInGame) {
 			console.log('timed out');
 			mySocket.emit('fail', {round: this.props.curRound, timedout: true});
-			window.location.replace('http://www.tapfour10dollars.com/sleeping');	// wake up
+			window.location.replace('http://chiefsmurph.com/tapfour10dollars/sleeping');	// wake up
 		}
 	}.bind(this), 9000);		/// you have 9000 sec to make a move
 };
