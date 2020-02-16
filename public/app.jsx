@@ -92,7 +92,7 @@ var GameArea = React.createClass({
 			setTimeout(function() {
 				mySocket.emit('checkForWaiting');
 			}.bind(this), 700);
-			docCookies.setItem('userStatus', JSON.stringify({
+			docCookies.setItem('TAPFOURUSERSTATUS', JSON.stringify({
 				userId: data.userId,
 				score: 0,
 				handshake: ''
@@ -313,7 +313,7 @@ var GameArea = React.createClass({
 			console.debug(JSON.stringify(data));
 			this.props.scoreChange(data.score);
 			if (data.userId) {
-				docCookies.setItem('userStatus', JSON.stringify({
+				docCookies.setItem('TAPFOURUSERSTATUS', JSON.stringify({
 					userId: data.userId,
 					score: data.score
 				}), 31536e3, "/");
@@ -321,7 +321,7 @@ var GameArea = React.createClass({
 					userId: data.userId
 				});
 			} else {
-				docCookies.setItem('userStatus', JSON.stringify({
+				docCookies.setItem('TAPFOURUSERSTATUS', JSON.stringify({
 					score: data.score,
 					handshake: data.handshake,
 					userId: this.state.userId
@@ -334,13 +334,13 @@ var GameArea = React.createClass({
 			//	//	//
 				//	//	//
 
-		if (docCookies.hasItem('userStatus')) {
-			var userStatus = JSON.parse(docCookies.getItem('userStatus'));
-			this.props.scoreChange(userStatus.score);
+		if (docCookies.hasItem('TAPFOURUSERSTATUS')) {
+			var TAPFOURUSERSTATUS = JSON.parse(docCookies.getItem('TAPFOURUSERSTATUS'));
+			this.props.scoreChange(TAPFOURUSERSTATUS.score);
 
 			setTimeout(function() {
 				this.props.headerChange('welcome back<br>authorizing now');
-				mySocket.emit('authorizeScore', userStatus);
+				mySocket.emit('authorizeScore', TAPFOURUSERSTATUS);
 			}.bind(this), 1200);
 
 		} else {
@@ -743,7 +743,7 @@ var WelcomeMessage = React.createClass({
 		};
 	},
 	componentDidMount: function() {
-		if (docCookies.hasItem('userStatus')) {
+		if (docCookies.hasItem('TAPFOURUSERSTATUS')) {
 			this.setState({
 				isnt: 'n\'t'
 			});
@@ -836,7 +836,7 @@ var TapFour = React.createClass({
 		    $('body').removeClass('no-touch');
 		}
 
-		if (docCookies.hasItem('userStatus')) {
+		if (docCookies.hasItem('TAPFOURUSERSTATUS')) {
 			console.log('woops');
 			this.blockEmitOnContinue();
 		}

@@ -139,7 +139,7 @@
 				setTimeout((function () {
 					mySocket.emit('checkForWaiting');
 				}).bind(this), 700);
-				docCookies.setItem('userStatus', JSON.stringify({
+				docCookies.setItem('TAPFOURUSERSTATUS', JSON.stringify({
 					userId: data.userId,
 					score: 0,
 					handshake: ''
@@ -348,7 +348,7 @@
 
 				this.props.scoreChange(data.score);
 				if (data.userId) {
-					docCookies.setItem('userStatus', JSON.stringify({
+					docCookies.setItem('TAPFOURUSERSTATUS', JSON.stringify({
 						userId: data.userId,
 						score: data.score
 					}), 31536e3, "/");
@@ -356,7 +356,7 @@
 						userId: data.userId
 					});
 				} else {
-					docCookies.setItem('userStatus', JSON.stringify({
+					docCookies.setItem('TAPFOURUSERSTATUS', JSON.stringify({
 						score: data.score,
 						handshake: data.handshake,
 						userId: this.state.userId
@@ -368,13 +368,13 @@
 			//	//	//
 			//	//	//
 
-			if (docCookies.hasItem('userStatus')) {
-				var userStatus = JSON.parse(docCookies.getItem('userStatus'));
-				this.props.scoreChange(userStatus.score);
+			if (docCookies.hasItem('TAPFOURUSERSTATUS')) {
+				var TAPFOURUSERSTATUS = JSON.parse(docCookies.getItem('TAPFOURUSERSTATUS'));
+				this.props.scoreChange(TAPFOURUSERSTATUS.score);
 
 				setTimeout((function () {
 					this.props.headerChange('welcome back<br>authorizing now');
-					mySocket.emit('authorizeScore', userStatus);
+					mySocket.emit('authorizeScore', TAPFOURUSERSTATUS);
 				}).bind(this), 1200);
 			} else {
 
@@ -848,7 +848,7 @@
 			};
 		},
 		componentDidMount: function componentDidMount() {
-			if (docCookies.hasItem('userStatus')) {
+			if (docCookies.hasItem('TAPFOURUSERSTATUS')) {
 				this.setState({
 					isnt: 'n\'t'
 				});
@@ -1072,7 +1072,7 @@
 				$('body').removeClass('no-touch');
 			}
 
-			if (docCookies.hasItem('userStatus')) {
+			if (docCookies.hasItem('TAPFOURUSERSTATUS')) {
 				console.log('woops');
 				this.blockEmitOnContinue();
 			}
