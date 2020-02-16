@@ -2,7 +2,7 @@
   "name": "new-react-game",
   "scripts": {
     "dev": "nodemon server.js",
-    "build": "sudo webpack",
+    "build": "webpack",
     "webpack": "webpack-dev-server --progress --colors --port 8090"
   },
   "dependencies": {

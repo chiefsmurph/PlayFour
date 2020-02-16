@@ -980,13 +980,13 @@
 						React.createElement(
 							"b",
 							{ className: "inlineblock" },
-							"11:59pm November 30, 2015 PST"
+							"11:59pm July 4, 2020 PST"
 						),
 						React.createElement("br", null),
 						React.createElement(
 							"i",
 							null,
-							"Note: new $10 Giveaway begins right after.  Winner can't win more than once"
+							"Note: new $10 Giveaway begins rigsht after.  Winner can't win more than once"
 						)
 					),
 					React.createElement(
