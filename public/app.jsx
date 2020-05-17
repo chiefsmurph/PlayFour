@@ -77,7 +77,10 @@ var GameArea = React.createClass({
 	},
 	componentDidMount: function () {
 
-		mySocket = io.connect('http://23.237.87.144:8001');
+		mySocket = io.connect('https://chiefsmurph.com', {
+			path: '/tapfour10dollars/socket.io',
+			secure: true
+		});
 
 		mySocket.on('scoreToBeat', function(data) {
 			console.log('score to beat ' + JSON.stringify(data));
