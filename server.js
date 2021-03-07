@@ -1,9 +1,15 @@
-var pg = require('pg');
+var { Pool } = require('pg');
+const { pgString } = require('./config');
+const pool = new Pool({
+    connectionString: pgString
+});
+
+
+
 var path = require('path');
 var express = require('express');
 // var geoip = require('geoip-lite');
 var async = require('async');
-const { pgString } = require('./config');
 
 sendmail = require('sendmail')();
 
@@ -66,69 +72,50 @@ function getCurrentTimestamp() {
 
 var dbFunctions = {
   executeQuery: function(q) {
-    pg.connect(pgString, function(err, client, done) {
-      //CREATE TABLE scores (dbId serial primary key, username VARCHAR(30) not null, score INT, handshake VARCHAR(60))
-      var query = client.query(q);
-      console.log('executed query ' + q);
-      query.on('row', function(row) {
-        console.log('row: ' + JSON.stringify(row));
-      });
-      query.on('end', function() {
-        done();
-      });
+    pool.query(pgString, function(err, response) {
+      console.log({ err, response });
     });
   },
   getTopScore: function(cb) {
-    pg.connect(pgString, function(err, client, done) {
-        client.query('SELECT * FROM scores ORDER BY score desc limit 1', function(err, result) {
-          done();
+    pool.query('SELECT * FROM scores ORDER BY score desc limit 1', function(err, result) {
 
-          var tScore = result.rows[0].score;
-          console.log('gotten top score ' + tScore);
-          topScore = tScore;
-          cb(tScore);
+        var tScore = result.rows[0].score;
+        console.log('gotten top score ' + tScore);
+        topScore = tScore;
+        cb(tScore);
 
-        });
     });
   },
   createNewUser: function(userId, cb) {
 
     console.log('creating new user ' + userId);
     // insert
-    pg.connect(pgString, function(err, client, done) {
-      var queryText = 'INSERT INTO scores (username, score, handshake) VALUES($1, $2, $3)';
-      client.query(queryText, [userId, 0, ''], function(err, result) {
+    var queryText = 'INSERT INTO scores (username, score, handshake) VALUES($1, $2, $3)';
+    pool.query(queryText, [userId, 0, ''], function(err, result) {
 
-        done();
         if (err) console.log(err);
         console.log('created new user ' + userId);
         cb();
 
-      });
     });
     // thats all folks
   },
   authorizeScore: function(userId, score, handshake, cb) {
     // select where
     console.log('authorizing ' + userId + ' ' + score + ' ' + handshake);
-    pg.connect(pgString, function(err, client, done) {
-        console.log('err ' + err);
-        client.query('SELECT * FROM scores WHERE username=\'' + userId + '\' AND score = ' + score + ' AND handshake = \'' + handshake + '\'', function(err, result) {
+    pool.query('SELECT * FROM scores WHERE username=\'' + userId + '\' AND score = ' + score + ' AND handshake = \'' + handshake + '\'', function(err, result) {
 
-          done();
-          var authorized = (result.rows.length > 0);
-          console.log('userId was authorized: ' + authorized);
-          cb(authorized);
+        var authorized = (result.rows.length > 0);
+        console.log('userId was authorized: ' + authorized);
+        cb(authorized);
 
-        });
     });
 
     // return true or false
   },
   changeScore: function(userId, increment, cb) {
     // return handshake via callback
-    pg.connect(pgString, function(err, client, done) {
-      client.query('SELECT * FROM scores WHERE username=\'' + userId + '\'', function(err, result) {
+    pool.query('SELECT * FROM scores WHERE username=\'' + userId + '\'', function(err, result) {
         console.log('result rows ' + JSON.stringify(result.rows));
         if (result.rows.length) {
           var curScore = result.rows[0].score;
@@ -144,50 +131,32 @@ var dbFunctions = {
                 io.sockets.emit('scoreToBeat', {score: topScore});
               });
             }
-            done();
           });
 
         }
-      });
     });
 
   },
   returnAllUsers: function(cb) {
-    pg.connect(pgString, function(err, client, done) {
-      client.query('SELECT * FROM scores ORDER BY score desc', function(err, result) {
+    pool.query('SELECT * FROM scores ORDER BY score desc', function(err, result) {
         console.log('got all scores');
         cb(result.rows);
-        done();
-      });
     });
   },
   hasAnsweredRequest: function(userId, cb) {
-    pg.connect(pgString, function(err, client, done) {
-        client.query('SELECT * FROM scores WHERE username = \'' + userId + '\'', function(err, result) {
-          done();
-
+    pool.query('SELECT * FROM scores WHERE username = \'' + userId + '\'', function(err, result) {
           var dbRow = result.rows[0];
           var answered = dbRow.paypalemail || dbRow.address;
           cb(answered);
-
-        });
     });
   },
   savePreferences: function(userId, preferences) {
-    pg.connect(pgString, function(err, client, done) {
-      client.query('UPDATE scores SET contactemail = \'' + preferences.contactEmail + '\', paypalemail = \'' + preferences.paypalEmail + '\', address = \'' + preferences.address + '\' WHERE username=\'' + userId + '\'', function(err, result) {
-        done();
-      });
-    });
+    pool.query('UPDATE scores SET contactemail = \'' + preferences.contactEmail + '\', paypalemail = \'' + preferences.paypalEmail + '\', address = \'' + preferences.address + '\' WHERE username=\'' + userId + '\'');
   },
   getUserRank: function(userId, score, cb) {
-    pg.connect(pgString, function(err, client, done) {
-        client.query('SELECT * FROM scores WHERE score >= ' + score + ' ORDER BY score desc', function(err, result) {
-          done();
+    pool.query('SELECT * FROM scores WHERE score >= ' + score + ' ORDER BY score desc', function(err, result) {
           console.log(JSON.stringify(result.rows.length));
           cb(result.rows.length);
-
-        });
     });
   }
 };
@@ -203,56 +172,41 @@ visitLogFunctions = {
     ip = ip || "-- error --";
 
     console.log('creating new visit ' + userId);
-    pg.connect(pgString, function(err, client, done) {
       var curDateTime = getCurrentTimestamp();
       var queryText = 'INSERT INTO visitLogs (username, ip, datetime, arrscore) VALUES($1, $2, $3, $4) RETURNING visitid';
-      client.query(queryText, [userId, ip, curDateTime, arrScore], function(err, result) {
+      pool.query(queryText, [userId, ip, curDateTime, arrScore], function(err, result) {
 
-        done();
         if (err) console.log(err);
         console.log('created new log visit' + JSON.stringify(result));
         cb(result.rows[0].visitid);   // pass the visitid back
 
       });
-    });
   },
   closeOutVisit: function(visitId, leaveScore, duration, gamesWon, gamesLost) {
-    pg.connect(pgString, function(err, client, done) {
-      client.query('UPDATE visitLogs SET leaveScore = ' + leaveScore + ', duration = ' + duration + ', gameswon = ' + gamesWon + ', gameslost = ' + gamesLost + ' WHERE visitid=' + visitId, function(err, result) {
-        done();
-        if (err) console.log(err);
-        console.log('closed out visit' + JSON.stringify(result));
-      });
+    pool.query('UPDATE visitLogs SET leaveScore = ' + leaveScore + ', duration = ' + duration + ', gameswon = ' + gamesWon + ', gameslost = ' + gamesLost + ' WHERE visitid=' + visitId, function(err, result) {
+      if (err) console.log(err);
+      console.log('closed out visit' + JSON.stringify(result));
     });
   }
 };
 
 generalLogFunctions = {
   logMessage: function(text) {
-    pg.connect(pgString, function(err, client, done) {
-      var curDateTime = getCurrentTimestamp();
-      var queryText = 'INSERT INTO generalLogs (datetime, log) VALUES($1, $2)';
-      client.query(queryText, [curDateTime, text], function(err, result) {
-
-        done();
+    var curDateTime = getCurrentTimestamp();
+    var queryText = 'INSERT INTO generalLogs (datetime, log) VALUES($1, $2)';
+    pool.query(queryText, [curDateTime, text], function(err, result) {
         if (err) console.log(err);
-
-      });
     });
   }
 };
 
 gameLogFunctions = {
   logGame: function(winnerId, loserId, round) {
-    pg.connect(pgString, function(err, client, done) {
-      var curDateTime = getCurrentTimestamp();
-      var queryText = 'INSERT INTO gameLogs (datetime, winnerId, loserId, round) VALUES($1, $2, $3, $4)';
-      client.query(queryText, [curDateTime, winnerId, loserId, round], function(err, result) {
-
-        done();
+    var curDateTime = getCurrentTimestamp();
+    var queryText = 'INSERT INTO gameLogs (datetime, winnerId, loserId, round) VALUES($1, $2, $3, $4)';
+      
+    pool.query(queryText, [curDateTime, winnerId, loserId, round], function(err, result) {
         if (err) console.log(err);
-
-      });
     });
   }
 };
@@ -261,15 +215,12 @@ gameLogFunctions = {
 
 var adminStatFunctions = {
   getSingleDayGameCount: function(day, cb) {
-    pg.connect(pgString, function(err, client, done) {
-      var curDateTime = getCurrentTimestamp();
-      client.query('SELECT count(*) from gameLogs WHERE datetime like \'%' + day + '%\'', function(err, result) {
+    var curDateTime = getCurrentTimestamp();
+    pool.query('SELECT count(*) from gameLogs WHERE datetime like \'%' + day + '%\'', function(err, result) {
         
-        done();
         if (err) console.log(err);
         cb(null, result.rows[0].count);
 
-      });
     });
   },
   getTotalDailyGameCount: function(cb) {
